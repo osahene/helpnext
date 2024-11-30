@@ -8,7 +8,7 @@ const Main = () => {
     <>
       <div className="flex flex-col justify-between ">
         <Navbar />
-        <div className="relative top-10 flex flex-col max-h-screen ">
+        <div className="flex flex-col max-h-screen ">
           <section className="flex-grow">
             <MainPage />
           </section>
