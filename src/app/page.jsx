@@ -6,14 +6,14 @@ import MainPage from "@/components/Cards/pageCards";
 const Main = () => {
   return (
     <>
-      <div className="flex flex-col justify-between ">
+      <div className="">
         <Navbar />
-        <div className="flex flex-col ">
+        <div className="flex flex-col">
           <section className="flex-grow">
             <MainPage />
           </section>
         </div>
-        <div className="sticky">
+        <div className="">
           <Footer />
         </div>
       </div>
