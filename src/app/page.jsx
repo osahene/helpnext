@@ -7,7 +7,7 @@ const Main = () => {
   return (
     <>
       <Navbar />
-      <section>
+      <section className="h-screen">
         <MainPage />
       </section>
       <FooterAdmin />
