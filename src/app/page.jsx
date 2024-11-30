@@ -6,9 +6,9 @@ import MainPage from "@/components/Cards/pageCards";
 const Main = () => {
   return (
     <>
-      <div className="flex flex-col min-h-[120dvh] ">
+      <div className="flex flex-col justify-between ">
         <Navbar />
-        <div className="flex flex-col ">
+        <div className="relative top-10 flex flex-col max-h-screen ">
           <section className="flex-grow">
             <MainPage />
           </section>
