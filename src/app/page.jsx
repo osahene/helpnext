@@ -6,16 +6,16 @@ import MainPage from "@/components/Cards/pageCards";
 const Main = () => {
   return (
     <>
-      <div className="">
+      <div className="flex flex-col h-screen ">
         <Navbar />
-        <div className="flex flex-col">
+        <div className="flex flex-col h-[80vh]">
           <section className="flex-grow">
             <MainPage />
           </section>
         </div>
-        {/* <div className="">
+        <div className="sticky">
           <Footer />
-        </div> */}
+        </div>
       </div>
     </>
   );
