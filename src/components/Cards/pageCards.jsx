@@ -70,7 +70,7 @@ export default function MainPage() {
   };
 
   return (
-    <div className="m-5 top-0 grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
+    <div className="m-5 h-full top-0 grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
       {cardsData.map((card, index) => (
         <div key={index} className="p-0" onClick={() => handleCardClick(card)}>
           <Cards
