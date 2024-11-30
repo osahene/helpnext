@@ -8,7 +8,7 @@ const Main = () => {
     <>
       <div className="flex flex-col min-h-[120dvh] ">
         <Navbar />
-        <div className="flex flex-col h-screen">
+        <div className="flex flex-col ">
           <section className="flex-grow">
             <MainPage />
           </section>
