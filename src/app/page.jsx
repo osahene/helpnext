@@ -12,9 +12,9 @@ const Main = () => {
           <MainPage />
         </section>
       </div>
-      <div className="sticky">
+      {/* <div className="sticky">
         <Footer />
-      </div>
+      </div> */}
     </>
   );
 };
