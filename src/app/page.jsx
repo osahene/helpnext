@@ -8,10 +8,12 @@ const Main = () => {
     <>
       {/* <div className=""> */}
       <Navbar />
-      <div className="flex flex-col h-[90vh]">
-        <section className="flex-grow">
-          <MainPage />
-        </section>
+      <div className="relative top-20">
+        <div className="flex flex-col h-[75vh]">
+          <section className="flex-grow">
+            <MainPage />
+          </section>
+        </div>
       </div>
       <div className="sticky">
         <Footer />
