@@ -13,9 +13,9 @@ const Main = () => {
             <MainPage />
           </section>
         </div>
-        <div className="">
+        {/* <div className="">
           <Footer />
-        </div>
+        </div> */}
       </div>
     </>
   );
