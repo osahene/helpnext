@@ -7,12 +7,12 @@ const Main = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col h-[75vh]">
+      <div className="flex flex-col h-[80vh]">
         <section className="flex-grow">
           <MainPage />
         </section>
       </div>
-      <div>
+      <div className="sticky">
         <Footer />
       </div>
     </>
