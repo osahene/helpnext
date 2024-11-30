@@ -7,7 +7,7 @@ const Main = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col h-[75vh]">
+      <div className="flex flex-col h-[90vh]">
         {/* Main Content */}
         <section className="flex-grow">
           <MainPage />
