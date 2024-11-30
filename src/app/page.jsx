@@ -8,14 +8,14 @@ const Main = () => {
     <>
       <div className="">
         <Navbar />
-        <div className="flex flex-col min-h-[75vh] ">
+        <div className="flex flex-col h-[80vh]">
           <section className="flex-grow">
             <MainPage />
           </section>
         </div>
-        <div className="">
-          <Footer />
-        </div>
+        {/* <div className="sticky">
+        <Footer />
+      </div> */}
       </div>
     </>
   );
