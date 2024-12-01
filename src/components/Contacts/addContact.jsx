@@ -34,7 +34,7 @@ export default function AddContacts() {
   return (
     <form
       onSubmit={handleCreateContact}
-      className="bg-gray-800 dark:text-white relative overflow-x-auto shadow-md sm:rounded-lg"
+      className="bg-gray-800 dark:text-white relative overflow-x-auto shadow-md rounded-lg"
     >
       <div className="m-10 space-y-12 ">
         <div className="border-b border-gray-900/10 pb-12">

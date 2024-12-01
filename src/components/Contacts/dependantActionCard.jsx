@@ -35,7 +35,7 @@ export default function DependantAction({
     <div className="modal-content ">
       <div className="w-full  max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <div className="flex flex-col items-center pb-10">
-          <div className="py-5 uppercase">
+          <div className="py-5 text-center uppercase">
             <h5 className="text-xl font-bold text-gray-900 dark:text-white">
               Heads Up !
             </h5>

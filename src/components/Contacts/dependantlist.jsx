@@ -88,7 +88,7 @@ export default function Dependents() {
   // if (loading) return <p>Loading...</p>;
 
   return (
-    <div className=" overflow-x-auto shadow-md sm:rounded-lg">
+    <div className=" overflow-x-auto shadow-md rounded rounded-lg">
       <table className="w-full text-lg text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <caption className="p-5 text-xl font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
           My Dependents
