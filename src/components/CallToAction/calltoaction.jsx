@@ -41,14 +41,14 @@ const ActionButton = ({ pendingCount }) => {
   return (
     <div
       ref={actionButtonRef}
-      className="fixed bottom-0 right-0 p-10 flex items-end justify-end w-20 h-20"
+      className="fixed bottom-0 right-0 p-10 flex items-end justify-end w-10"
     >
       <div
         onClick={toggleMenu}
-        className="text-white shadow-xl flex items-center justify-center p-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 z-50 cursor-pointer"
+        className="w-15 h-[4rem] text-white shadow-xl flex items-center justify-center p-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 z-50 cursor-pointer"
       >
         <FontAwesomeIcon
-          className={`w-8 h-8 transition-all duration-[0.6s] ${
+          className={`w-10 h-10 transition-all duration-[0.6s] ${
             menuOpen ? "rotate-90" : ""
           }`}
           icon={faAdd}
@@ -62,8 +62,8 @@ const ActionButton = ({ pendingCount }) => {
 
       {/* Menu items */}
       <div
-        className={`absolute mb-5 transition-all duration-[0.3s] ease-out flex flex-col items-center space-y-4 ${
-          menuOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"
+        className={`absolute mb-[4rem] transition-all duration-[0.3s] ease-out flex flex-col items-center space-y-4 ${
+          menuOpen ? "scale-110 opacity-100" : "scale-0 opacity-0"
         }`}
         style={{ bottom: "4rem" }} // Adjust position slightly above the button
       >

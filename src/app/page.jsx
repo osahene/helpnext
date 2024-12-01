@@ -14,9 +14,9 @@ const Main = () => {
           <section className="flex-grow">
             <MainPage />
           </section>
-          <ActionButton />
         </div>
       </div>
+      <ActionButton />
       <div className="sticky">
         <Footer />
       </div>
