@@ -8,6 +8,12 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "packageManager": "npm@10.5.1",
+  "overrides": {
+    "react": "$react",
+    "react-dom": "$react-dom",
+    "next": "$next"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.1",
     "@fortawesome/free-solid-svg-icons": "^6.7.1",
