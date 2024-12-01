@@ -7,7 +7,6 @@ import ActionButton from "@/components/CallToAction/calltoaction";
 const Main = () => {
   return (
     <>
-      {/* <div className=""> */}
       <Navbar />
       <div className="relative top-20">
         <div className="flex flex-col h-[74vh]">
@@ -17,10 +16,9 @@ const Main = () => {
         </div>
       </div>
       <ActionButton />
-      <div className="sticky">
+      {/* <div className="sticky">
         <Footer />
-      </div>
-      {/* </div> */}
+      </div> */}
     </>
   );
 };
