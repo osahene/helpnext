@@ -9,7 +9,7 @@ const Main = () => {
     <>
       <Navbar />
       <div className="relative top-20">
-        <div className="flex flex-col h-[90vh]">
+        <div className="flex flex-col h-[86vh]">
           <section className="flex-grow">
             <MainPage />
           </section>
