@@ -1,4 +1,4 @@
-import $axios from "..";
+import $axios from "./axiosInstance";
 
 const apiService = {
   register: (data) => $axios.post("/account/user-register/", data),
