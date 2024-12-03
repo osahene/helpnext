@@ -51,7 +51,7 @@ export default function HeaderBar() {
                 height={40}
                 alt="Flowbite Logo"
               />
-              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+              <span className="self-center text-lg font-semibold whitespace-nowrap dark:text-white">
                 Help oo Help
               </span>
             </a>

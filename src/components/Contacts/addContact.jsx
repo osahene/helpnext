@@ -58,9 +58,11 @@ export default function AddContacts() {
                 <input
                   id="first-name"
                   name="first_name"
+                  placeholder="John"
                   type="text"
                   autoComplete="given-name"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
+                  required
                 />
               </div>
             </div>
@@ -77,8 +79,10 @@ export default function AddContacts() {
                   id="last-name"
                   name="last_name"
                   type="text"
+                  placeholder="Musah"
                   autoComplete="family-name"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
+                  required
                 />
               </div>
             </div>
@@ -95,8 +99,10 @@ export default function AddContacts() {
                   id="email"
                   name="email_address"
                   type="email"
+                  placeholder="johnmusah@example.com"
                   autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
+                  required
                 />
               </div>
             </div>
@@ -112,8 +118,10 @@ export default function AddContacts() {
                   id="phonenumber"
                   name="phone_number"
                   type="tel"
+                  placeholder="+233241123456"
                   autoComplete="phone_number"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
+                  required
                 />
               </div>
             </div>
@@ -129,8 +137,10 @@ export default function AddContacts() {
                   id="relation"
                   name="relation"
                   type="text"
+                  placeholder="Father"
                   autoComplete="relation"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
+                  required
                 />
               </div>
             </div>
