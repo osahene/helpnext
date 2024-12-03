@@ -93,7 +93,7 @@ export default function VerifyEmail() {
                   </p>
                 ) : (
                   <p className="dark:text-white text-black">
-                    Didn't receive code?
+                    {"Didn't receive code?"}
                   </p>
                 )}
                 <button

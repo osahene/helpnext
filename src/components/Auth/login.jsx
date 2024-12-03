@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import apiService from "../../api/axios";
 import { useAuth } from "../../AuthContext";
+import Image from "next/image";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
@@ -43,7 +44,7 @@ export default function Login() {
               href="#as"
               className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
             >
-              <img
+              <Image
                 className="w-8 h-8 mr-2"
                 src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
                 alt="logo"
