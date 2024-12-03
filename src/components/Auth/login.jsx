@@ -1,43 +1,34 @@
+"use client";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import apiService from "../../api/axios";
-import { useAuth } from "../../AuthContext";
+import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
+import { login } from "@/redux/authSlice";
+import Link from "next/link";
 
 export default function Login() {
-  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    emailOrPhone: "",
+    password: "",
+  });
+  const { loading, error } = useSelector((state) => state.user);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
-  const navigate = useNavigate();
-  const { login } = useAuth();
+  const dispatch = useDispatch();
 
   function togglePasswordVisibility() {
     setIsPasswordVisible((prevState) => !prevState);
   }
+
+  const formChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const email = formData.get("emailOrPhone");
-    const password = formData.get("password");
-
-    try {
-      const res = await apiService.login({ email, password });
-      if (res.status === 200) {
-        localStorage.setItem("email", email);
-        const { first_name, last_name, phone_number } = res.data;
-        const { access, refresh } = res.data.tokens;
-        login({ access, refresh, first_name, last_name, phone_number });
-        navigate("/");
-      }
-    } catch (error) {
-      console.log("log", error.message);
-    } finally {
-      setLoading(false);
-    }
+    dispatch(login(formData));
   };
   return (
     <>
-      <div className="App-header-1">
+      <div className="">
         <div className="">
           <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
             <a
@@ -84,6 +75,8 @@ export default function Login() {
                       type="text"
                       name="emailOrPhone"
                       id="phone_number"
+                      value={formData.emailOrPhone}
+                      onChange={formChange}
                       placeholder="+233123456789 or abc@efg.com"
                       className="border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       required
@@ -103,6 +96,8 @@ export default function Login() {
                         type={isPasswordVisible ? "text" : "password"}
                         placeholder="Password"
                         name="password"
+                        value={formData.password}
+                        onChange={formChange}
                         className="border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       />
                       <button
@@ -191,7 +186,7 @@ export default function Login() {
                   <p className="text-lg m-0 font-light text-gray-500 dark:text-gray-400">
                     Don’t have an account yet?{" "}
                     <Link
-                      to="/register"
+                      href={"/auth/register"}
                       className="font-medium text-blue-600 hover:underline dark:text-blue-500"
                     >
                       Sign up

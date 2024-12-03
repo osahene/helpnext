@@ -1,13 +1,14 @@
+"use client";
+import { verifyEmail, requestOTP } from "@/redux/authSlice";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../AuthContext";
-import apiService from "../../api/axios";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function VerifyEmail() {
-  const navigate = useNavigate();
-  const { login } = useAuth();
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState({
+    otp: "",
+  });
   const [timer, setTimer] = useState({ minutes: 0, seconds: 5 });
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (timer.minutes > 0 || timer.seconds > 0) {
@@ -27,30 +28,20 @@ export default function VerifyEmail() {
     }
   }, [timer]);
 
-  const resendOTP = async () => {
-    const email_address = localStorage.getItem("email");
+  const resendOTP = async (event) => {
+    // const email_address = localStorage.getItem("email");
     setTimer({ minutes: 0, seconds: 30 }); // Reset timer
+    event.preventDefault();
+    dispatch(requestOTP(otp));
+  };
 
-    try {
-      await apiService.generate({ email: email_address });
-    } catch (error) {}
+  const formChange = (e) => {
+    setOtp({ ...otp, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const email_address = localStorage.getItem("email");
-
-    try {
-      const res = await apiService.verifyEmail({
-        email: email_address,
-        otp,
-      });
-      if (res.status === 200) {
-        const { access, refresh } = res.data;
-        login({ access, refresh });
-        navigate("/verifyPhoneNumber");
-      }
-    } catch (error) {}
+    dispatch(verifyEmail(otp));
   };
 
   return (
@@ -76,8 +67,8 @@ export default function VerifyEmail() {
                   placeholder="Enter OTP"
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
                   required
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
+                  value={otp.otp}
+                  onChange={formChange}
                 />
               </div>
               {/* Resend OTP logic */}

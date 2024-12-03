@@ -1,24 +1,21 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import apiService from "../../api/axios";
+"use client";
+import React, { useState } from "react";
+import { verifyPhoneNumber } from "@/redux/authSlice";
+import { useDispatch } from "react-redux";
 
 export default function VerifyPhoneNumber() {
-  const navigate = useNavigate();
+  const [phone_number, setPhone_Number] = useState({
+    phone_number: "",
+  });
+  const dispatch = useDispatch();
+
+  const formChange = (e) => {
+    setPhone_Number({ ...phone_number, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const phone_number = formData.get("phone");
-
-    try {
-      const res = await apiService.VerifyPhoneNumber({
-        phoneNumber: phone_number,
-      });
-      if (res.status === 200) {
-        localStorage.setItem("phone_number", phone_number);
-        navigate("/verifyPhoneOTP");
-      }
-    } catch (error) {}
+    dispatch(verifyPhoneNumber(phone_number));
   };
 
   return (
@@ -41,6 +38,8 @@ export default function VerifyPhoneNumber() {
                   type="tel"
                   name="phone"
                   id="phone_number"
+                  value={phone_number.phone_number}
+                  onChange={formChange}
                   placeholder="+2331234567890"
                   className="bg-gray-50 border border-gray-30"
                 />

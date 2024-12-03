@@ -50,6 +50,17 @@ export const verifyPhoneNumberOTP = createAsyncThunk(
     }
   }
 );
+export const requestOTP = createAsyncThunk(
+  "auth/verifyEmail",
+  async (userData, thunkAPI) => {
+    try {
+      const res = await apiService.generate(userData);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.res.data);
+    }
+  }
+);
 
 const initialState = {
   accessToken: null,

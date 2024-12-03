@@ -1,14 +1,14 @@
+"use client";
+import { verifyPhoneNumberOTP, requestOTP } from "@/redux/authSlice";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import apiService from "../../api/axios";
-import { useAuth } from "../../AuthContext";
+import { useDispatch } from "react-redux";
 
 export default function VerifyPhoneNumberOTP() {
-  const { login } = useAuth();
-
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState({
+    otp: "",
+  });
   const [timer, setTimer] = useState({ minutes: 0, seconds: 5 });
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (timer.minutes > 0 || timer.seconds > 0) {
@@ -28,30 +28,20 @@ export default function VerifyPhoneNumberOTP() {
     }
   }, [timer]);
 
-  const resendOTP = async () => {
-    const phoneNumber = localStorage.getItem("phone_number");
-    setTimer({ minutes: 0, seconds: 30 }); // Reset timer
+  const formChange = (e) => {
+    setOtp({ ...otp, [e.target.name]: e.target.value });
+  };
 
-    try {
-      await apiService.generateRegister({ phoneNumber: phoneNumber });
-    } catch (error) {}
+  const resendOTP = async (event) => {
+    // const phoneNumber = localStorage.getItem("phone_number");
+    setTimer({ minutes: 0, seconds: 30 }); // Reset timer
+    event.preventDefault();
+    dispatch(requestOTP(otp));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const phoneNumber = localStorage.getItem("phone_number");
-
-    try {
-      const res = await apiService.VerifyPhoneNumberOTP({
-        phoneNumber: phoneNumber,
-        otp,
-      });
-      if (res.status === 200) {
-        const { access, refresh, first_name, last_name } = res.data;
-        login({ access, refresh, first_name, last_name });
-        navigate("/");
-      }
-    } catch (error) {}
+    dispatch(verifyPhoneNumberOTP(otp));
   };
 
   return (
@@ -77,8 +67,8 @@ export default function VerifyPhoneNumberOTP() {
                   placeholder="Enter OTP"
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
                   required
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
+                  value={otp.otp}
+                  onChange={formChange}
                 />
               </div>
               {/* Resend OTP logic */}
@@ -93,7 +83,7 @@ export default function VerifyPhoneNumberOTP() {
                     </span>
                   </p>
                 ) : (
-                  <p>Didn't receive code?</p>
+                  <p>{"Didn't receive code?"}</p>
                 )}
                 <button
                   type="button"
