@@ -122,7 +122,7 @@ export default function AddContacts() {
                 htmlFor="text"
                 className="block text-lg font-medium leading-6 text-white"
               >
-                Relationship
+                Relationship {"(Who are they to you?)"}
               </label>
               <div className="mt-2">
                 <input

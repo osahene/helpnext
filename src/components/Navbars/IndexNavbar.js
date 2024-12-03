@@ -39,7 +39,7 @@ export default function HeaderBar() {
     <>
       <div>
         {/* Sticky navbar */}
-        <nav className="top-0 fixed z-50 w-full flex flex-wrap justify-between items-center px-4 py-3 navbar-expand-lg bg-white shadow">
+        <nav className="top-0 fixed z-50 w-full flex flex-nowrap justify-between items-center px-4 py-3 navbar-expand-lg bg-white shadow">
           <div>
             <a
               href="https://flowbite.com/"
@@ -56,7 +56,7 @@ export default function HeaderBar() {
               </span>
             </a>
           </div>
-          <div className="flex justify-center">
+          <div className="flex items-center gap-x-4 flex-nowrap">
             {/* Dropdown button */}
             {/* {isAuthenticated ? (
                 <>
