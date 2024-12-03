@@ -56,7 +56,7 @@ export default function HeaderBar() {
               </span>
             </a>
           </div>
-          <div className="flex items-center gap-x-4 flex-nowrap">
+          <div className="flex items-center gap-x-1 flex-nowrap">
             {/* Dropdown button */}
             {/* {isAuthenticated ? (
                 <>
