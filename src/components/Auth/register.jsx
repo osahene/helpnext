@@ -1,6 +1,9 @@
 "use client";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  useDispatch,
+  // useSelector
+} from "react-redux";
 import Image from "next/image";
 import { registerUser } from "@/redux/authSlice";
 import Link from "next/link";
@@ -8,14 +11,13 @@ import Link from "next/link";
 export default function Register() {
   const [formData, setFormData] = useState({
     first_name: "",
-    first_name: "",
     last_name: "",
     email: "",
     password: "",
   });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.user);
+  // const { loading, error } = useSelector((state) => state.user);
 
   function togglePasswordVisibility() {
     setIsPasswordVisible((prevState) => !prevState);
@@ -39,6 +41,8 @@ export default function Register() {
               className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
             >
               <Image
+                width={10}
+                height={10}
                 className="w-8 h-8 mr-2"
                 src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
                 alt="logo"
@@ -193,13 +197,13 @@ export default function Register() {
                     type="submit"
                     className="w-full mt-8 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   >
-                    {loading ? "Registering..." : "Register"}
+                    {/* {loading ? "Registering..." : "Register"} */} Sign Up
                   </button>
 
                   <p className="text-lg font-light text-gray-500 dark:text-gray-400">
                     Already have an account?{" "}
                     <Link
-                      to="/login"
+                      href={"/auth/login"}
                       className="font-medium text-blue-600 hover:underline dark:text-blue-500"
                     >
                       Sign In

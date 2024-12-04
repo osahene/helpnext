@@ -1,3 +1,4 @@
+"use client";
 const {
   default: VerifyPhoneNumber,
 } = require("@/components/Auth/verifyPhoneNumber");

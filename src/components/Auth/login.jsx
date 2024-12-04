@@ -1,6 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  useDispatch,
+  // useSelector
+} from "react-redux";
 import Image from "next/image";
 import { login } from "@/redux/authSlice";
 import Link from "next/link";
@@ -10,7 +13,7 @@ export default function Login() {
     emailOrPhone: "",
     password: "",
   });
-  const { loading, error } = useSelector((state) => state.user);
+  // const { loading, error } = useSelector((state) => state.user);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const dispatch = useDispatch();
 
@@ -36,6 +39,8 @@ export default function Login() {
               className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
             >
               <Image
+                width={10}
+                height={10}
                 className="w-8 h-8 mr-2"
                 src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
                 alt="logo"
@@ -169,7 +174,7 @@ export default function Login() {
                         type="submit"
                         className="w-full mt-5 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                       >
-                        {loading ? "Signing in..." : "Sign in"}
+                        {/* {loading ? "Signing in..." : "Sign in"} */} Sign In
                       </button>
                     </div>
                     <div className=" flex justify-center pt-4">

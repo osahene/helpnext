@@ -1,7 +1,10 @@
 "use client";
 import { verifyEmail, requestOTP } from "@/redux/authSlice";
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  useDispatch,
+  // useSelector
+} from "react-redux";
 
 export default function VerifyEmail() {
   const [otp, setOtp] = useState({
