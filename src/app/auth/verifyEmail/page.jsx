@@ -1,7 +1,7 @@
 "use client";
-const { default: VerifyEmail } = require("@/components/Auth/verifyEmail");
-const { default: store } = require("@/redux/store");
-const { Provider } = require("react-redux");
+import { Provider } from "react-redux";
+import store from "@/redux/store";
+import VerifyEmail from "@/components/Auth/verifyEmail";
 
 export default function VerifyEmailPage() {
   return (

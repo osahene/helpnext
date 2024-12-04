@@ -1,7 +1,7 @@
 "use client";
-const { default: Login } = require("@/components/Auth/login");
-const { default: store } = require("@/redux/store");
-const { Provider } = require("react-redux");
+import { Provider } from "react-redux";
+import store from "@/redux/store";
+import Login from "@/components/Auth/login";
 
 export default function LoginPage() {
   return (

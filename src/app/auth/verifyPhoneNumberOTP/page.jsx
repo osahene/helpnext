@@ -1,9 +1,7 @@
 "use client";
-const {
-  default: VerifyPhoneNumberOTP,
-} = require("@/components/Auth/verifyPhoneNumberOTP");
-const { default: store } = require("@/redux/store");
-const { Provider } = require("react-redux");
+import { Provider } from "react-redux";
+import store from "@/redux/store";
+import VerifyPhoneNumberOTP from "@/components/Auth/verifyPhoneNumberOTP";
 
 export default function VerifyPhoneNumberOTPPage() {
   return (

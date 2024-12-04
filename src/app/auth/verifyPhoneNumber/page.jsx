@@ -1,9 +1,7 @@
 "use client";
-const {
-  default: VerifyPhoneNumber,
-} = require("@/components/Auth/verifyPhoneNumber");
-const { default: store } = require("@/redux/store");
-const { Provider } = require("react-redux");
+import { Provider } from "react-redux";
+import store from "@/redux/store";
+import VerifyPhoneNumber from "@/components/Auth/verifyPhoneNumber";
 
 export default function VerifyPhoneNumberPage() {
   return (
