@@ -139,7 +139,7 @@ export const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(verifyEmail.fulfilled, (state) => {
+      .addCase(verifyEmail.fulfilled, (state, action) => {
         state.loading = false;
         const { access, refresh } = action.payload;
         state.accessToken = access;

@@ -5,22 +5,20 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 
 export default function VerifyPhoneNumber() {
-  const [phone_number, setPhone_Number] = useState({
-    phone_number: "",
-  });
+  const [phone_number, setPhone_Number] = useState("");
   const dispatch = useDispatch();
   const router = useRouter();
 
   const formChange = (e) => {
-    setPhone_Number({ ...phone_number, [e.target.name]: e.target.value });
+    setPhone_Number(e.target.value);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const result = await dispatch(verifyPhoneNumber(phone_number));
+      const result = await dispatch(verifyPhoneNumber({ phone_number }));
       if (result.meta.requestStatus === "fulfilled") {
-        dispatch(setPhone_Number(phone_number.phone_number));
+        dispatch(setPhone_Number(phone_number));
         router.push("/auth/verifyPhoneNumberOTP");
       }
     } catch (error) {
@@ -48,7 +46,7 @@ export default function VerifyPhoneNumber() {
                   type="tel"
                   name="phone_number"
                   id="phone_number"
-                  value={phone_number.phone_number}
+                  value={phone_number || ""}
                   onChange={formChange}
                   placeholder="+2331234567890"
                   className="bg-gray-50 border rounded rounded-lg border-gray-30 text-black"

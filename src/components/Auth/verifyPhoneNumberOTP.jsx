@@ -40,7 +40,7 @@ export default function VerifyPhoneNumberOTP() {
     setTimer({ minutes: 0, seconds: 30 }); // Reset timer
     event.preventDefault();
     try {
-      const result = dispatch(requestOTP(phone_number));
+      const result = dispatch(requestOTP({ email: phone_number }));
       if (result.meta.requestStatus === "fulfilled") {
         console.log("huray");
       } else {
@@ -55,7 +55,7 @@ export default function VerifyPhoneNumberOTP() {
     event.preventDefault();
     try {
       const result = await dispatch(
-        verifyPhoneNumberOTP({ otp, phone_number })
+        verifyPhoneNumberOTP({ otp: otp, phone_number: phone_number })
       );
 
       if (result.meta.requestStatus === "fulfilled") {
