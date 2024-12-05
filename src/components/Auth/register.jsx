@@ -5,8 +5,9 @@ import {
   // useSelector
 } from "react-redux";
 import Image from "next/image";
-import { registerUser } from "@/redux/authSlice";
+import { setEmail, registerUser } from "@/redux/authSlice";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ export default function Register() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const dispatch = useDispatch();
   // const { loading, error } = useSelector((state) => state.user);
+  const router = useRouter();
 
   function togglePasswordVisibility() {
     setIsPasswordVisible((prevState) => !prevState);
@@ -29,8 +31,20 @@ export default function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    dispatch(registerUser(formData));
+    try {
+      const result = await dispatch(registerUser(formData));
+      console.log("res", result);
+      if (result.meta.requestStatus === "fulfilled") {
+        dispatch(setEmail(formData.email));
+        router.push("/auth/verifyEmail");
+      } else {
+        console.error("Registration failed:", result);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   };
+
   return (
     <>
       <div className="App-header-1">
@@ -122,7 +136,7 @@ export default function Register() {
                       </label>
                       <input
                         type="email"
-                        name="email_address"
+                        name="email"
                         id="email_address"
                         value={formData.email}
                         onChange={formChange}
@@ -148,6 +162,7 @@ export default function Register() {
                         onChange={formChange}
                         name="password"
                         className="border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
                       />
                       <button
                         type="button"

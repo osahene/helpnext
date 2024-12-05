@@ -1,17 +1,17 @@
 "use client";
-import { verifyEmail, requestOTP } from "@/redux/authSlice";
+import { verifyEmail, requestOTP, refreshToken } from "@/redux/authSlice";
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
-import {
-  useDispatch,
-  // useSelector
-} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function VerifyEmail() {
   const [otp, setOtp] = useState({
     otp: "",
   });
   const [timer, setTimer] = useState({ minutes: 0, seconds: 5 });
+  const email = useSelector((state) => state.auth.email);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     if (timer.minutes > 0 || timer.seconds > 0) {
@@ -35,7 +35,16 @@ export default function VerifyEmail() {
     // const email_address = localStorage.getItem("email");
     setTimer({ minutes: 0, seconds: 30 }); // Reset timer
     event.preventDefault();
-    dispatch(requestOTP(otp));
+    try {
+      const result = await dispatch(requestOTP({ email: email }));
+      if (result.meta.requestStatus === "fulfilled") {
+        console.log("huray");
+      } else {
+        console.log("it did not work");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   };
 
   const formChange = (e) => {
@@ -44,7 +53,20 @@ export default function VerifyEmail() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    dispatch(verifyEmail(otp));
+    try {
+      console.log("email_verif", email);
+      const result = await dispatch(verifyEmail({ otp, email }));
+      if (result.meta.requestStatus === "fulfilled") {
+        console.log("here");
+        const { access, refresh } = result.payload;
+        dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
+        router.push("/auth/verifyPhoneNumber");
+      } else {
+        console.error("Email verification failed:", result);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   };
 
   return (

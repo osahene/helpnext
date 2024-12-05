@@ -56,7 +56,6 @@ const TakeRefreshToken = async () => {
   }
 };
 
-// Axios interceptors for requests and responses
 $axios.interceptors.request.use(
   async (req) => {
     store.dispatch(setGlobalLoading(true));
