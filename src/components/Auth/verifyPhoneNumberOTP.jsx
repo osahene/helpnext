@@ -1,7 +1,7 @@
 "use client";
 import { verifyPhoneNumberOTP, requestOTP } from "@/redux/authSlice";
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function VerifyPhoneNumberOTP() {
   const [otp, setOtp] = useState({
@@ -9,6 +9,9 @@ export default function VerifyPhoneNumberOTP() {
   });
   const [timer, setTimer] = useState({ minutes: 0, seconds: 5 });
   const dispatch = useDispatch();
+  const phone_number = useSelector((state) => {
+    state.auth.phone_number;
+  });
 
   useEffect(() => {
     if (timer.minutes > 0 || timer.seconds > 0) {
@@ -36,12 +39,35 @@ export default function VerifyPhoneNumberOTP() {
     // const phoneNumber = localStorage.getItem("phone_number");
     setTimer({ minutes: 0, seconds: 30 }); // Reset timer
     event.preventDefault();
-    dispatch(requestOTP(otp));
+    try {
+      const result = dispatch(requestOTP(phone_number));
+      if (result.meta.requestStatus === "fulfilled") {
+        console.log("huray");
+      } else {
+        console.log("it did not work");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    dispatch(verifyPhoneNumberOTP(otp));
+    try {
+      const result = await dispatch(
+        verifyPhoneNumberOTP({ otp, phone_number })
+      );
+
+      if (result.meta.requestStatus === "fulfilled") {
+        const { access, refresh } = result.payload;
+        dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
+        router.push("/");
+      } else {
+        console.error("Email verification failed:", result);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   };
 
   return (

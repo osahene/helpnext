@@ -1,13 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { verifyPhoneNumber } from "@/redux/authSlice";
+import { verifyPhoneNumber, setPhone_Number } from "@/redux/authSlice";
 import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
 export default function VerifyPhoneNumber() {
   const [phone_number, setPhone_Number] = useState({
     phone_number: "",
   });
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const formChange = (e) => {
     setPhone_Number({ ...phone_number, [e.target.name]: e.target.value });
@@ -15,7 +17,15 @@ export default function VerifyPhoneNumber() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    dispatch(verifyPhoneNumber(phone_number));
+    try {
+      const result = await dispatch(verifyPhoneNumber(phone_number));
+      if (result.meta.requestStatus === "fulfilled") {
+        dispatch(setPhone_Number(phone_number.phone_number));
+        router.push("/auth/verifyPhoneNumberOTP");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   };
 
   return (
@@ -36,12 +46,12 @@ export default function VerifyPhoneNumber() {
                 </label>
                 <input
                   type="tel"
-                  name="phone"
+                  name="phone_number"
                   id="phone_number"
                   value={phone_number.phone_number}
                   onChange={formChange}
                   placeholder="+2331234567890"
-                  className="bg-gray-50 border border-gray-30"
+                  className="bg-gray-50 border rounded rounded-lg border-gray-30 text-black"
                 />
               </div>
               {/* Resend OTP logic */}

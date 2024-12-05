@@ -5,17 +5,19 @@ import {
   // useSelector
 } from "react-redux";
 import Image from "next/image";
-import { login } from "@/redux/authSlice";
+import { loginUser, refreshToken, userState } from "@/redux/authSlice";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [formData, setFormData] = useState({
-    emailOrPhone: "",
+    email: "",
     password: "",
   });
   // const { loading, error } = useSelector((state) => state.user);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   function togglePasswordVisibility() {
     setIsPasswordVisible((prevState) => !prevState);
@@ -27,7 +29,19 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    dispatch(login(formData));
+    try {
+      const result = await dispatch(loginUser(formData));
+      if (result.meta.requestStatus === "fulfilled") {
+        const { access, refresh, first_name, last_name } = result.payload;
+        dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
+        dispatch(userState({ first_name: first_name, last_name: last_name }));
+        router.push("/");
+      } else {
+        console.error("Login Failed:", result);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   };
   return (
     <>
@@ -78,9 +92,9 @@ export default function Login() {
                     </label>
                     <input
                       type="text"
-                      name="emailOrPhone"
+                      name="email"
                       id="phone_number"
-                      value={formData.emailOrPhone}
+                      value={formData.email}
                       onChange={formChange}
                       placeholder="+233123456789 or abc@efg.com"
                       className="border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
