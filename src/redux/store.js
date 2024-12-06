@@ -16,6 +16,12 @@ export const store = configureStore({
     auth: persistedReducer,
     global: globalReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST"], // Ignore redux-persist actions
+      },
+    }),
 });
 
 export const persistor = persistStore(store);
