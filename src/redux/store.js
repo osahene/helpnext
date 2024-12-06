@@ -3,6 +3,7 @@ import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
 import authReducer from "./authSlice";
 import globalReducer from "./globalSlice";
+import ContactSlice from "./userSlice";
 
 const persistConfig = {
   key: "auth",
@@ -15,6 +16,7 @@ export const store = configureStore({
   reducer: {
     auth: persistedReducer,
     global: globalReducer,
+    contact: ContactSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

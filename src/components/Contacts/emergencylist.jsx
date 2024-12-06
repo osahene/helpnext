@@ -188,8 +188,9 @@ export default function Emergency() {
             <tr>
               <td colSpan="5" className="px-6 py-4 bg-gray-300 text-center">
                 <FontAwesomeIcon
-                  className="w-20 h-20 text-gray-500"
+                  className="text-gray-500"
                   icon={faFile}
+                  size="2xl"
                 />
                 <p className="mt-4 text-lg font-semibold text-gray-600">
                   No emergency contact available
