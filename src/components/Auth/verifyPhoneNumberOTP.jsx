@@ -1,5 +1,10 @@
 "use client";
-import { verifyPhoneNumberOTP, requestOTP } from "@/redux/authSlice";
+import {
+  verifyPhoneNumberOTP,
+  requestOTP,
+  refreshToken,
+} from "@/redux/authSlice";
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -9,10 +14,8 @@ export default function VerifyPhoneNumberOTP() {
   });
   const [timer, setTimer] = useState({ minutes: 0, seconds: 5 });
   const dispatch = useDispatch();
-  const phone_number = useSelector((state) => {
-    state.auth.phone_number;
-  });
-
+  const phone_number = useSelector((state) => state.auth.phone_number);
+  const router = useRouter();
   useEffect(() => {
     if (timer.minutes > 0 || timer.seconds > 0) {
       const interval = setInterval(() => {

@@ -87,7 +87,7 @@ export const authSlice = createSlice({
     setEmail(state, action) {
       state.email = action.payload;
     },
-    setPhoneNumber(state, action) {
+    setPhoneNumbers(state, action) {
       state.phone_number = action.payload;
     },
     userState: (state, action) => {
@@ -117,6 +117,9 @@ export const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
+        const { access, refresh } = action.payload;
+        state.accessToken = access;
+        state.refreshToken = refresh;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -127,7 +130,7 @@ export const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
+      .addCase(registerUser.fulfilled, (state) => {
         state.loading = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
@@ -166,7 +169,7 @@ export const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(verifyPhoneNumberOTP.fulfilled, (state) => {
+      .addCase(verifyPhoneNumberOTP.fulfilled, (state, action) => {
         state.loading = false;
         const { access, refresh } = action.payload;
         state.accessToken = access;
@@ -195,7 +198,7 @@ export const {
   logout,
   refreshToken,
   setEmail,
-  setPhoneNumber,
+  setPhoneNumbers,
   userState,
 } = authSlice.actions;
 export default authSlice.reducer;

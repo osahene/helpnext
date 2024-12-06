@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { verifyPhoneNumber, setPhone_Number } from "@/redux/authSlice";
+import { verifyPhoneNumber, setPhoneNumbers } from "@/redux/authSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 
@@ -16,9 +16,12 @@ export default function VerifyPhoneNumber() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const result = await dispatch(verifyPhoneNumber({ phone_number }));
+      const result = await dispatch(
+        verifyPhoneNumber({ phone_number: phone_number })
+      );
+      console.log("verify phone", result);
       if (result.meta.requestStatus === "fulfilled") {
-        dispatch(setPhone_Number(phone_number));
+        dispatch(setPhoneNumbers(phone_number));
         router.push("/auth/verifyPhoneNumberOTP");
       }
     } catch (error) {
