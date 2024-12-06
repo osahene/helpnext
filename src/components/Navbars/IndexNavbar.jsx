@@ -2,14 +2,14 @@
 import { useState, useEffect, useRef } from "react";
 // import userImg from "../../assets/img/user.svg";
 import Image from "next/image";
+// import { useAuth } from "../../AuthContext";
 import Link from "next/link";
-import { useSelector } from "react-redux";
 
 export default function HeaderBar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null); // Reference to the dropdown
   const buttonRef = useRef(null); // Reference to the button
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  // const { isAuthenticated, user, logout } = useAuth();
 
   // Toggle dropdown visibility
   const toggleDropdown = () => {
