@@ -1,31 +1,30 @@
 "use client";
 import React, { useEffect, useState } from "react";
-// import apiService from "../../api/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { GetContact, DeleteContact, EditContactInfo } from "@/redux/userSlice";
 import EditContact from "./editInfo";
 import RemoveInfo from "./removeInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function Emergency() {
-  const [contacts, setContacts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const contacts = useSelector((state) => state.contact.contacts);
+  const loadData = useSelector((state) => state.contact.loadData);
+  const error = useSelector((state) => state.contact.error);
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [currentContact, setCurrentContact] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchContacts = async () => {
-      try {
-        const response = await apiService.getMyContacts();
-        setContacts(response.data.results);
-      } catch (error) {
-        console.log("Error fetching contacts", error);
-      } finally {
-        setLoading(false);
+    try {
+      if (loadData === "idle") {
+        dispatch(GetContact());
       }
-    };
-    fetchContacts();
-  }, []);
+    } catch (error) {
+      console.log("Error fetching contacts", error);
+    }
+  }, [loadData, dispatch]);
 
   const handleEditClick = (contact) => {
     setCurrentContact(contact);
@@ -34,12 +33,7 @@ export default function Emergency() {
 
   const handleEditSubmit = async (updatedContact) => {
     try {
-      const response = await apiService.updateContact(updatedContact);
-      setContacts((prevContacts) =>
-        prevContacts.map((contact) =>
-          contact.pk === currentContact.pk ? response.data : contact
-        )
-      );
+      await dispatch(EditContactInfo(updatedContact));
       setIsEditing(false);
     } catch (error) {
       console.log("Error updating contact", error);
@@ -52,17 +46,15 @@ export default function Emergency() {
 
   const handleDeleteConfirm = async () => {
     try {
-      await apiService.deleteContact(currentContact);
-      setContacts((prevContacts) =>
-        prevContacts.filter((contact) => contact.pk !== currentContact.pk)
-      );
+      await dispatch(DeleteContact(currentContact));
       setIsDeleting(false);
     } catch (error) {
       console.log("Error deleting contact", error);
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loadData === "loading") return <p>Loading...</p>;
+  // if (loadData === "failed") return <p>Error: {error}</p>;
 
   return (
     <div className="relative overflow-x-auto shadow-md rounded rounded-lg">

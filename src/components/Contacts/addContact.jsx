@@ -1,29 +1,28 @@
 "use client";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-
-// import apiService from "../../api/axios";
+import { createContact } from "@/redux/userSlice";
 
 export default function AddContacts() {
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email_address: "",
+    phone_number: "",
+    relation: "",
+  });
+  const dispatch = useDispatch();
+
+  const formChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleCreateContact = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const first_name = formData.get("first_name");
-    const last_name = formData.get("last_name");
-    const email_address = formData.get("email_address");
-    const phone_number = formData.get("phone_number");
-    const relation = formData.get("relation");
 
     try {
-      const res = await apiService.createRelation({
-        first_name,
-        last_name,
-        email_address,
-        phone_number,
-        relation,
-      });
-
-      if (res.status === 201) {
+      const result = await dispatch(createContact(formData));
+      if (result.meta.requestStatus === "fulfilled") {
         event.target.reset();
       }
     } catch (error) {
@@ -62,6 +61,8 @@ export default function AddContacts() {
                   name="first_name"
                   placeholder="John"
                   type="text"
+                  value={formData.first_name}
+                  onChange={formChange}
                   autoComplete="given-name"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
                   required
@@ -82,6 +83,8 @@ export default function AddContacts() {
                   name="last_name"
                   type="text"
                   placeholder="Musah"
+                  value={formData.last_name}
+                  onChange={formChange}
                   autoComplete="family-name"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
                   required
@@ -102,6 +105,8 @@ export default function AddContacts() {
                   name="email_address"
                   type="email"
                   placeholder="johnmusah@example.com"
+                  value={formData.email_address}
+                  onChange={formChange}
                   autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
                   required
@@ -121,6 +126,8 @@ export default function AddContacts() {
                   name="phone_number"
                   type="tel"
                   placeholder="+233241123456"
+                  value={formData.phone_number}
+                  onChange={formChange}
                   autoComplete="phone_number"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
                   required
@@ -140,6 +147,8 @@ export default function AddContacts() {
                   name="relation"
                   type="text"
                   placeholder="Father"
+                  value={formData.relation}
+                  onChange={formChange}
                   autoComplete="relation"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
                   required

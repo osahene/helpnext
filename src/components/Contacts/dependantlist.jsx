@@ -1,89 +1,112 @@
 "use client";
 import React, { useEffect, useState } from "react";
-// import apiService from "../../api/axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  GetDependants,
+  approveContact,
+  rejectContact,
+} from "@/redux/userSlice";
+
 import ActionButton from "./../CallToAction/calltoaction";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle, faFile } from "@fortawesome/free-solid-svg-icons";
 import DependantAction from "./dependantActionCard";
 
 export default function Dependents() {
-  const [dependants, setDependants] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [approval, setApproval] = useState(false);
-  const [reject, setReject] = useState(false);
-  const [currentDependant, setCurrentDependant] = useState(null);
+  const dependants = useSelector((state) => state.contact.dependants);
+  const loadData = useSelector((state) => state.contact.loadData);
+  const dispatch = useDispatch();
+  const [actionModal, setActionModal] = useState({
+    open: false,
+    dependant: null,
+    type: "",
+  });
+
+  // const [approval, setApproval] = useState(false);
+  // const [reject, setReject] = useState(false);
+  // const [currentDependant, setCurrentDependant] = useState(null);
 
   const pendingCount = dependants.filter((d) => d.status === "pending").length;
 
-  const handleApprovalClick = (dependant) => {
-    setCurrentDependant(dependant);
-    setApproval(true);
-  };
+  // const handleApprovalClick = (dependant) => {
+  //   setCurrentDependant(dependant);
+  //   setApproval(true);
+  // };
 
-  const handleRejectClick = (dependant) => {
-    setCurrentDependant(dependant);
-    setReject(true);
-  };
+  // const handleRejectClick = (dependant) => {
+  //   setCurrentDependant(dependant);
+  //   setReject(true);
+  // };
 
-  const handleApprovalConfirm = async () => {
-    try {
-      const res = await apiService.approveDependant(currentDependant.id);
-      if (res.status === 200) {
-        setDependants((prevDependants) =>
-          prevDependants.map((dependant) =>
-            dependant.id === currentDependant.id
-              ? { ...dependant, status: "approved" }
-              : dependant
-          )
-        );
-        setApproval(false);
-      }
-    } catch (error) {
-      console.log("Error approving dependant", error);
-    }
-  };
-
-  const handleRejectConfirm = async () => {
-    try {
-      const res = await apiService.rejectDependant(currentDependant.id);
-      if (res.status === 200) {
-        setDependants((prevDependants) =>
-          prevDependants.map((dependant) =>
-            dependant.id === currentDependant.id
-              ? { ...dependant, status: "rejected" }
-              : dependant
-          )
-        );
-        setReject(false);
-      }
-    } catch (error) {
-      console.log("Error rejecting dependant", error);
-    }
+  const handleActionClick = (dependant, type) => {
+    setActionModal({ open: true, dependant, type });
   };
 
   useEffect(() => {
-    let phone_number = localStorage.getItem("userPhoneNumber");
-
-    if (phone_number) {
-      if (phone_number.startsWith('"') && phone_number.endsWith('"')) {
-        phone_number = phone_number.slice(1, -1);
+    try {
+      if (loadData === "idle") {
+        dispatch(GetDependants());
       }
-
-      const fetchContacts = async () => {
-        try {
-          const response = await apiService.getMyDependants({
-            phone_number: phone_number,
-          });
-          setDependants(response.data.dependant_list);
-        } catch (error) {
-          console.log("Error fetching contacts", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchContacts();
+    } catch (error) {
+      console.log("Error fetching contacts", error);
     }
-  }, []);
+  }, [loadData, dispatch]);
+
+  const handleActionConfirm = async () => {
+    const { dependant, type } = actionModal;
+
+    try {
+      const action = type === "approve" ? approveContact : rejectContact;
+      const res = await dispatch(action(dependant.id)).unwrap();
+
+      if (res.status === 200) {
+        console.log(`${type}d dependant successfully`);
+        setActionModal({ open: false, dependant: null, type: "" });
+      }
+    } catch (error) {
+      console.error(`Error during ${type} operation`, error);
+    }
+  };
+
+  const closeModal = () => {
+    setActionModal({ open: false, dependant: null, type: "" });
+  };
+
+  // const handleApprovalConfirm = async () => {
+  //   try {
+  //     const res = await apiService.approveDependant(currentDependant.id);
+  //     if (res.status === 200) {
+  //       setDependants((prevDependants) =>
+  //         prevDependants.map((dependant) =>
+  //           dependant.id === currentDependant.id
+  //             ? { ...dependant, status: "approved" }
+  //             : dependant
+  //         )
+  //       );
+  //       setApproval(false);
+  //     }
+  //   } catch (error) {
+  //     console.log("Error approving dependant", error);
+  //   }
+  // };
+
+  // const handleRejectConfirm = async () => {
+  //   try {
+  //     const res = await apiService.rejectDependant(currentDependant.id);
+  //     if (res.status === 200) {
+  //       setDependants((prevDependants) =>
+  //         prevDependants.map((dependant) =>
+  //           dependant.id === currentDependant.id
+  //             ? { ...dependant, status: "rejected" }
+  //             : dependant
+  //         )
+  //       );
+  //       setReject(false);
+  //     }
+  //   } catch (error) {
+  //     console.log("Error rejecting dependant", error);
+  //   }
+  // };
 
   // if (loading) return <p>Loading...</p>;
 
@@ -163,18 +186,55 @@ export default function Dependents() {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    {dependant.status === "pending" && (
+                    {isPending ? (
                       <>
                         <span
                           className="text-blue-400 cursor-pointer"
-                          onClick={() => handleApprovalClick(dependant)}
+                          onClick={() =>
+                            handleActionClick(dependant, "approve")
+                          }
                         >
                           Approve
                         </span>
                         <span className="mx-5">|</span>
                         <span
                           className="text-red-400 cursor-pointer"
-                          onClick={() => handleRejectClick(dependant)}
+                          onClick={() => handleActionClick(dependant, "reject")}
+                        >
+                          Reject
+                        </span>
+                      </>
+                    ) : (
+                      <span
+                        className={`cursor-pointer ${
+                          dependant.status === "approved"
+                            ? "text-red-400"
+                            : "text-blue-400"
+                        }`}
+                        onClick={() =>
+                          handleActionClick(
+                            dependant,
+                            dependant.status === "approved"
+                              ? "reject"
+                              : "approve"
+                          )
+                        }
+                      >
+                        {dependant.status === "approved" ? "Reject" : "Approve"}
+                      </span>
+                    )}
+                    {/* {dependant.status === "pending" && (
+                      <>
+                        <span
+                          className="text-blue-400 cursor-pointer"
+                          onClick={() => handleActionClick(dependant, "approve")}
+                        >
+                          Approve
+                        </span>
+                        <span className="mx-5">|</span>
+                        <span
+                          className="text-red-400 cursor-pointer"
+                          onClick={() => handleActionClick(dependant, "reject")}
                         >
                           Reject
                         </span>
@@ -195,7 +255,7 @@ export default function Dependents() {
                       >
                         Approve
                       </span>
-                    )}
+                    )} */}
                   </td>
                 </tr>
               );
@@ -216,7 +276,17 @@ export default function Dependents() {
           )}
         </tbody>
       </table>
-      {approval && (
+      {actionModal.open && (
+        <div className="modal-backdrop">
+          <DependantAction
+            contact={actionModal.dependant}
+            onAction={handleActionConfirm}
+            onCancel={closeModal}
+            actionType={actionModal.type}
+          />
+        </div>
+      )}
+      {/* {approval && (
         <div className="modal-backdrop">
           <DependantAction
             contact={currentDependant}
@@ -235,7 +305,7 @@ export default function Dependents() {
             actionType="reject"
           />
         </div>
-      )}
+      )} */}
       <div className="hidden">
         <ActionButton pendingCount={pendingCount} />
       </div>

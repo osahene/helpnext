@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import apiService from "@/utils/axios";
 
 export const createContact = createAsyncThunk(
-  "contact",
+  "contact/createcontact",
   async (data, thunkAPI) => {
     try {
       const res = await apiService.createRelation(data);
@@ -13,7 +13,7 @@ export const createContact = createAsyncThunk(
   }
 );
 export const approveContact = createAsyncThunk(
-  "contact",
+  "contact/approvecontact",
   async (data, thunkAPI) => {
     try {
       const res = await apiService.approveDependant(data);
@@ -24,7 +24,7 @@ export const approveContact = createAsyncThunk(
   }
 );
 export const rejectContact = createAsyncThunk(
-  "contact",
+  "contact/rejectcontact",
   async (data, thunkAPI) => {
     try {
       const res = await apiService.rejectDependant(data);
@@ -34,11 +34,11 @@ export const rejectContact = createAsyncThunk(
     }
   }
 );
-export const EditContact = createAsyncThunk(
-  "contact",
-  async (userData, thunkAPI) => {
+export const EditContactInfo = createAsyncThunk(
+  "contact/editcontact",
+  async (data, thunkAPI) => {
     try {
-      const res = await apiService.updateContact(userData);
+      const res = await apiService.updateContact(data);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.res.data);
@@ -46,10 +46,10 @@ export const EditContact = createAsyncThunk(
   }
 );
 export const DeleteContact = createAsyncThunk(
-  "contact",
-  async (userData, thunkAPI) => {
+  "contact/deletecontact",
+  async (data, thunkAPI) => {
     try {
-      const res = await apiService.deleteContact(userData);
+      const res = await apiService.deleteContact(data);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.res.data);
@@ -57,10 +57,10 @@ export const DeleteContact = createAsyncThunk(
   }
 );
 export const GetContact = createAsyncThunk(
-  "contact",
-  async (userData, thunkAPI) => {
+  "contact/getcontact",
+  async (_, thunkAPI) => {
     try {
-      const res = await apiService.getMyContacts(userData);
+      const res = await apiService.getMyContacts();
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.res.data);
@@ -68,10 +68,10 @@ export const GetContact = createAsyncThunk(
   }
 );
 export const GetDependants = createAsyncThunk(
-  "contact",
-  async (userData, thunkAPI) => {
+  "contact/getdependants",
+  async (_, thunkAPI) => {
     try {
-      const res = await apiService.getMyDependants(userData);
+      const res = await apiService.getMyDependants();
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.res.data);
@@ -79,10 +79,10 @@ export const GetDependants = createAsyncThunk(
   }
 );
 export const ContactInfo = createAsyncThunk(
-  "contact",
-  async (userData, { rejectWithValue }) => {
+  "contact/contactinfo",
+  async (data, { rejectWithValue }) => {
     try {
-      const res = await apiService.contactInfo(userData);
+      const res = await apiService.contactInfo(data);
       return res.data;
     } catch (error) {
       return rejectWithValue(error.res.data);
@@ -90,7 +90,7 @@ export const ContactInfo = createAsyncThunk(
   }
 );
 export const Invite = createAsyncThunk(
-  "contact",
+  "contact/invite",
   async (data, { rejectWithValue }) => {
     try {
       const response = await apiService.inviteStatus(data);
@@ -101,7 +101,7 @@ export const Invite = createAsyncThunk(
   }
 );
 export const Trigger = createAsyncThunk(
-  "contact",
+  "contact/trigger",
   async (data, { rejectWithValue }) => {
     try {
       const response = await apiService.triggerAlert(data);
@@ -113,128 +113,154 @@ export const Trigger = createAsyncThunk(
 );
 
 const initialState = {
-  first_name: null,
-  last_name: null,
-  email: null,
-  phone_number: null,
-  relation: null,
-  status: null,
+  contacts: [],
+  dependants: [],
   error: null,
+  loadData: "idle",
 };
 
 export const ContactSlice = createSlice({
   name: "contacts",
   initialState,
-  reducers: {
-    setEmail(state, action) {
-      state.email = action.payload;
-    },
-    setPhoneNumbers(state, action) {
-      state.phone_number = action.payload;
-    },
-    userState: (state, action) => {
-      const { first_name, last_name } = action.payload;
-      state.first_name = first_name;
-      state.last_name = last_name;
-      state.isAuthenticated = true;
-    },
-    logout: (state) => {
-      state.accessToken = null;
-      state.refreshToken = null;
-      state.first_name = null;
-      state.last_name = null;
-      state.isAuthenticated = false;
-    },
-    refreshToken: (state, action) => {
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    builder;
-    // Login User
-    //   .addCase(loginUser.pending, (state) => {
-    //     state.loading = true;
-    //     state.error = null;
-    //   })
-    //   .addCase(loginUser.fulfilled, (state, action) => {
-    //     state.loading = false;
-    //     const { access, refresh } = action.payload;
-    //     state.accessToken = access;
-    //     state.refreshToken = refresh;
-    //   })
-    //   .addCase(loginUser.rejected, (state, action) => {
-    //     state.loading = false;
-    //     state.error = action.payload;
-    //   })
-    //   // Register User
-    //   .addCase(registerUser.pending, (state) => {
-    //     state.loading = true;
-    //     state.error = null;
-    //   })
-    //   .addCase(registerUser.fulfilled, (state) => {
-    //     state.loading = false;
-    //   })
-    //   .addCase(registerUser.rejected, (state, action) => {
-    //     state.loading = false;
-    //     state.error = action.payload;
-    //   })
-    //   // Verify Email
-    //   .addCase(verifyEmail.pending, (state) => {
-    //     state.loading = true;
-    //     state.error = null;
-    //   })
-    //   .addCase(verifyEmail.fulfilled, (state, action) => {
-    //     state.loading = false;
-    //     const { access, refresh } = action.payload;
-    //     state.accessToken = access;
-    //     state.refreshToken = refresh;
-    //   })
-    //   .addCase(verifyEmail.rejected, (state, action) => {
-    //     state.loading = false;
-    //     state.error = action.payload;
-    //   })
-    //   // Verify phone_number
-    //   .addCase(verifyPhoneNumber.pending, (state) => {
-    //     state.loading = true;
-    //     state.error = null;
-    //   })
-    //   .addCase(verifyPhoneNumber.fulfilled, (state) => {
-    //     state.loading = false;
-    //   })
-    //   .addCase(verifyPhoneNumber.rejected, (state, action) => {
-    //     state.loading = false;
-    //     state.error = action.payload;
-    //   })
-    //   // Verify phone_number OTP
-    //   .addCase(verifyPhoneNumberOTP.pending, (state) => {
-    //     state.loading = true;
-    //     state.error = null;
-    //   })
-    //   .addCase(verifyPhoneNumberOTP.fulfilled, (state, action) => {
-    //     state.loading = false;
-    //     const { access, refresh } = action.payload;
-    //     state.accessToken = access;
-    //     state.refreshToken = refresh;
-    //   })
-    //   .addCase(verifyPhoneNumberOTP.rejected, (state, action) => {
-    //     state.loading = false;
-    //     state.error = action.payload;
-    //   })
-    //   // request otp
-    //   .addCase(requestOTP.pending, (state) => {
-    //     state.loading = true;
-    //   })
-    //   .addCase(requestOTP.fulfilled, (state) => {
-    //     state.loading = false;
-    //   })
-    //   .addCase(requestOTP.rejected, (state, action) => {
-    //     state.loading = false;
-    //     state.error = action.payload;
-    //   });
+    builder
+      // Create Contact
+      .addCase(createContact.pending, (state) => {
+        state.loadData = "loading";
+        state.error = null;
+      })
+      .addCase(createContact.fulfilled, (state, action) => {
+        state.loadData = "success";
+      })
+      .addCase(createContact.rejected, (state, action) => {
+        state.loadData = "failed";
+        state.error = action.payload;
+      })
+
+      // Emergency List
+      // Edit contact
+      .addCase(EditContactInfo.pending, (state) => {
+        state.loadData = "loading";
+        state.error = null;
+      })
+      .addCase(EditContactInfo.fulfilled, (state) => {
+        state.loadData = "success";
+        const index = state.contacts.findIndex(
+          (contact) => contact.pk === action.payload.pk
+        );
+        if (index >= 0) {
+          state.contacts[index] = action.payload;
+        }
+      })
+      .addCase(EditContactInfo.rejected, (state, action) => {
+        state.loadData = "failed";
+        state.error = action.payload;
+      })
+      // Delete contact
+      .addCase(DeleteContact.pending, (state) => {
+        state.loadData = "loading";
+        state.error = null;
+      })
+      .addCase(DeleteContact.fulfilled, (state, action) => {
+        state.loadData = "success";
+        state.contacts = state.contacts.filter(
+          (contact) => contact.pk !== action.payload
+        );
+      })
+      .addCase(DeleteContact.rejected, (state, action) => {
+        state.loadData = "failed";
+        state.error = action.payload;
+      })
+      // Get contact
+      .addCase(GetContact.pending, (state) => {
+        state.loadData = "loading";
+      })
+      .addCase(GetContact.fulfilled, (state, action) => {
+        state.loadData = "success";
+        state.contacts = action.payload;
+      })
+      .addCase(GetContact.rejected, (state, action) => {
+        state.loadData = "failed";
+        state.error = action.payload;
+      })
+      // Dependants List
+      // Get Dependants
+      .addCase(GetDependants.pending, (state) => {
+        state.loadData = "loading";
+      })
+      .addCase(GetDependants.fulfilled, (state, action) => {
+        state.loadData = "success";
+        state.dependants = action.payload;
+      })
+      .addCase(GetDependants.rejected, (state, action) => {
+        state.loadData = "failed";
+        state.error = action.payload;
+      })
+      // Approve Contact
+      .addCase(approveContact.pending, (state) => {
+        state.loadData = "loading";
+        state.error = null;
+      })
+      .addCase(approveContact.fulfilled, (state, action) => {
+        state.loadData = "success";
+        state.dependants = state.dependants.filter(
+          (dependant) => dependant.pk !== action.payload
+        );
+      })
+      .addCase(approveContact.rejected, (state, action) => {
+        state.loadData = "failed";
+        state.error = action.payload;
+      })
+      // Reject contact
+      .addCase(rejectContact.pending, (state) => {
+        state.loadData = "loading";
+        state.error = null;
+      })
+      .addCase(rejectContact.fulfilled, (state, action) => {
+        state.loadData = "success";
+        state.dependants = state.dependants.filter(
+          (dependant) => dependant.pk !== action.payload
+        );
+      })
+      .addCase(rejectContact.rejected, (state, action) => {
+        state.loadData = "failed";
+        state.error = action.payload;
+      })
+      // Get contact info during invite
+      .addCase(ContactInfo.pending, (state) => {
+        state.loadData = "loading";
+      })
+      .addCase(ContactInfo.fulfilled, (state) => {
+        state.loadData = "success";
+      })
+      .addCase(ContactInfo.rejected, (state, action) => {
+        state.loadData = "failed";
+        state.error = action.payload;
+      })
+      // Invitation process
+      .addCase(Invite.pending, (state) => {
+        state.loadData = "loading";
+      })
+      .addCase(Invite.fulfilled, (state) => {
+        state.loadData = "success";
+      })
+      .addCase(Invite.rejected, (state, action) => {
+        state.loadData = "failed";
+        state.error = action.payload;
+      })
+      // Trigger Alert
+      .addCase(Trigger.pending, (state) => {
+        state.loadData = "loading";
+      })
+      .addCase(Trigger.fulfilled, (state) => {
+        state.loadData = "success";
+      })
+      .addCase(Trigger.rejected, (state, action) => {
+        state.loadData = "failed";
+        state.error = action.payload;
+      });
   },
 });
 
-export const { logout, refreshToken, setEmail, setPhoneNumbers, userState } =
-  ContactSlice.actions;
 export default ContactSlice.reducer;
