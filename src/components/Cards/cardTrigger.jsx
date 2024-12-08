@@ -4,9 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { Trigger } from "@/redux/userSlice";
 import { motion, AnimatePresence } from "motion/react";
 import userImg from "../../../public/img/user.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Link from "next/link";
 import Image from "next/image";
+import {
+  faUserSlash,
+  faUsersSlash,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 // import { Store } from "react-notifications-component";
 
 export default function TriggerCard({
@@ -19,7 +25,12 @@ export default function TriggerCard({
   const [showModal, setShowModal] = useState(true);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const contact = useSelector((state) => state.contact.contacts);
+  const contact = useSelector((state) => state.contact.contacts || []);
+
+  const handleClose = () => {
+    setShowModal(false);
+    setTimeout(onClose, 300); // Delay to match animation duration
+  };
 
   const getGeolocation = () => {
     return new Promise((resolve, reject) => {
@@ -135,9 +146,161 @@ export default function TriggerCard({
     }
   };
 
-  const handleClose = () => {
-    setShowModal(false);
-    setTimeout(onClose, 300); // Delay to match animation duration
+  const renderCardContent = () => {
+    if (!isAuthenticated) {
+      return (
+        <div className="flex flex-col items-center pb-10 mx-5">
+          <Image
+            className="mb-3 rounded-full shadow-xl"
+            width={80}
+            height={80}
+            src={userImg}
+            alt="Auth"
+          />
+
+          <h5 className="mb-1 text-2xl font-medium text-gray-900">
+            Authentication Required
+          </h5>
+          <p className="text-lg text-gray-500">
+            This service is only available to authenticated users.
+          </p>
+          <div className="flex mt-4">
+            <Link href={"/auth/register"}>
+              <button className="px-4 py-2 text-lg text-white bg-blue-700 rounded-lg hover:bg-blue-800">
+                Register
+              </button>
+            </Link>
+            <Link href={"/auth/login"}>
+              <button className="py-2 px-4 ms-2 text-lg bg-white text-gray-900 border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700">
+                Login
+              </button>
+            </Link>
+          </div>
+        </div>
+      );
+    }
+
+    if (contact.length < 1) {
+      return (
+        <div className="flex flex-col items-center pb-10 mx-5">
+          <div className="mb-3 p-5 border border-2 border-black-400 rounded-full shadow-xl">
+            <FontAwesomeIcon
+              icon={faUserSlash}
+              size="2xl"
+              style={{ color: "#ff0000" }}
+            />
+          </div>
+          <div className="">
+            <h1 className="text-xl text-red-500">Sorry !</h1>
+          </div>
+          <p className="text-gray-500 mt-4">
+            You do not have any contacts in your emergency list. To use this
+            service, you ought to register at least one person to your emergency
+            list, and they must approve of it before they can receive alerts
+            from you.
+          </p>
+          <div className="mt-4 flex justify-center">
+            <Link href="/contact">
+              <button className="px-4 py-2 text-lg text-white bg-blue-700 rounded-lg hover:bg-blue-800">
+                Register Contacts
+              </button>
+            </Link>
+            <button
+              onClick={handleClose}
+              className="py-2 px-4 ms-2 text-lg bg-white text-gray-900 border border-gray-200 rounded-lg hover:bg-gray-100"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    const approvedContacts = contact.filter((c) => c.status === "approved");
+    if (approvedContacts.length < 1) {
+      return (
+        <div className="flex flex-col items-center pb-10 mx-5">
+          <div className="mb-3 p-5 border border-2 border-black-400 rounded-full shadow-xl">
+            <FontAwesomeIcon
+              icon={faUsersSlash}
+              size="2xl"
+              style={{ color: "#ff0000" }}
+            />
+          </div>
+          <div className=" ">
+            <h1 className="text-xl text-red-500">Sorry !</h1>
+          </div>
+          <p className="text-gray-500 py-4">
+            None of your contacts have approved your request. You have 2
+            options:
+          </p>
+          <br />
+          <div className="text-black">
+            <ul>
+              <li>
+                <span>1.</span> Alert them to approve your request.
+              </li>
+              <li>
+                <span>2.</span> If you have not registered a relation, quickly
+                do so.
+              </li>
+            </ul>
+          </div>
+          <div className="mt-4  flex justify-center space-x-3">
+            <Link href="/register-contacts">
+              <button className="px-4 py-2 text-lg text-white bg-blue-700 rounded-lg hover:bg-blue-800">
+                Register Contacts
+              </button>
+            </Link>
+            <button
+              onClick={handleClose}
+              className="py-2 px-4 ms-2 text-lg bg-white text-gray-900 border border-gray-200 rounded-lg hover:bg-gray-100"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className="p-4 text-center">
+        <div className="p-2 ">
+          <FontAwesomeIcon
+            icon={faTriangleExclamation}
+            beatFade
+            size="2xl"
+            style={{ color: "#ff0000" }}
+          />
+        </div>
+        <h3 className="mb-5 text-lg font-normal text-gray-500">
+          You have triggered <span className="text-red-500">{cardName}</span>{" "}
+          <span className="text-red-500">{cardName2}.</span>
+        </h3>
+        <h3 className="text-black">
+          All approved contacts on your emergency list would receive this
+          message.
+        </h3>
+        <Image
+          src={cardLogo}
+          alt={logoAlt}
+          width={60}
+          height={60}
+          className="mx-auto mb-4 w-10 h-10"
+        />
+        <button
+          onClick={handleTriggerAlert}
+          className="text-white bg-red-600 hover:bg-red-800 px-5 py-2 rounded"
+        >
+          Trigger Alert
+        </button>
+        <button
+          onClick={handleClose}
+          className="py-2 px-5 ms-3 text-gray-900 bg-white border border-gray-200 rounded-lg"
+        >
+          No, cancel
+        </button>
+      </div>
+    );
   };
 
   return (
@@ -175,85 +338,7 @@ export default function TriggerCard({
                 />
               </svg>
             </button>
-
-            {isAuthenticated ? (
-              <>
-                <h1 className="text-red-400">Heads Up</h1>
-                <div className="p-4 text-center">
-                  <h3 className="mb-5 text-lg font-normal text-gray-500">
-                    You have triggered <span>{cardName}</span>{" "}
-                    <span>{cardName2}</span>
-                  </h3>
-                  <Image
-                    src={cardLogo}
-                    alt={logoAlt}
-                    width={30}
-                    height={30}
-                    className="mx-auto mb-4 w-10 h-10"
-                  />
-                  <button
-                    onClick={handleTriggerAlert}
-                    className="text-white bg-red-600 hover:bg-red-800 px-5 py-2 rounded"
-                  >
-                    Trigger Alert
-                  </button>
-                  <button
-                    onClick={handleClose}
-                    className="py-2 px-5 ms-3 text-gray-900 bg-white border border-gray-200 rounded-lg"
-                  >
-                    No, cancel
-                  </button>
-                </div>
-
-                {contact.length === 0 && (
-                  <div className="text-center mt-4">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-12 h-12 mx-auto text-gray-400"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 13h6m2 10H7a2 2 0 01-2-2V7c0-1.1.9-2 2-2h10a2 2 0 012 2v14a2 2 0 01-2 2z"
-                      />
-                    </svg>
-                    <p className="text-gray-500 mt-2">
-                      You have no contact in your emergency list.
-                    </p>
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="flex flex-col items-center pb-10 mx-5">
-                <Image
-                  className="w-24 h-24 mb-3 rounded-full shadow-lg"
-                  src={userImg}
-                  alt="Auth"
-                />
-                <h5 className="mb-1 text-2xl font-medium text-gray-900">
-                  Authentication Required
-                </h5>
-                <p className="text-lg text-gray-500">
-                  This service is only available to authenticated users.
-                </p>
-                <div className="flex mt-4">
-                  <Link href={"/register"}>
-                    <button className="px-4 py-2 text-lg text-white bg-blue-700 rounded-lg hover:bg-blue-800">
-                      Register
-                    </button>
-                  </Link>
-                  <Link href={"/login"}>
-                    <button className="py-2 px-4 ms-2 text-lg bg-white text-gray-900 border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700">
-                      Login
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            )}
+            {renderCardContent()}
           </motion.div>
         </motion.div>
       )}
