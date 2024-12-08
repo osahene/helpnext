@@ -10,7 +10,7 @@ import { faFile, faCircle } from "@fortawesome/free-solid-svg-icons";
 export default function Emergency() {
   const contacts = useSelector((state) => state.contact.contacts);
   const loadData = useSelector((state) => state.contact.loadData);
-  const error = useSelector((state) => state.contact.error);
+  // const error = useSelector((state) => state.contact.error);
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [currentContact, setCurrentContact] = useState(null);

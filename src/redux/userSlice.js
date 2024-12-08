@@ -119,7 +119,7 @@ const initialState = {
   loadData: "idle",
 };
 
-export const ContactSlice = createSlice({
+const ContactSlice = createSlice({
   name: "contacts",
   initialState,
   reducers: {},

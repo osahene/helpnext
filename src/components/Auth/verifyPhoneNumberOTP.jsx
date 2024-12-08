@@ -3,6 +3,7 @@ import {
   verifyPhoneNumberOTP,
   requestOTP,
   refreshToken,
+  userState,
 } from "@/redux/authSlice";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
@@ -62,8 +63,9 @@ export default function VerifyPhoneNumberOTP() {
       );
 
       if (result.meta.requestStatus === "fulfilled") {
-        const { access, refresh } = result.payload;
+        const { access, refresh, first_name, last_name } = result.payload;
         dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
+        dispatch(userState({ first_name: first_name, last_name: last_name }));
         router.push("/");
       } else {
         console.error("Email verification failed:", result);
