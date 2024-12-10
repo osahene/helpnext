@@ -31,8 +31,10 @@ export default function Login() {
     e.preventDefault();
     try {
       const result = await dispatch(loginUser(formData));
+      console.log("res log", result);
       if (result.meta.requestStatus === "fulfilled") {
-        const { access, refresh, first_name, last_name } = result.payload;
+        const { first_name, last_name } = result.payload;
+        const { access, refresh } = result.payload.tokens;
         dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
         dispatch(userState({ first_name: first_name, last_name: last_name }));
         router.push("/");

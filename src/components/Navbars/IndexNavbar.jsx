@@ -1,7 +1,8 @@
 "use client";
 import { useDispatch, useSelector } from "react-redux";
-// import { logout } from "@/redux/authSlice";
+import { logoutUser, logout } from "@/redux/authSlice";
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import userImg from "../../../public/img/user.svg";
@@ -13,11 +14,8 @@ export default function HeaderBar() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const first_name = useSelector((state) => state.auth.first_name);
   const last_name = useSelector((state) => state.auth.last_name);
-  const logout = React.lazy(() =>
-    import("@/redux/authSlice").then((module) => module.logout)
-  );
-
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -42,8 +40,18 @@ export default function HeaderBar() {
     };
   }, [dropdownRef]);
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    const result = await dispatch(logoutUser());
+    try {
+      if (result.meta.requestStatus === "fulfilled") {
+        dispatch(logout());
+        router.push("/");
+      }
+    } catch (error) {
+      if (result.meta.requestStatus === "rejected") {
+        console.log("Logout error", error);
+      }
+    }
   };
 
   return (

@@ -8,7 +8,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function Emergency() {
-  const contacts = useSelector((state) => state.contact.contacts);
+  const contacts =
+    JSON.parse(
+      JSON.stringify(useSelector((state) => state.contact.contacts)) || "{}"
+    ).results || [];
   const loadData = useSelector((state) => state.contact.loadData);
   // const error = useSelector((state) => state.contact.error);
   const [isEditing, setIsEditing] = useState(false);
@@ -18,13 +21,13 @@ export default function Emergency() {
 
   useEffect(() => {
     try {
-      if (loadData === "idle") {
+      if (loadData === "success") {
         dispatch(GetContact());
       }
     } catch (error) {
       console.log("Error fetching contacts", error);
     }
-  }, [loadData, dispatch]);
+  });
 
   const handleEditClick = (contact) => {
     setCurrentContact(contact);
@@ -53,7 +56,7 @@ export default function Emergency() {
     }
   };
 
-  if (loadData === "loading") return <p>Loading...</p>;
+  // if (loadData === "loading") return <p>Loading...</p>;
   // if (loadData === "failed") return <p>Error: {error}</p>;
 
   return (

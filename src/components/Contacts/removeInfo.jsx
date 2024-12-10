@@ -9,13 +9,12 @@ export default function RemoveInfo({ contact, onDelete, onCancel }) {
       <div className="w-full  max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <div className="flex flex-col items-center pb-10">
           <div className="py-5 uppercase">
-            <h5 className="text-xl font-bold text-gray-900 dark:text-white">
-              Heads Up !
-            </h5>
+            <h5 className="text-xl font-bold text-red-400">Heads Up !</h5>
           </div>
           <FontAwesomeIcon
-            className="w-20 h-20 text-red-400"
+            className="text-red-400"
             icon={faTrashCan}
+            size="2xl"
           />
           <div className="p-5">
             <p className="text-lg dark:text-white">
@@ -34,7 +33,7 @@ export default function RemoveInfo({ contact, onDelete, onCancel }) {
             </button>
             <button
               onClick={onCancel}
-              className="bg-gray-300 px-4 py-2 rounded-lg ml-2"
+              className="hover:bg-red-400 hover:text-white bg-gray-300 px-4 py-2 text-black rounded-lg ml-2"
             >
               Cancel
             </button>

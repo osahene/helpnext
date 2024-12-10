@@ -11,18 +11,26 @@ const authPersistConfig = {
   storage,
 };
 
-const contactPersistConfig = {
-  key: "contact",
-  storage,
-};
+// const contactPersistConfig = {
+//   key: "contact",
+//   storage,
+// };
 
 const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   global: globalReducer, // Non-persisted reducer
-  contact: persistReducer(contactPersistConfig, contactReducer),
+  // contact: persistReducer(contactPersistConfig, contactReducer),
+  contact: contactReducer,
 });
 
-const persistedReducer = persistReducer({ key: "root", storage }, rootReducer);
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["auth"], // Only persist the `auth` state
+};
+
+// const persistedReducer = persistReducer({ key: "root", storage }, rootReducer);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,

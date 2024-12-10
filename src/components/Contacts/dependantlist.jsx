@@ -13,7 +13,10 @@ import { faCircle, faFile } from "@fortawesome/free-solid-svg-icons";
 import DependantAction from "./dependantActionCard";
 
 export default function Dependents() {
-  const dependants = useSelector((state) => state.contact.dependants);
+  const dependants =
+    JSON.parse(
+      JSON.stringify(useSelector((state) => state.contact.dependants)) || "{}"
+    ).results || [];
   const loadData = useSelector((state) => state.contact.loadData);
   const dispatch = useDispatch();
   const [actionModal, setActionModal] = useState({

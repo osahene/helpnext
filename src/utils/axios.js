@@ -8,6 +8,7 @@ const apiService = {
   VerifyPhoneNumberOTP: (data) =>
     $axios.post("/account/verify-phone-number-otp/", data),
   login: (data) => $axios.post("/account/user-login/", data),
+  logout: () => $axios.post("/account/user-logout/"),
   // Generate OTP
   generateRegister: (data) =>
     $axios.post("/account/user-register-generate-otp/", data),
