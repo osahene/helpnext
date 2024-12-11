@@ -25,7 +25,10 @@ export default function TriggerCard({
   const [showModal, setShowModal] = useState(true);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const contact = useSelector((state) => state.contact.contacts || []);
+  const contact =
+    JSON.parse(
+      JSON.stringify(useSelector((state) => state.contact.contacts)) || "{}"
+    ).results || [];
 
   const handleClose = () => {
     setShowModal(false);
@@ -247,7 +250,7 @@ export default function TriggerCard({
             </ul>
           </div>
           <div className="mt-4  flex justify-center space-x-3">
-            <Link href="/register-contacts">
+            <Link href="/contact">
               <button className="px-4 py-2 text-lg text-white bg-blue-700 rounded-lg hover:bg-blue-800">
                 Register Contacts
               </button>

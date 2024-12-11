@@ -25,21 +25,21 @@ export default function Dependents() {
     type: "",
   });
 
-  // const [approval, setApproval] = useState(false);
-  // const [reject, setReject] = useState(false);
-  // const [currentDependant, setCurrentDependant] = useState(null);
+  const [approval, setApproval] = useState(false);
+  const [reject, setReject] = useState(false);
+  const [currentDependant, setCurrentDependant] = useState(null);
 
   const pendingCount = dependants.filter((d) => d.status === "pending").length;
 
-  // const handleApprovalClick = (dependant) => {
-  //   setCurrentDependant(dependant);
-  //   setApproval(true);
-  // };
+  const handleApprovalClick = (dependant) => {
+    setCurrentDependant(dependant);
+    setApproval(true);
+  };
 
-  // const handleRejectClick = (dependant) => {
-  //   setCurrentDependant(dependant);
-  //   setReject(true);
-  // };
+  const handleRejectClick = (dependant) => {
+    setCurrentDependant(dependant);
+    setReject(true);
+  };
 
   const handleActionClick = (dependant, type) => {
     setActionModal({ open: true, dependant, type });
@@ -74,42 +74,6 @@ export default function Dependents() {
   const closeModal = () => {
     setActionModal({ open: false, dependant: null, type: "" });
   };
-
-  // const handleApprovalConfirm = async () => {
-  //   try {
-  //     const res = await apiService.approveDependant(currentDependant.id);
-  //     if (res.status === 200) {
-  //       setDependants((prevDependants) =>
-  //         prevDependants.map((dependant) =>
-  //           dependant.id === currentDependant.id
-  //             ? { ...dependant, status: "approved" }
-  //             : dependant
-  //         )
-  //       );
-  //       setApproval(false);
-  //     }
-  //   } catch (error) {
-  //     console.log("Error approving dependant", error);
-  //   }
-  // };
-
-  // const handleRejectConfirm = async () => {
-  //   try {
-  //     const res = await apiService.rejectDependant(currentDependant.id);
-  //     if (res.status === 200) {
-  //       setDependants((prevDependants) =>
-  //         prevDependants.map((dependant) =>
-  //           dependant.id === currentDependant.id
-  //             ? { ...dependant, status: "rejected" }
-  //             : dependant
-  //         )
-  //       );
-  //       setReject(false);
-  //     }
-  //   } catch (error) {
-  //     console.log("Error rejecting dependant", error);
-  //   }
-  // };
 
   // if (loading) return <p>Loading...</p>;
 
@@ -226,11 +190,13 @@ export default function Dependents() {
                         {dependant.status === "approved" ? "Reject" : "Approve"}
                       </span>
                     )}
-                    {/* {dependant.status === "pending" && (
+                    {dependant.status === "pending" && (
                       <>
                         <span
                           className="text-blue-400 cursor-pointer"
-                          onClick={() => handleActionClick(dependant, "approve")}
+                          onClick={() =>
+                            handleActionClick(dependant, "approve")
+                          }
                         >
                           Approve
                         </span>
@@ -258,7 +224,7 @@ export default function Dependents() {
                       >
                         Approve
                       </span>
-                    )} */}
+                    )}
                   </td>
                 </tr>
               );
@@ -289,7 +255,7 @@ export default function Dependents() {
           />
         </div>
       )}
-      {/* {approval && (
+      {approval && (
         <div className="modal-backdrop">
           <DependantAction
             contact={currentDependant}
@@ -308,7 +274,7 @@ export default function Dependents() {
             actionType="reject"
           />
         </div>
-      )} */}
+      )}
       <div className="hidden">
         <ActionButton pendingCount={pendingCount} />
       </div>

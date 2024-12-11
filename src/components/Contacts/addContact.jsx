@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createContact } from "@/redux/userSlice";
+import { createContact, GetContact } from "@/redux/userSlice";
 
 export default function AddContacts() {
   const [formData, setFormData] = useState({
@@ -145,7 +145,7 @@ export default function AddContacts() {
                 htmlFor="text"
                 className="block text-lg font-medium leading-6 text-white"
               >
-                Relationship {"(Who are they to you?)"}
+                Relationship {"(Who are you to them?)"}
               </label>
               <div className="mt-2">
                 <input

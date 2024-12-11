@@ -8,10 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function Emergency() {
-  const contacts =
-    JSON.parse(
-      JSON.stringify(useSelector((state) => state.contact.contacts)) || "{}"
-    ).results || [];
+  const contacts = useSelector((state) => state.contact.contacts);
   const loadData = useSelector((state) => state.contact.loadData);
   // const error = useSelector((state) => state.contact.error);
   const [isEditing, setIsEditing] = useState(false);
@@ -22,15 +19,13 @@ export default function Emergency() {
   useEffect(() => {
     async function fetchContacts() {
       try {
-        if (loadData === "idle") {
-          await dispatch(GetContact());
-        }
+        await dispatch(GetContact());
       } catch (error) {
         console.log("Error fetching contacts", error);
       }
     }
     fetchContacts();
-  }, [loadData, dispatch]);
+  }, [dispatch]);
 
   const handleEditClick = (contact) => {
     setCurrentContact(contact);
@@ -40,11 +35,13 @@ export default function Emergency() {
   const handleEditSubmit = async (updatedContact) => {
     try {
       await dispatch(EditContactInfo(updatedContact));
-      setIsEditing(false);
     } catch (error) {
-      console.log("Error updating contact", error);
+      console.error("Error updating contact:", error);
+    } finally {
+      setIsEditing(false);
     }
   };
+
   const handleDeleteClick = (contact) => {
     setCurrentContact(contact);
     setIsDeleting(true);
@@ -53,13 +50,14 @@ export default function Emergency() {
   const handleDeleteConfirm = async () => {
     try {
       await dispatch(DeleteContact(currentContact));
-      setIsDeleting(false);
     } catch (error) {
-      console.log("Error deleting contact", error);
+      console.error("Error deleting contact:", error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
-  // if (loadData === "loading") return <p>Loading...</p>;
+  if (loadData === "loading") return <p>Loading...</p>;
   // if (loadData === "failed") return <p>Error: {error}</p>;
 
   return (

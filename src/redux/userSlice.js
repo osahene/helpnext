@@ -49,8 +49,8 @@ export const DeleteContact = createAsyncThunk(
   "contact/deletecontact",
   async (data, thunkAPI) => {
     try {
-      const res = await apiService.deleteContact(data);
-      return res.data;
+      await apiService.deleteContact(data);
+      return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.res.data);
     }
@@ -61,7 +61,7 @@ export const GetContact = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const res = await apiService.getMyContacts();
-      return res.data;
+      return res.data.results;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.res.data);
     }
@@ -132,6 +132,7 @@ const ContactSlice = createSlice({
       })
       .addCase(createContact.fulfilled, (state, action) => {
         state.loadData = "success";
+        state.contacts = [...state.contacts, action.payload];
       })
       .addCase(createContact.rejected, (state, action) => {
         state.loadData = "failed";
@@ -144,14 +145,20 @@ const ContactSlice = createSlice({
         state.loadData = "loading";
         state.error = null;
       })
-      .addCase(EditContactInfo.fulfilled, (state) => {
+      // .addCase(EditContactInfo.fulfilled, (state) => {
+      //   state.loadData = "success";
+      //   const index = state.contacts.findIndex(
+      //     (contact) => contact.pk === action.payload.pk
+      //   );
+      //   if (index !== -1) {
+      //     state.contacts[index] = action.payload;
+      //   }
+      // })
+      .addCase(EditContactInfo.fulfilled, (state, action) => {
         state.loadData = "success";
-        const index = state.contacts.findIndex(
-          (contact) => contact.pk === action.payload.pk
+        state.contacts = state.contacts.map((contact) =>
+          contact.pk === action.payload.pk ? action.payload : contact
         );
-        if (index >= 0) {
-          state.contacts[index] = action.payload;
-        }
       })
       .addCase(EditContactInfo.rejected, (state, action) => {
         state.loadData = "failed";

@@ -32,6 +32,7 @@ export default function EditContact({ contact, onSave, onCancel }) {
               onChange={handleChange}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
               placeholder="John"
+              required
             />
           </div>
           <div>
@@ -47,7 +48,8 @@ export default function EditContact({ contact, onSave, onCancel }) {
               value={formData.last_name || ""}
               onChange={handleChange}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-              placeholder="Doe"
+              placeholder="Musah"
+              required
             />
           </div>
           <div>
@@ -64,6 +66,7 @@ export default function EditContact({ contact, onSave, onCancel }) {
               onChange={handleChange}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
               placeholder="+233123456789"
+              required
             />
           </div>
           <div>
@@ -78,8 +81,9 @@ export default function EditContact({ contact, onSave, onCancel }) {
               name="email_address"
               value={formData.email_address || ""}
               onChange={handleChange}
-              placeholder="johndoe@gmail.com"
+              placeholder="johnmusah@example.com"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+              required
             />
           </div>
           <div>
@@ -96,6 +100,7 @@ export default function EditContact({ contact, onSave, onCancel }) {
               onChange={handleChange}
               placeholder="father"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+              required
             />
           </div>
           <div className="flex flex-row">
