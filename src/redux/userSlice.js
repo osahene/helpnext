@@ -145,15 +145,6 @@ const ContactSlice = createSlice({
         state.loadData = "loading";
         state.error = null;
       })
-      // .addCase(EditContactInfo.fulfilled, (state) => {
-      //   state.loadData = "success";
-      //   const index = state.contacts.findIndex(
-      //     (contact) => contact.pk === action.payload.pk
-      //   );
-      //   if (index !== -1) {
-      //     state.contacts[index] = action.payload;
-      //   }
-      // })
       .addCase(EditContactInfo.fulfilled, (state, action) => {
         state.loadData = "success";
         state.contacts = state.contacts.map((contact) =>

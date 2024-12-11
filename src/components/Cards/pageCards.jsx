@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-// import { useAuth } from "../AuthContext";
+import { useSelector } from "react-redux";
 import Cards from "./card";
 import TriggerCard from "./cardTrigger";
 import health from "../../../public/img/health.svg";
@@ -9,16 +9,13 @@ import flood from "../../../public/img/flood.svg";
 import fire from "../../../public/img/fire.svg";
 import callss from "../../../public/img/callss.svg";
 import nonviolence from "../../../public/img/nonviolence.svg";
-import IntroMod from "./introMod";
-
-function IntroModal({ onClose }) {
-  return <IntroMod onClick={onClose} />;
-}
+import IntroModal from "./introMod";
 
 export default function MainPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
-  //   const { isAuthenticated, loading } = useAuth();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  // const loadData = useSelector((state) => state.contact.loadData);
   const [showIntro, setShowIntro] = useState(false);
   const cardsData = [
     {
@@ -58,11 +55,11 @@ export default function MainPage() {
       logoAlt: "violence alert",
     },
   ];
-  //   useEffect(() => {
-  //     if (!loading && !isAuthenticated) {
-  //       setShowIntro(true);
-  //     }
-  //   }, [isAuthenticated, loading]);
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setShowIntro(true);
+    }
+  }, [isAuthenticated]);
 
   const handleCardClick = (card) => {
     setSelectedCard(card);

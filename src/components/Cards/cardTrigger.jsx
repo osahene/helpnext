@@ -25,10 +25,7 @@ export default function TriggerCard({
   const [showModal, setShowModal] = useState(true);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const contact =
-    JSON.parse(
-      JSON.stringify(useSelector((state) => state.contact.contacts)) || "{}"
-    ).results || [];
+  const contact = useSelector((state) => state.contact.contacts);
 
   const handleClose = () => {
     setShowModal(false);
