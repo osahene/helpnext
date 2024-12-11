@@ -20,14 +20,17 @@ export default function Emergency() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    try {
-      if (loadData === "success") {
-        dispatch(GetContact());
+    async function fetchContacts() {
+      try {
+        if (loadData === "idle") {
+          await dispatch(GetContact());
+        }
+      } catch (error) {
+        console.log("Error fetching contacts", error);
       }
-    } catch (error) {
-      console.log("Error fetching contacts", error);
     }
-  });
+    fetchContacts();
+  }, [loadData, dispatch]);
 
   const handleEditClick = (contact) => {
     setCurrentContact(contact);

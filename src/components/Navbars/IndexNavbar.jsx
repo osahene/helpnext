@@ -152,9 +152,6 @@ export default function HeaderBar() {
               </>
             )}
           </div>
-          {/* <div className="items-center justify-between w-full md:flex md:w-auto md:mt-3 md:order-1">
-              <p className="flex flex-col text-lg text-white">Welcome Akwasi</p>
-            </div> */}
         </nav>
       </div>
     </>

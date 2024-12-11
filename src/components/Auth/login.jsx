@@ -14,7 +14,6 @@ export default function Login() {
     email: "",
     password: "",
   });
-  // const { loading, error } = useSelector((state) => state.user);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -31,7 +30,6 @@ export default function Login() {
     e.preventDefault();
     try {
       const result = await dispatch(loginUser(formData));
-      console.log("res log", result);
       if (result.meta.requestStatus === "fulfilled") {
         const { first_name, last_name } = result.payload;
         const { access, refresh } = result.payload.tokens;

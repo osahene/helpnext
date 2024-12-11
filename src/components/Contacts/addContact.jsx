@@ -23,7 +23,13 @@ export default function AddContacts() {
     try {
       const result = await dispatch(createContact(formData));
       if (result.meta.requestStatus === "fulfilled") {
-        event.target.reset();
+        setFormData({
+          first_name: "",
+          last_name: "",
+          email_address: "",
+          phone_number: "",
+          relation: "",
+        });
       }
     } catch (error) {
       const errorMsg =
