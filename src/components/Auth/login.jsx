@@ -6,6 +6,7 @@ import {
 } from "react-redux";
 import Image from "next/image";
 import { loginUser, refreshToken, userState } from "@/redux/authSlice";
+import { GetContact, GetDependants } from "@/redux/userSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -35,6 +36,8 @@ export default function Login() {
         const { access, refresh } = result.payload.tokens;
         dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
         dispatch(userState({ first_name: first_name, last_name: last_name }));
+        dispatch(GetContact());
+        dispatch(GetDependants());
         router.push("/");
       } else {
         console.error("Login Failed:", result);

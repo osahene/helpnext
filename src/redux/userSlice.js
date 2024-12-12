@@ -61,7 +61,7 @@ export const GetContact = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const res = await apiService.getMyContacts();
-      return res.data.results;
+      return res.data.result;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.res.data);
     }
@@ -83,7 +83,7 @@ export const ContactInfo = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const res = await apiService.contactInfo(data);
-      return res.data;
+      return res.data.result;
     } catch (error) {
       return rejectWithValue(error.res.data);
     }
@@ -114,6 +114,7 @@ export const Trigger = createAsyncThunk(
 
 const initialState = {
   contacts: [],
+  contactDetails: [],
   dependants: [],
   error: null,
   loadData: "idle",
@@ -229,8 +230,9 @@ const ContactSlice = createSlice({
       .addCase(ContactInfo.pending, (state) => {
         state.loadData = "loading";
       })
-      .addCase(ContactInfo.fulfilled, (state) => {
+      .addCase(ContactInfo.fulfilled, (state, action) => {
         state.loadData = "success";
+        state.contactDetails = action.payload;
       })
       .addCase(ContactInfo.rejected, (state, action) => {
         state.loadData = "failed";
