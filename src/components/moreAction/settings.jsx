@@ -5,6 +5,13 @@ import fire from "../../../public/emerg/GNFS.jpg";
 import nadmo from "../../../public/emerg/nadmo.jpg";
 import amb from "../../../public/emerg/ambulance.jpg";
 import elec from "../../../public/emerg/ecg.jpg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFacebookF,
+  faTwitter,
+  faWhatsapp,
+} from "@fortawesome/free-brands-svg-icons";
+import { faPhone, faPhoneFlip } from "@fortawesome/free-solid-svg-icons";
 export default function MoreAction() {
   const emergencyServices = [
     {
@@ -36,6 +43,35 @@ export default function MoreAction() {
       name: "Electricity Company of Ghana",
       image: elec,
       contacts: ["+233302676727", "+233302611611", "+233302676728"],
+    },
+  ];
+  const contactUs = [
+    {
+      id: 1,
+      name: "WhatsApp",
+      iconName: faWhatsapp,
+      actions: ["+233506053020"], // Will generate a WhatsApp link
+      link: "https://wa.me/233506053020", // Optional: fallback for manual links
+    },
+    {
+      id: 2,
+      name: "Facebook",
+      iconName: faFacebookF,
+      actions: "Visit Facebook",
+      link: "https://facebook.com/home",
+    },
+    {
+      id: 3,
+      name: "Twitter",
+      iconName: faTwitter,
+      actions: "Visit Twitter",
+      link: "https://twitter.com/home",
+    },
+    {
+      id: 4,
+      name: "Call",
+      iconName: faPhone,
+      actions: ["+233546045726"], // Will generate `tel:` links
     },
   ];
 
@@ -104,7 +140,8 @@ export default function MoreAction() {
             </tbody>
           </table>
         </div>
-        {/* <div className="relative mt-5 overflow-x-auto shadow-md sm:rounded-lg">
+        {/* Contact us */}
+        <div className="relative mt-5 overflow-x-auto shadow-md sm:rounded-lg">
           <div className="bg-gray-500">
             <h2 className="text-xl p-4 font-semibold leading-7 text-white">
               Contact TeenByte Tech Lab
@@ -121,20 +158,14 @@ export default function MoreAction() {
                   Service
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Contact 1
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Contact 2
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Contact 3
+                  Action
                 </th>
               </tr>
             </thead>
             <tbody>
-              {emergencyServices.map((service) => (
+              {contactUs.map((contact) => (
                 <tr
-                  key={service.id}
+                  key={contact.id}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
                   <th
@@ -142,30 +173,37 @@ export default function MoreAction() {
                     className="px-6 flex items-center space-x-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
                     <span>
-                      <Image
-                        src={service.image}
-                        alt={service.name}
-                        width={40}
-                        height={40}
-                      />
+                      <FontAwesomeIcon icon={contact.iconName} size="lg" />
                     </span>
-                    <span className="text-lg">{service.name}</span>
+                    <span className="text-lg">{contact.name}</span>
                   </th>
-                  {service.contacts.map((contact, index) => (
-                    <td key={index} className="px-6 text-lg py-4">
+                  <td className="px-6 text-lg py-4">
+                    {Array.isArray(contact.actions) ? (
+                      contact.actions.map((action, index) => (
+                        <a
+                          key={index}
+                          href={`tel:${action}`}
+                          className="text-blue-500 hover:underline block"
+                        >
+                          {action}
+                        </a>
+                      ))
+                    ) : (
                       <a
-                        href={`tel:${contact}`}
+                        href={contact.link || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-blue-500 hover:underline"
                       >
-                        {contact}
+                        {contact.actions}
                       </a>
-                    </td>
-                  ))}
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div> */}
+        </div>
       </div>
     </>
   );

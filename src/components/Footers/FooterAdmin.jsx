@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-
+import Link from "next/link";
 export default function FooterAdmin() {
   return (
     <>
@@ -39,12 +39,12 @@ export default function FooterAdmin() {
                   </a>
                 </li> */}
                 <li>
-                  <a
-                    href=""
+                  <Link
+                    href={"/contact/more"}
                     className="text-slate-100 hover:text-slate-800 text-md font-semibold block py-1 px-3"
                   >
                     Contact Us
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
