@@ -77,7 +77,7 @@ const ActionButton = ({ pendingCount }) => {
             </div>
           )}
         </Link>
-        <Link href={`settings`}>
+        <Link href={`/contact/more`}>
           <div className="rounded-full p-2 bg-blue-300 hover:bg-blue-400 text-white">
             <FontAwesomeIcon className="w-8 h-8" icon={faUserCog} />
           </div>
