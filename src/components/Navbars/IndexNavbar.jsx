@@ -70,7 +70,7 @@ export default function HeaderBar() {
                 height={40}
                 alt="Flowbite Logo"
               />
-              <span className="self-center text-lg font-semibold whitespace-nowrap dark:text-white">
+              <span className="self-center text-lg font-semibold whitespace-nowrap dark:text-black">
                 Help oo Help
               </span>
             </a>
@@ -137,14 +137,14 @@ export default function HeaderBar() {
               <>
                 <div className="mx-2">
                   <Link href={"/auth/register"}>
-                    <button className="px-4 py-2 text-lg font-medium border border-2 rounded-md  text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:text-black">
+                    <button className="px-4 py-2 text-lg font-medium border border-2 rounded-md  text-gray-700 hover:bg-gray-100 dark:text-gray-600 dark:hover:text-black">
                       Register
                     </button>
                   </Link>
                 </div>
                 <div className="mx-2">
                   <Link href={"/auth/login"}>
-                    <button className="px-4 py-2 text-lg font-medium border border-2 rounded-md text-gray-700 hover:bg-gray-100  dark:text-gray-200 dark:hover:text-black">
+                    <button className="px-4 py-2 text-lg font-medium border border-2 rounded-md text-gray-700 hover:bg-gray-100  dark:text-gray-600 dark:hover:text-black">
                       Login
                     </button>
                   </Link>

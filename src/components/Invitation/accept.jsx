@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { ContactInfo, Invite } from "@/redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -10,17 +10,17 @@ export default function Accept() {
   const contDetail = useSelector((state) => state.contact.contactDetails || []);
   const [contactData, setContactData] = useState(null);
   const dispatch = useDispatch();
-  const { contactId } = useParams();
   const router = useRouter();
+  const search = useSearchParams();
+  const contactId = search.get("contact_id");
+  const token = search.get("token");
 
   useEffect(() => {
     const fetchContactData = async () => {
       try {
-        const res = await dispatch(ContactInfo(contactId));
-        if (res.meta.requestStatus === "fulfilled") {
-          setContactData(res.data);
-        }
+        await dispatch(ContactInfo(contactId)).unwrap();
       } catch (error) {
+        console.log("why", error);
         alert("Failed to fetch contact information.");
       }
     };
@@ -33,6 +33,7 @@ export default function Accept() {
         Invite({
           contact_id: contactId,
           action: status,
+          token: token,
         })
       );
       if (res.meta.requestStatus === "fulfilled") {
