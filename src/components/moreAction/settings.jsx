@@ -53,7 +53,7 @@ export default function MoreAction() {
             </p>
           </div>
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead className="text-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   Service
@@ -87,10 +87,10 @@ export default function MoreAction() {
                         height={40}
                       />
                     </span>
-                    <span>{service.name}</span>
+                    <span className="text-lg">{service.name}</span>
                   </th>
                   {service.contacts.map((contact, index) => (
-                    <td key={index} className="px-6 py-4">
+                    <td key={index} className="px-6 text-lg py-4">
                       <a
                         href={`tel:${contact}`}
                         className="text-blue-500 hover:underline"
@@ -104,6 +104,68 @@ export default function MoreAction() {
             </tbody>
           </table>
         </div>
+        {/* <div className="relative mt-5 overflow-x-auto shadow-md sm:rounded-lg">
+          <div className="bg-gray-500">
+            <h2 className="text-xl p-4 font-semibold leading-7 text-white">
+              Contact TeenByte Tech Lab
+            </h2>
+            <p className="text-lg p-2  leading-6 text-gray-400">
+              Call any of the emergency helplines. Tap on the desired service
+              number to place a direct call to them.
+            </p>
+          </div>
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className="text-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  Service
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Contact 1
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Contact 2
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Contact 3
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {emergencyServices.map((service) => (
+                <tr
+                  key={service.id}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
+                  <th
+                    scope="row"
+                    className="px-6 flex items-center space-x-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    <span>
+                      <Image
+                        src={service.image}
+                        alt={service.name}
+                        width={40}
+                        height={40}
+                      />
+                    </span>
+                    <span className="text-lg">{service.name}</span>
+                  </th>
+                  {service.contacts.map((contact, index) => (
+                    <td key={index} className="px-6 text-lg py-4">
+                      <a
+                        href={`tel:${contact}`}
+                        className="text-blue-500 hover:underline"
+                      >
+                        {contact}
+                      </a>
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div> */}
       </div>
     </>
   );

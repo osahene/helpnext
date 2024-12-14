@@ -22,25 +22,25 @@ export default function FooterAdmin() {
                     TeenByte Tech Lab
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a
                     href="https://www.creative-tim.com/presentation?ref=nnjs-footer-admin"
                     className="text-slate-100 hover:text-slate-800 text-md font-semibold block py-1 px-3"
                   >
                     About Us
                   </a>
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                   <a
                     href="http://blog.creative-tim.com?ref=nnjs-footer-admin"
                     className="text-slate-100 hover:text-slate-800 text-md font-semibold block py-1 px-3"
                   >
                     Blog
                   </a>
-                </li>
+                </li> */}
                 <li>
                   <a
-                    href="https://github.com/creativetimofficial/notus-nextjs/blob/main/LICENSE.md?ref=nnjs-footer-admin"
+                    href=""
                     className="text-slate-100 hover:text-slate-800 text-md font-semibold block py-1 px-3"
                   >
                     Contact Us
