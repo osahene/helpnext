@@ -20,7 +20,6 @@ export default function Accept() {
       try {
         await dispatch(ContactInfo(contactId)).unwrap();
       } catch (error) {
-        console.log("why", error);
         alert("Failed to fetch contact information.");
       }
     };
@@ -37,7 +36,7 @@ export default function Accept() {
         })
       );
       if (res.meta.requestStatus === "fulfilled") {
-        router.push("/guestInvite/invite", { state: { contactData } });
+        router.push("/guestInvite/invite");
       }
     } catch (error) {
       if (error.response) {

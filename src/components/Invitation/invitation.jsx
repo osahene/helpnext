@@ -6,16 +6,14 @@ import { faThumbsUp, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Invite() {
-  const contactData = useSelector((state) => state.contact.contactDetail || []);
+  const contactData = useSelector(
+    (state) => state.contact.contactDetails || []
+  );
 
   return (
     <>
-      <main className="App-header">
+      <main className="">
         <div className="w-auto p-10">
-          {/* <div className="absolute  top-[30px]">
-            <h1 className="text-center">Create your</h1>
-            <h1 className="text-center">In Case of Emergency List</h1>
-          </div> */}
           <div className="border border-gray-200  w-auto shadow shadow-lg rounded rounded-xl">
             <div className="p-5 bg-black rounded rounded-xl">
               <h3 className="text-center">
