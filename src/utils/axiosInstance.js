@@ -79,7 +79,7 @@ $axios.interceptors.request.use(
             req.headers.Authorization = `Bearer ${tokens.access_token}`;
           } else {
             store.dispatch(logout()); // Clear Redux state
-            window.location.href = "/login";
+            window.location.href = "/auth/login";
           }
         }
       } catch (error) {

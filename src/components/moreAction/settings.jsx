@@ -50,8 +50,8 @@ export default function MoreAction() {
       id: 1,
       name: "WhatsApp",
       iconName: faWhatsapp,
-      actions: ["+233506053020"], // Will generate a WhatsApp link
-      link: "https://wa.me/233506053020", // Optional: fallback for manual links
+      actions: ["+233506053020"],
+      link: "https://wa.me/233506053020",
     },
     {
       id: 2,
@@ -147,8 +147,7 @@ export default function MoreAction() {
               Contact TeenByte Tech Lab
             </h2>
             <p className="text-lg p-2  leading-6 text-gray-400">
-              Call any of the emergency helplines. Tap on the desired service
-              number to place a direct call to them.
+              Get in touch through all the available mediums.
             </p>
           </div>
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
