@@ -6,7 +6,7 @@ import { logout, refreshToken } from "../redux/authSlice"; // Redux actions
 import { setGlobalLoading } from "../redux/globalSlice";
 
 const $axios = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL || "http://127.0.0.1:8000",
+  baseURL: process.env.REACT_APP_BASE_URL,
   withCredentials: true,
   headers: { "Content-type": "application/json" },
 });
