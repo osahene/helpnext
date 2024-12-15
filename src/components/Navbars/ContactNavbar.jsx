@@ -64,7 +64,7 @@ export default function HeaderBar() {
           <div>
             <button
               onClick={() => router.back()}
-              className="flex items-center space-x-3 rtl:space-x-reverse"
+              className="flex items-center text-black space-x-3 rtl:space-x-reverse"
             >
               <FontAwesomeIcon icon={faArrowLeftLong} size="2xl" />
             </button>
