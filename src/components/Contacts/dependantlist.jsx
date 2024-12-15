@@ -46,14 +46,15 @@ export default function Dependents() {
   };
 
   useEffect(() => {
-    try {
-      if (loadData === "idle") {
-        dispatch(GetDependants());
+    async function fetchDependants() {
+      try {
+        await dispatch(GetDependants());
+      } catch (error) {
+        console.log("Error fetching contacts", error);
       }
-    } catch (error) {
-      console.log("Error fetching contacts", error);
     }
-  }, [loadData, dispatch]);
+    fetchDependants();
+  }, [dispatch]);
 
   const handleActionConfirm = async () => {
     const { dependant, type } = actionModal;

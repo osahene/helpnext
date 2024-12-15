@@ -13,7 +13,7 @@ export default function VerifyPhoneNumberOTP() {
   const [otp, setOtp] = useState({
     otp: "",
   });
-  const [timer, setTimer] = useState({ minutes: 0, seconds: 5 });
+  const [timer, setTimer] = useState({ minutes: 1, seconds: 59 });
   const dispatch = useDispatch();
   const phone_number = useSelector((state) => state.auth.phone_number);
   const router = useRouter();
@@ -41,15 +41,10 @@ export default function VerifyPhoneNumberOTP() {
 
   const resendOTP = async (event) => {
     // const phoneNumber = localStorage.getItem("phone_number");
-    setTimer({ minutes: 0, seconds: 30 }); // Reset timer
+    setTimer({ minutes: 1, seconds: 59 }); // Reset timer
     event.preventDefault();
     try {
-      const result = dispatch(requestOTP({ email: phone_number }));
-      if (result.meta.requestStatus === "fulfilled") {
-        console.log("huray");
-      } else {
-        console.log("it did not work");
-      }
+      await dispatch(requestOTP({ email: phone_number }));
     } catch (error) {
       console.error("An error occurred:", error);
     }

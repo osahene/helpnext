@@ -57,7 +57,7 @@ export default function Emergency() {
     }
   };
 
-  if (loadData === "loading") return <p>Loading...</p>;
+  // if (loadData === "loading") return <p>Loading...</p>;
   // if (loadData === "failed") return <p>Error: {error}</p>;
 
   return (

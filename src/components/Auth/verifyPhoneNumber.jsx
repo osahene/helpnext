@@ -19,7 +19,6 @@ export default function VerifyPhoneNumber() {
       const result = await dispatch(
         verifyPhoneNumber({ phone_number: phone_number })
       );
-      console.log("verify phone", result);
       if (result.meta.requestStatus === "fulfilled") {
         dispatch(setPhoneNumbers(phone_number));
         router.push("/auth/verifyPhoneNumberOTP");

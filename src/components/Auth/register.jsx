@@ -33,7 +33,6 @@ export default function Register() {
     event.preventDefault();
     try {
       const result = await dispatch(registerUser(formData));
-      console.log("res", result);
       if (result.meta.requestStatus === "fulfilled") {
         dispatch(setEmail(formData.email));
         router.push("/auth/verifyEmail");

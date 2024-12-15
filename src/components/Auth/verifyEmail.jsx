@@ -32,16 +32,10 @@ export default function VerifyEmail() {
   }, [timer]);
 
   const resendOTP = async (event) => {
-    // const email_address = localStorage.getItem("email");
     setTimer({ minutes: 0, seconds: 30 }); // Reset timer
     event.preventDefault();
     try {
-      const result = await dispatch(requestOTP({ email: email }));
-      if (result.meta.requestStatus === "fulfilled") {
-        console.log("huray");
-      } else {
-        console.log("it did not work");
-      }
+      await dispatch(requestOTP({ email: email }));
     } catch (error) {
       console.error("An error occurred:", error);
     }
