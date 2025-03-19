@@ -61,8 +61,8 @@ export default function HeaderBar() {
         {/* Sticky navbar */}
         <nav className="top-0 fixed z-50 w-full flex flex-nowrap justify-between items-center px-4 py-3 navbar-expand-lg bg-white shadow">
           <div>
-            <a
-              href="/"
+            <Link
+              href={"/"}
               className="flex items-center space-x-3 rtl:space-x-reverse"
             >
               <Image
@@ -74,7 +74,7 @@ export default function HeaderBar() {
               <span className="self-center text-lg font-semibold whitespace-nowrap dark:text-black">
                 Help oo Help
               </span>
-            </a>
+            </Link>
           </div>
           <div className="flex items-center gap-x-1 flex-nowrap">
             {/* Dropdown button */}
