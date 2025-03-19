@@ -78,4 +78,8 @@ body {
 
 .bg-cust{
   background-image: url("../../public/svg/back-light.svg");
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
