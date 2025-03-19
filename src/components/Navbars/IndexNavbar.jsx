@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import userImg from "../../../public/img/user.svg";
+import mainLogo from "../../../public/svg/Help Logo.svg"
 
 export default function HeaderBar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -61,13 +62,13 @@ export default function HeaderBar() {
         <nav className="top-0 fixed z-50 w-full flex flex-nowrap justify-between items-center px-4 py-3 navbar-expand-lg bg-white shadow">
           <div>
             <a
-              href="https://flowbite.com/"
+              href="/"
               className="flex items-center space-x-3 rtl:space-x-reverse"
             >
               <Image
-                src="https://flowbite.com/docs/images/logo.svg"
-                width={40}
-                height={40}
+                src={mainLogo}
+                width={50}
+                height={50}
                 alt="Flowbite Logo"
               />
               <span className="self-center text-lg font-semibold whitespace-nowrap dark:text-black">

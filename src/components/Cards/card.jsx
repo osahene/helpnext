@@ -6,10 +6,10 @@ const Cards = ({ cardName, cardName2, cardLogo, logoAlt }) => {
     <div className="flex flex-col justify-between h-full backdrop-filter backdrop-blur-sm bg-opacity-10 bg-slate-200 overflow-hidden border border-gray-200 rounded-xl shadow shadow-xl">
       <div className="p-1 flex flex-col justify-center items-start content-fit">
         <div className="ml-3 flex flex-col items-start">
-          <p className="font-bold text-[24px] xs:text-[40px] sm:text-[50px]  text-gray-700 dark:text-white">
+          <p className="font-bold text-[24px] xs:text-[40px] sm:text-[50px] text-black">
             {cardName}
           </p>
-          <p className=" font-bold text-[24px] xs:text-[40px] sm:text-[50px]  text-white dark:text-white">
+          <p className=" font-bold text-[24px] xs:text-[40px] sm:text-[50px] text-black">
             {cardName2}
           </p>
         </div>

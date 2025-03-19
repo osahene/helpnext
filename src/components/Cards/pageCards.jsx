@@ -67,9 +67,9 @@ export default function MainPage() {
   };
 
   return (
-    <div className="m-5 h-full top-0 grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
+    <div className="m-5 h-full  top-0 grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
       {cardsData.map((card, index) => (
-        <div key={index} className="p-0" onClick={() => handleCardClick(card)}>
+        <div key={index} className="p-0 shadow-2xl rounded-2xl border-2 border-gray-900" onClick={() => handleCardClick(card)}>
           <Cards
             cardName={card.cardName}
             cardName2={card.cardName2}

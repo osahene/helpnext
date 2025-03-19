@@ -75,3 +75,7 @@ body {
   font-weight: 400;
   color: #fdfdfd;
 }
+
+.bg-cust{
+  background-image: url("../../public/svg/back-light.svg");
+}

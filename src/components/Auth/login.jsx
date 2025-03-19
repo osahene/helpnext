@@ -9,6 +9,7 @@ import { loginUser, refreshToken, userState } from "@/redux/authSlice";
 import { GetContact, GetDependants } from "@/redux/userSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import mainLogo from "../../../public/svg/Help Logo.svg"
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -56,10 +57,10 @@ export default function Login() {
               className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
             >
               <Image
-                width={10}
-                height={10}
-                className="w-8 h-8 mr-2"
-                src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
+                width={60}
+                height={60}
+                className="mr-2"
+                src={mainLogo}
                 alt="logo"
               />
               Help OO Help

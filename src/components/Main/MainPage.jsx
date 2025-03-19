@@ -10,7 +10,7 @@ export default function Homepage() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   return (
     <>
-      <div>
+      <div className="bg-cust">
         <Navbar />
         <div className="relative top-20">
           <div className="flex flex-col h-[83vh]">

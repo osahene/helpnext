@@ -8,6 +8,7 @@ import Image from "next/image";
 import { setEmail, registerUser } from "@/redux/authSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import mainLogo from "../../../public/svg/Help Logo.svg"
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -54,10 +55,10 @@ export default function Register() {
               className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
             >
               <Image
-                width={10}
-                height={10}
-                className="w-8 h-8 mr-2"
-                src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
+                width={60}
+                height={60}
+                className="mr-2"
+                src={mainLogo}
                 alt="logo"
               />
               Help OO Help
