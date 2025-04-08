@@ -5,11 +5,17 @@ import {
   // useSelector
 } from "react-redux";
 import Image from "next/image";
-import { loginUser, refreshToken, userState } from "@/redux/authSlice";
+import {
+  googleLogin,
+  loginUser,
+  refreshToken,
+  userState,
+} from "@/redux/authSlice";
 import { GetContact, GetDependants } from "@/redux/userSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import mainLogo from "../../../public/svg/Help Logo.svg"
+import { GoogleLogin } from "@react-oauth/google";
+import mainLogo from "../../../public/svg/Help Logo.svg";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -19,6 +25,39 @@ export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      const decoded = jwt_decode(credentialResponse.credential);
+      console.log("Google User Info:", decoded);
+      const result = await dispatch(googleLogin(credentialResponse.credential));
+      if (result.meta.requestStatus === "fulfilled") {
+        const { first_name, last_name } = result.payload;
+        const { access, refresh } = result.payload.tokens;
+
+        dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
+        dispatch(
+          userState({
+            first_name: first_name || decoded.given_name,
+            last_name: last_name || decoded.family_name,
+            isAuthenticated: true,
+            email: decoded.email,
+          })
+        );
+        dispatch(GetContact());
+        dispatch(GetDependants());
+        router.push("/");
+      } else {
+        console.error("Google Login Failed:", result);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };
+
+  const handleGoogleLoginFailure = () => {
+    console.log("Google Login Failed");
+  };
 
   function togglePasswordVisibility() {
     setIsPasswordVisible((prevState) => !prevState);
@@ -68,15 +107,16 @@ export default function Login() {
             <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <div>
-                  <h1 className="text-white text-lg text-center">
-                    Sign in with
-                  </h1>
-                  <button
-                    type="submit"
-                    className="w-full mt-3 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                  >
-                    Google
-                  </button>
+                  <GoogleLogin
+                    onSuccess={handleGoogleLoginSuccess}
+                    onError={handleGoogleLoginFailure}
+                    useOneTap
+                    theme="filled_blue"
+                    size="large"
+                    text="signin_with"
+                    shape="rectangular"
+                    logo_alignment="left"
+                  />
                 </div>
                 <div className="flex items-center justify-center">
                   <div className="flex-grow h-px bg-indigo-600"></div>

@@ -1,6 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import apiService from "@/utils/axios";
 
+export const googleLogin = createAsyncThunk(
+  "auth/googleLogin",
+  async (googleToken, thunkAPI) => {
+    try {
+      const res = await apiService.post("/account/google/login/", {
+        token: googleToken,
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (userData, thunkAPI) => {
@@ -121,6 +135,22 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Google Login
+      .addCase(googleLogin.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(googleLogin.fulfilled, (state, action) => {
+        state.loading = false;
+        const { access, refresh } = action.payload.tokens;
+        state.accessToken = access;
+        state.refreshToken = refresh;
+        state.isAuthenticated = true;
+      })
+      .addCase(googleLogin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       // Login User
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
