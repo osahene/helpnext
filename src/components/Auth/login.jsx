@@ -14,6 +14,7 @@ import {
 import { GetContact, GetDependants } from "@/redux/userSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 import { GoogleLogin } from "@react-oauth/google";
 import mainLogo from "../../../public/svg/Help Logo.svg";
 
@@ -28,7 +29,7 @@ export default function Login() {
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
-      const decoded = jwt_decode(credentialResponse.credential);
+      const decoded = jwtDecode(credentialResponse.credential);
       console.log("Google User Info:", decoded);
       const result = await dispatch(googleLogin(credentialResponse.credential));
       if (result.meta.requestStatus === "fulfilled") {
