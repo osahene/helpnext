@@ -7,7 +7,13 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function ReduxProvider({ children }) {
   return (
-    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+    <GoogleOAuthProvider
+      clientId={
+        process.env.NODE_ENV === "development"
+          ? "972387283638-ad9c1rcda4sc1ki137f80u87po7f07l5.apps.googleusercontent.com"
+          : process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+      }
+    >
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           {children}

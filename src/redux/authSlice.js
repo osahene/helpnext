@@ -4,11 +4,13 @@ import apiService from "@/utils/axios";
 export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
   async (googleToken, thunkAPI) => {
+    if (googleToken.startsWith('"') && googleToken.endsWith('"')) {
+      googleToken = googleToken.slice(1, -1);
+    }
     try {
-      const gToken = googleToken.slice(1, -1);
       const res = await apiService.googleLog(
         JSON.stringify({
-          access_token: gToken,
+          access_token: googleToken,
         })
       );
       console.log("Google Login Response:", res);
