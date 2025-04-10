@@ -6,6 +6,7 @@ export const googleLogin = createAsyncThunk(
   async (googleToken, thunkAPI) => {
     try {
       if (googleToken.startsWith('"') && googleToken.endsWith('"')) {
+        console.log("Google Login with inverted comma");
         let gToken = googleToken.slice(1, -1);
         const res = await apiService.googleLog(
           JSON.stringify({
