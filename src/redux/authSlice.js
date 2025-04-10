@@ -5,9 +5,10 @@ export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
   async (googleToken, thunkAPI) => {
     try {
+      const gToken = googleToken.slice(1, -1);
       const res = await apiService.googleLog(
         JSON.stringify({
-          access_token: googleToken,
+          access_token: gToken,
         })
       );
       console.log("Google Login Response:", res);
