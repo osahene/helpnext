@@ -5,28 +5,14 @@ export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
   async (googleToken, thunkAPI) => {
     try {
-      if (googleToken.startsWith('"') && googleToken.endsWith('"')) {
-        console.log("Google Login with inverted comma");
-        let gToken = googleToken.slice(1, -1);
-        const res = await apiService.googleLog(
-          JSON.stringify({
-            access_token: gToken,
-          })
-        );
-        console.log("Google Login Response:", res);
-        return res.data;
-      } else {
-        console.log("Google Login No inverted comma");
-        // If the token does not have inverted commas, we can use it directly
-        // without slicing it.
-        const res = await apiService.googleLog(
-          JSON.stringify({
-            access_token: googleToken,
-          })
-        );
-        console.log("Google Login No inverted comma:", res);
-        return res.data;
-      }
+      const cleanToken = googleToken.replace(/^"|"$/g, '');
+      const res = await apiService.googleLog(
+        JSON.stringify({
+          access_token: cleanToken,
+        })
+      );
+      console.log("Google Login Response:", res);
+      return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
