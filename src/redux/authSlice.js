@@ -4,17 +4,28 @@ import apiService from "@/utils/axios";
 export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
   async (googleToken, thunkAPI) => {
-    if (googleToken.startsWith('"') && googleToken.endsWith('"')) {
-      googleToken = googleToken.slice(1, -1);
-    }
     try {
-      const res = await apiService.googleLog(
-        JSON.stringify({
-          access_token: googleToken,
-        })
-      );
-      console.log("Google Login Response:", res);
-      return res.data;
+      if (googleToken.startsWith('"') && googleToken.endsWith('"')) {
+        let gToken = googleToken.slice(1, -1);
+        const res = await apiService.googleLog(
+          JSON.stringify({
+            access_token: gToken,
+          })
+        );
+        console.log("Google Login Response:", res);
+        return res.data;
+      } else {
+        console.log("Google Login No inverted comma");
+        // If the token does not have inverted commas, we can use it directly
+        // without slicing it.
+        const res = await apiService.googleLog(
+          JSON.stringify({
+            access_token: googleToken,
+          })
+        );
+        console.log("Google Login No inverted comma:", res);
+        return res.data;
+      }
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
