@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
+import mainLogo from "../../../public/svg/Help Logo.svg"
 import userImg from "../../../public/img/user.svg";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
@@ -75,10 +76,10 @@ export default function HeaderBar() {
               className="flex items-center space-x-3 rtl:space-x-reverse"
             >
               <Image
-                src="https://flowbite.com/docs/images/logo.svg"
-                width={40}
-                height={40}
-                alt="Flowbite Logo"
+                src={mainLogo}
+                width={50}
+                height={50}
+                alt="Help oo Help Logo"
               />
               <span className="self-center text-lg font-semibold whitespace-nowrap dark:text-black">
                 Help oo Help

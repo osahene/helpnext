@@ -69,7 +69,7 @@ export default function HeaderBar() {
                 src={mainLogo}
                 width={50}
                 height={50}
-                alt="Flowbite Logo"
+                alt="Help oo Help Logo"
               />
               <span className="self-center text-lg font-semibold whitespace-nowrap dark:text-black">
                 Help oo Help
