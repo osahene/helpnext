@@ -8,7 +8,7 @@ export const googleLogin = createAsyncThunk(
       const cleanToken = googleToken.replace(/^"|"$/g, '');
       const res = await apiService.googleLog(
         JSON.stringify({
-          access_token: cleanToken,
+          id_token: cleanToken,
         })
       );
       console.log("Google Login Response:", res);
