@@ -34,7 +34,7 @@ export default function Login() {
       const result = await dispatch(googleLogin(credentialResponse.credential));
       if (result.meta.requestStatus === "fulfilled") {
         const { first_name, last_name } = result.payload;
-        const { access, refresh } = result.payload.tokens;
+        const { access, refresh } = result.payload.data;
 
         dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
         dispatch(

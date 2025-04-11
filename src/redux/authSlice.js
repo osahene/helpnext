@@ -146,7 +146,7 @@ export const authSlice = createSlice({
       })
       .addCase(googleLogin.fulfilled, (state, action) => {
         state.loading = false;
-        const { access, refresh } = action.payload.tokens;
+        const { access, refresh } = action.payload.data;
         state.accessToken = access;
         state.refreshToken = refresh;
         state.isAuthenticated = true;
