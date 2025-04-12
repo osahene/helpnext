@@ -14,6 +14,20 @@ export const googleLogin = createAsyncThunk(
       console.log("Google Login Response:", res);
       return res.data;
     } catch (error) {
+      if (error.response?.status === 307) {
+        localStorage.setItem('tempAuthData', JSON.stringify({
+          tokens: error.response.data.data,
+          user: {
+            email: error.response.data.email,
+            first_name: error.response.data.first_name,
+            last_name: error.response.data.last_name
+          }
+        }));
+        return thunkAPI.fulfillWithValue({
+          status: 'redirect',
+          redirectUrl: error.response.data.redirect_url
+        });
+      }
       return thunkAPI.rejectWithValue(error.response.data);
     }
   }
@@ -113,6 +127,14 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    setTempAuthData: (state, action) => {
+      const { tokens, user } = action.payload;
+      state.accessToken = tokens.access;
+      state.refreshToken = tokens.refresh;
+      state.first_name = user.first_name;
+      state.last_name = user.last_name;
+      state.email = user.email;
+    },
     setEmail(state, action) {
       state.email = action.payload;
     },
@@ -152,8 +174,11 @@ export const authSlice = createSlice({
         state.isAuthenticated = true;
       })
       .addCase(googleLogin.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        if (action.payload?.status === 'redirect') {
+          state.redirectUrl = action.payload.redirectUrl;
+        } else {
+          state.error = action.payload;
+        }
       })
       // Login User
       .addCase(loginUser.pending, (state) => {
