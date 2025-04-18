@@ -1,5 +1,7 @@
 "use client";
 import { verifyEmail, requestOTP, refreshToken } from "@/redux/authSlice";
+import { faPaperPlane, faPassport } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -66,8 +68,8 @@ export default function VerifyEmail() {
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <div className="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Verify your email address
+            <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              Email Verification
             </h1>
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
@@ -77,22 +79,29 @@ export default function VerifyEmail() {
                 >
                   OTP
                 </label>
-                <input
-                  type="text"
-                  name="otp"
-                  id="otp"
-                  placeholder="Enter OTP"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
-                  required
-                  value={otp.otp}
-                  onChange={formChange}
-                />
+                <div className="flex items-center">
+                  <FontAwesomeIcon
+                    icon={faPassport}
+                    size="xl"
+                    className="pr-2"
+                  />
+                  <input
+                    type="text"
+                    name="otp"
+                    id="otp"
+                    placeholder="Enter OTP"
+                    className="bg-gray-50 border border-gray-300 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
+                    required
+                    value={otp.otp}
+                    onChange={formChange}
+                  />
+                </div>
               </div>
               {/* Resend OTP logic */}
               <div className="countdown-text">
                 {timer.minutes > 0 || timer.seconds > 0 ? (
                   <p>
-                    Time Remaining:{" "}
+                    Resend in:{" "}
                     <span style={{ fontWeight: 600 }}>
                       {timer.minutes < 10 ? `0${timer.minutes}` : timer.minutes}
                       :
@@ -121,6 +130,11 @@ export default function VerifyEmail() {
                 type="submit"
                 className="w-full mt-8 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 font-medium rounded-lg text-lg px-5 py-2.5"
               >
+                <FontAwesomeIcon
+                  icon={faPaperPlane}
+                  className="pr-2"
+                  size="lg"
+                />
                 Submit
               </button>
             </form>

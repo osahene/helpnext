@@ -17,6 +17,12 @@ import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { GoogleLogin } from "@react-oauth/google";
 import mainLogo from "../../../public/svg/Help Logo.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEnvelope,
+  faKey,
+  faArrowRightToBracket,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -52,7 +58,10 @@ export default function Login() {
         console.error("Google Login Failed:", result);
       }
     } catch (error) {
-      if (result.meta.requestStatus === "rejected" && result.payload?.status === 'redirect') {
+      if (
+        result.meta.requestStatus === "rejected" &&
+        result.payload?.status === "redirect"
+      ) {
         // Handle redirect to phone verification
         router.push(result.payload.redirectUrl);
       }
@@ -134,18 +143,26 @@ export default function Login() {
                       htmlFor="password"
                       className="block p-2 text-lg font-medium text-gray-900 dark:text-white"
                     >
-                      Phone Number or Email Address
+                      Email Address or Phone Number
                     </label>
-                    <input
-                      type="text"
-                      name="email"
-                      id="phone_number"
-                      value={formData.email}
-                      onChange={formChange}
-                      placeholder="+233123456789 or abc@efg.com"
-                      className="border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      required
-                    />
+                    <div className="flex items-center">
+                      <FontAwesomeIcon
+                        icon={faEnvelope}
+                        className="w-10 h-5 pr-2"
+                        size="xl"
+                      />
+
+                      <input
+                        type="text"
+                        name="email"
+                        id="phone_number"
+                        value={formData.email}
+                        onChange={formChange}
+                        placeholder="+233123456789 or amahenewaa@example.com"
+                        className="border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                      />
+                    </div>
                   </div>
 
                   <div className="my-5">
@@ -157,14 +174,21 @@ export default function Login() {
                     </label>
 
                     <div className="relative">
-                      <input
-                        type={isPasswordVisible ? "text" : "password"}
-                        placeholder="Password"
-                        name="password"
-                        value={formData.password}
-                        onChange={formChange}
-                        className="border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      />
+                      <div className="flex items-center">
+                        <FontAwesomeIcon
+                          icon={faKey}
+                          className="w-10 h-5 pr-2"
+                          size="xl"
+                        />
+                        <input
+                          type={isPasswordVisible ? "text" : "password"}
+                          placeholder="Password"
+                          name="password"
+                          value={formData.password}
+                          onChange={formChange}
+                          className="border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        />
+                      </div>
                       <button
                         type="button"
                         className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-300"
@@ -209,7 +233,7 @@ export default function Login() {
                       </button>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between ">
+                  <div className="flex items-baseline justify-between ">
                     <div className="flex  items-center h-5">
                       <input
                         id="remember"
@@ -227,6 +251,18 @@ export default function Login() {
                         </label>
                       </div>
                     </div>
+                    <div className=" flex justify-center pt-4">
+                      <div className="ml-3 rounded rounded-lg hover:bg-blue-400  text-lg">
+                        <button
+                          type="button"
+                          className="text-blue-500 p-1 dark:text-blue-300 hover:text-white"
+                        >
+                          <Link href={"/auth/forgottenPassword"}>
+                            <span className="text-lg">Forgotten Password</span>
+                          </Link>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex flex-col -mt-10">
                     <div>
@@ -234,18 +270,13 @@ export default function Login() {
                         type="submit"
                         className="w-full mt-5 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                       >
+                        <FontAwesomeIcon
+                          icon={faArrowRightToBracket}
+                          className="w-10 h-5"
+                          size="lg"
+                        />
                         {/* {loading ? "Signing in..." : "Sign in"} */} Sign In
                       </button>
-                    </div>
-                    <div className=" flex justify-center pt-4">
-                      <div className="ml-3 rounded rounded-lg hover:bg-blue-400  text-lg">
-                        <button
-                          type="button"
-                          className="text-blue-500 p-1 dark:text-blue-300 hover:text-white"
-                        >
-                          Forgotten Password ?
-                        </button>
-                      </div>
                     </div>
                   </div>
                   <p className="text-lg m-0 font-light text-gray-500 dark:text-gray-400">

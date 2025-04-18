@@ -2,8 +2,7 @@ import Image from "next/image";
 
 const Cards = ({ cardName, cardName2, cardLogo, logoAlt }) => {
   return (
-    // <div className="w-auto h-fit grid gap-auto backdrop-filter backdrop-blur-sm bg-opacity-10 bg-slate-200 overflow-hidden border border-gray-200 rounded-xl shadow shadow-xl">
-    <div className="flex flex-col justify-between h-full backdrop-filter backdrop-blur-sm bg-opacity-10 bg-slate-200 overflow-hidden border border-gray-200 rounded-xl shadow shadow-xl">
+    <div className="flex flex-col justify-between h-full backdrop-filter backdrop-blur-sm bg-opacity-10 bg-slate-200 overflow-hidden border-4 border-gray-900 rounded-xl shadow shadow-xl">
       <div className="p-1 flex flex-col justify-center items-start content-fit">
         <div className="ml-3 flex flex-col items-start">
           <p className="font-bold text-[24px] xs:text-[40px] sm:text-[50px] text-black">

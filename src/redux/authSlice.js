@@ -5,7 +5,7 @@ export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
   async (googleToken, thunkAPI) => {
     try {
-      const cleanToken = googleToken.replace(/^"|"$/g, '');
+      const cleanToken = googleToken.replace(/^"|"$/g, "");
       const res = await apiService.googleLog(
         JSON.stringify({
           id_token: cleanToken,
@@ -15,24 +15,26 @@ export const googleLogin = createAsyncThunk(
       return res.data;
     } catch (error) {
       if (error.response?.status === 307) {
-        localStorage.setItem('tempAuthData', JSON.stringify({
-          tokens: error.response.data.data,
-          user: {
-            email: error.response.data.email,
-            first_name: error.response.data.first_name,
-            last_name: error.response.data.last_name
-          }
-        }));
+        localStorage.setItem(
+          "tempAuthData",
+          JSON.stringify({
+            tokens: error.response.data.data,
+            user: {
+              email: error.response.data.email,
+              first_name: error.response.data.first_name,
+              last_name: error.response.data.last_name,
+            },
+          })
+        );
         return thunkAPI.fulfillWithValue({
-          status: 'redirect',
-          redirectUrl: error.response.data.redirect_url
+          status: "redirect",
+          redirectUrl: error.response.data.redirect_url,
         });
       }
       return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
-
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (userData, thunkAPI) => {
@@ -110,6 +112,28 @@ export const requestOTP = createAsyncThunk(
     }
   }
 );
+export const forgottenPasswordRequest = createAsyncThunk(
+  "auth/forgottenPassword",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await apiService.forgottenEmail(data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+export const confirmPasswordRequest = createAsyncThunk(
+  "auth/confirmPassword",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await apiService.confirmPassword(data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 const initialState = {
   accessToken: null,
@@ -137,6 +161,12 @@ export const authSlice = createSlice({
     },
     setEmail(state, action) {
       state.email = action.payload;
+    },
+    setforgottenPasswordRequest(state, action) {
+      state.email = action.payload;
+    },
+    setConfirmPassword(state, action) {
+      state.password = action.payload;
     },
     setPhoneNumbers(state, action) {
       state.phone_number = action.payload;
@@ -174,7 +204,7 @@ export const authSlice = createSlice({
         state.isAuthenticated = true;
       })
       .addCase(googleLogin.rejected, (state, action) => {
-        if (action.payload?.status === 'redirect') {
+        if (action.payload?.status === "redirect") {
           state.redirectUrl = action.payload.redirectUrl;
         } else {
           state.error = action.payload;
@@ -271,10 +301,44 @@ export const authSlice = createSlice({
       .addCase(requestOTP.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      // Request ForgottenPassword
+      .addCase(forgottenPasswordRequest.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(forgottenPasswordRequest.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(forgottenPasswordRequest.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Confirm Password
+      .addCase(confirmPasswordRequest.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(confirmPasswordRequest.fulfilled, (state) => {
+        state.loading = false;
+        const { access, refresh } = action.payload;
+        state.accessToken = access;
+        state.refreshToken = refresh;
+      })
+      .addCase(confirmPasswordRequest.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { logout, refreshToken, setEmail, setPhoneNumbers, userState } =
-  authSlice.actions;
+export const {
+  logout,
+  refreshToken,
+  setEmail,
+  setConfirmPassword,
+  setforgottenPasswordRequest,
+  setPhoneNumbers,
+  userState,
+} = authSlice.actions;
 export default authSlice.reducer;

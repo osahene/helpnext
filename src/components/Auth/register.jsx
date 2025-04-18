@@ -8,7 +8,17 @@ import Image from "next/image";
 import { setEmail, registerUser } from "@/redux/authSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import mainLogo from "../../../public/svg/Help Logo.svg"
+import { jwtDecode } from "jwt-decode";
+import { GoogleLogin } from "@react-oauth/google";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEnvelope,
+  faFileSignature,
+  faKey,
+  faUserAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import mainLogo from "../../../public/svg/Help Logo.svg";
+import React from "react";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -45,6 +55,46 @@ export default function Register() {
     }
   };
 
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      const decoded = jwtDecode(credentialResponse.credential);
+      console.log("Google User Info:", decoded);
+      const result = await dispatch(googleLogin(credentialResponse.credential));
+      if (result.meta.requestStatus === "fulfilled") {
+        const { first_name, last_name } = result.payload;
+        const { access, refresh } = result.payload.data;
+
+        dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
+        dispatch(
+          userState({
+            first_name: first_name || decoded.given_name,
+            last_name: last_name || decoded.family_name,
+            isAuthenticated: true,
+            email: decoded.email,
+          })
+        );
+        dispatch(GetContact());
+        dispatch(GetDependants());
+        router.push("/");
+      } else {
+        console.error("Google Login Failed:", result);
+      }
+    } catch (error) {
+      if (
+        result.meta.requestStatus === "rejected" &&
+        result.payload?.status === "redirect"
+      ) {
+        // Handle redirect to phone verification
+        router.push(result.payload.redirectUrl);
+      }
+      console.error("An error occurred:", error);
+    }
+  };
+
+  const handleGoogleLoginFailure = () => {
+    console.log("Google Login Failed");
+  };
+
   return (
     <>
       <div className="App-header-1 bg-cust-dark">
@@ -65,16 +115,17 @@ export default function Register() {
             </a>
             <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                <div>
-                  <h1 className="text-white text-lg text-center">
-                    Sign up with
-                  </h1>
-                  <button
-                    type="submit"
-                    className="w-full mt-3 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                  >
-                    Google
-                  </button>
+                <div className="flex items-center justify-center w-full">
+                  <GoogleLogin
+                    onSuccess={handleGoogleLoginSuccess}
+                    onError={handleGoogleLoginFailure}
+                    useOneTap
+                    theme="filled_blue"
+                    size="large"
+                    text="signin_with"
+                    shape="rectangular"
+                    logo_alignment="left"
+                  />
                 </div>
                 <div className="flex items-center justify-center">
                   <div className="flex-grow h-px bg-indigo-600"></div>
@@ -85,7 +136,7 @@ export default function Register() {
                   className="space-y-4 md:space-y-6"
                   onSubmit={handleSubmit}
                 >
-                  <div className="flex flex-row">
+                  <div className="flex flex-col space-y-4 md:space-y-6">
                     <div className="pr-5">
                       <label
                         htmlFor="first_name"
@@ -93,16 +144,23 @@ export default function Register() {
                       >
                         First Name
                       </label>
-                      <input
-                        type="text"
-                        name="first_name"
-                        id="first_name"
-                        value={formData.first_name}
-                        onChange={formChange}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Akua"
-                        required
-                      />
+                      <div className="flex items-center">
+                        <FontAwesomeIcon
+                          icon={faUserAlt}
+                          className="w-10 h-5 pr-2"
+                          size="xl"
+                        />
+                        <input
+                          type="text"
+                          name="first_name"
+                          id="first_name"
+                          value={formData.first_name}
+                          onChange={formChange}
+                          className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="Akua"
+                          required
+                        />
+                      </div>
                     </div>
                     <div>
                       <label
@@ -111,16 +169,23 @@ export default function Register() {
                       >
                         Last Name
                       </label>
-                      <input
-                        type="text"
-                        name="last_name"
-                        id="last_name"
-                        value={formData.last_name}
-                        onChange={formChange}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Asumah"
-                        required
-                      />
+                      <div className="flex items-center">
+                        <FontAwesomeIcon
+                          icon={faUserAlt}
+                          className="w-10 h-5 pr-2"
+                          size="xl"
+                        />
+                        <input
+                          type="text"
+                          name="last_name"
+                          id="last_name"
+                          value={formData.last_name}
+                          onChange={formChange}
+                          className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="Asumah"
+                          required
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="">
@@ -131,16 +196,23 @@ export default function Register() {
                       >
                         Your email
                       </label>
-                      <input
-                        type="email"
-                        name="email"
-                        id="email_address"
-                        value={formData.email}
-                        onChange={formChange}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="name@company.com"
-                        required
-                      />
+                      <div className="flex items-center">
+                        <FontAwesomeIcon
+                          icon={faEnvelope}
+                          className="w-10 h-5 pr-2"
+                          size="xl"
+                        />
+                        <input
+                          type="email"
+                          name="email"
+                          id="email_address"
+                          value={formData.email}
+                          onChange={formChange}
+                          className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="amahenewaa@example.com"
+                          required
+                        />
+                      </div>
                     </div>
                   </div>
                   <div>
@@ -152,15 +224,22 @@ export default function Register() {
                     </label>
 
                     <div className="relative">
-                      <input
-                        type={isPasswordVisible ? "text" : "password"}
-                        placeholder="Password"
-                        value={formData.password}
-                        onChange={formChange}
-                        name="password"
-                        className="border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        required
-                      />
+                      <div className="flex flex-center items-baseline">
+                        <FontAwesomeIcon
+                          icon={faKey}
+                          className="w-10 h-5 pr-2"
+                          size="xl"
+                        />
+                        <input
+                          type={isPasswordVisible ? "text" : "password"}
+                          placeholder="Password"
+                          value={formData.password}
+                          onChange={formChange}
+                          name="password"
+                          className="border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          required
+                        />
+                      </div>
                       <button
                         type="button"
                         className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-600"
@@ -209,6 +288,11 @@ export default function Register() {
                     type="submit"
                     className="w-full mt-8 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   >
+                    <FontAwesomeIcon
+                      icon={faFileSignature}
+                      className="w-10 h-5"
+                      size="lg"
+                    />
                     {/* {loading ? "Registering..." : "Register"} */} Sign Up
                   </button>
 

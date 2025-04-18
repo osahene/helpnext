@@ -10,6 +10,9 @@ const apiService = {
     $axios.post("/account/verify-phone-number-otp/", data),
   login: (data) => $axios.post("/account/user-login/", data),
   logout: () => $axios.post("/account/user-logout/"),
+  // Reset Password
+  forgottenEmail: (data) => $axios.post("/account/request-reset-email/", data),
+  confirmPassword: (data) => $axios.post("/account/password-reset/", data),
   // Generate OTP
   generateRegister: (data) =>
     $axios.post("/account/user-register-generate-otp/", data),
