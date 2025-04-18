@@ -1,5 +1,6 @@
 import localFont from "next/font/local";
 import "./globals.css";
+import GlobalLoading from "./GlobalLoading";
 import ReduxProvider from "./reduxProvider";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
@@ -27,7 +28,10 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReduxProvider>{children}</ReduxProvider>
+        <ReduxProvider>
+          <GlobalLoading />
+          {children}
+        </ReduxProvider>
       </body>
     </html>
   );

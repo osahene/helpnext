@@ -6,7 +6,9 @@ import { logout, refreshToken } from "../redux/authSlice"; // Redux actions
 import { setGlobalLoading } from "../redux/globalSlice";
 
 const $axios = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL ? process.env.NEXT_PUBLIC_BASE_URL : "http://127.0.0.1:8000",
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL
+    ? process.env.NEXT_PUBLIC_BASE_URL
+    : "http://127.0.0.1:8000",
   withCredentials: true,
   headers: { "Content-type": "application/json" },
 });
@@ -91,7 +93,7 @@ $axios.interceptors.request.use(
   },
   (error) => {
     store.dispatch(setGlobalLoading(false));
-    Promise.reject(error);
+    return Promise.reject(error);
   }
 );
 
