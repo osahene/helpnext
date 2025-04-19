@@ -12,7 +12,7 @@ export const googleLogin = createAsyncThunk(
         })
       );
       console.log("Google Login Response:", res);
-      return res.data;
+      return res;
     } catch (error) {
       if (error.response?.status === 307) {
         localStorage.setItem(
