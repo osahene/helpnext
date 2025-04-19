@@ -10,7 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function confirmPassword() {
+export default function ConfirmPassword() {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const router = useRouter();

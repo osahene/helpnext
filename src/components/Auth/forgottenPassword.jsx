@@ -12,7 +12,7 @@ import {
   faPaperPlane,
   faBan,
 } from "@fortawesome/free-solid-svg-icons";
-export default function forgottenPassword() {
+export default function ForgottenPassword() {
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(false);
   const dispatch = useDispatch();
