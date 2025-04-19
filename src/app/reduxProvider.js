@@ -10,7 +10,7 @@ export default function ReduxProvider({ children }) {
     <GoogleOAuthProvider
       clientId={
         process.env.NODE_ENV === "development"
-          ? "972387283638-ad9c1rcda4sc1ki137f80u87po7f07l5.apps.googleusercontent.com"
+          ? process.env.NEXT_PUBLIC_CLIENT_ID
           : process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
       }
     >
