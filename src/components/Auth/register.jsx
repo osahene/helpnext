@@ -65,6 +65,7 @@ export default function Register() {
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     const decoded = jwtDecode(credentialResponse.credential);
     const result = await dispatch(googleLogin(credentialResponse.credential));
+    console.log("Google Login Result:", result);
     try {
       if (result.meta.requestStatus === "fulfilled") {
         const { first_name, last_name } = result.payload.data;
