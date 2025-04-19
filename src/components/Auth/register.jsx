@@ -5,7 +5,14 @@ import {
   // useSelector
 } from "react-redux";
 import Image from "next/image";
-import { setEmail, registerUser } from "@/redux/authSlice";
+import {
+  setEmail,
+  registerUser,
+  googleLogin,
+  userState,
+  refreshToken,
+} from "@/redux/authSlice";
+import { GetContact, GetDependants } from "@/redux/userSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
