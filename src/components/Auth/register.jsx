@@ -63,10 +63,10 @@ export default function Register() {
   };
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
+    const decoded = jwtDecode(credentialResponse.credential);
+    console.log("Google User Info:", decoded);
+    const result = await dispatch(googleLogin(credentialResponse.credential));
     try {
-      const decoded = jwtDecode(credentialResponse.credential);
-      console.log("Google User Info:", decoded);
-      const result = await dispatch(googleLogin(credentialResponse.credential));
       if (result.meta.requestStatus === "fulfilled") {
         const { first_name, last_name } = result.payload;
         const { access, refresh } = result.payload.data;
