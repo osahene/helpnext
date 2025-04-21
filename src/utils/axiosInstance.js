@@ -99,6 +99,7 @@ $axios.interceptors.request.use(
 
 $axios.interceptors.response.use(
   (response) => {
+    console.log("Intercept Response:", response);
     store.dispatch(setGlobalLoading(false));
     store.dispatch({
       type: "notifications/addNotification",
@@ -111,6 +112,7 @@ $axios.interceptors.response.use(
     return response;
   },
   (error) => {
+    console.error("Response error:", error);
     store.dispatch(setGlobalLoading(false));
 
     store.dispatch({

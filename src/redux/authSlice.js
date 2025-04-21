@@ -15,6 +15,11 @@ export const googleLogin = createAsyncThunk(
       return res;
     } catch (error) {
       console.error("Google Login Error:", error);
+      console.error("Google Login Error2:", error.response?.status);
+      console.error("Google Login Error alpha:", error.response?.data.data);
+      console.error("Google Login Error alpha2:", error.response.data.data);
+      console.error("Google Login Error3:", error.response.data.email);
+      console.error("Google Login Error4:", error.response.data.first_name);
       if (error.response?.status === 307) {
         localStorage.setItem(
           "tempAuthData",
