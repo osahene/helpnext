@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { verifyPhoneNumber, setPhoneNumbers } from "@/redux/authSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import { faPhoneFlip } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function VerifyPhoneNumber() {
   const [phone_number, setPhone_Number] = useState("");
@@ -44,15 +46,22 @@ export default function VerifyPhoneNumber() {
                 >
                   Phone Number
                 </label>
-                <input
-                  type="tel"
-                  name="phone_number"
-                  id="phone_number"
-                  value={phone_number || ""}
-                  onChange={formChange}
-                  placeholder="+2331234567890"
-                  className="bg-gray-50 border rounded rounded-lg border-gray-30 text-black"
-                />
+                <div className="flex items-center">
+                  <FontAwesomeIcon
+                    icon={faPhoneFlip}
+                    className="w-10 h-5 pr-2"
+                    size="xl"
+                  />
+                  <input
+                    type="tel"
+                    name="phone_number"
+                    id="phone_number"
+                    value={phone_number || ""}
+                    onChange={formChange}
+                    placeholder="+2331234567890"
+                    className=" w-full bg-gray-50 border rounded rounded-lg border-gray-30 text-black"
+                  />
+                </div>
               </div>
               {/* Resend OTP logic */}
 

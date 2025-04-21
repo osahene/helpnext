@@ -15,7 +15,6 @@ import {
 import { GetContact, GetDependants } from "@/redux/userSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { jwtDecode } from "jwt-decode";
 import { GoogleLogin } from "@react-oauth/google";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -63,41 +62,21 @@ export default function Register() {
   };
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
-    const decoded = jwtDecode(credentialResponse.credential);
     const result = await dispatch(googleLogin(credentialResponse.credential));
-    console.log("Google Login Result:", result);
     try {
-      console.log("gossips");
-      if (result.meta.requestStatus === "fulfilled") {
-        console.log("gossips if clause");
-        const { first_name, last_name } = result.payload.data;
-        const { access, refresh } = result.payload.data.tokens;
-
-        dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
-        dispatch(
-          userState({
-            first_name: first_name || decoded.given_name,
-            last_name: last_name || decoded.family_name,
-            isAuthenticated: true,
-            email: decoded.email,
-          })
-        );
-        console.log("gossips this far");
+      if (
+        result.meta.requestStatus === "fulfilled" &&
+        result.payload.status === "redirect"
+      ) {
+        console.log("Redirecting to:", result.payload.redirectUrl);
+        router.push(result.payload.redirectUrl);
+      } else {
         dispatch(GetContact());
         dispatch(GetDependants());
+        console.log("User State:");
         router.push("/");
-      } else {
-        console.error("Google Login Failed:", result);
       }
     } catch (error) {
-      console.log("Error during Google login:", error);
-      if (
-        result.meta.requestStatus === "rejected" &&
-        result.payload?.status === "redirect"
-      ) {
-        // Handle redirect to phone verification
-        router.push(result.payload.data.redirectUrl);
-      }
       console.error("An error occurred:", error);
     }
   };
@@ -113,7 +92,7 @@ export default function Register() {
           <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
             <a
               href="#as"
-              className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
+              className="flex items-center mb-6 text-2xl font-semibold text-white"
             >
               <Image
                 width={60}

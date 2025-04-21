@@ -4,6 +4,7 @@ import { confirmPasswordRequest, setConfirmPassword } from "@/redux/authSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import {
+  faBan,
   faCheckDouble,
   faKey,
   faPaperPlane,
@@ -12,11 +13,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function ConfirmPassword() {
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPasswordInput] = useState("");
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const formChange = (e) => {
+  const handlePasswordChange = (e) => {
     setPassword(e.target.value);
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPasswordInput(e.target.value);
   };
 
   const handleSubmit = async (event) => {
@@ -33,7 +39,8 @@ export default function ConfirmPassword() {
       console.error("An error occurred:", error);
     }
   };
-
+  const isFormValid =
+    password && confirmPassword && password === confirmPassword;
   return (
     <div className="App-header bg-cust-dark">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -62,7 +69,7 @@ export default function ConfirmPassword() {
                     name="new_password"
                     id="new_password"
                     value={password || ""}
-                    onChange={formChange}
+                    onChange={handlePasswordChange}
                     placeholder="********"
                     className="w-full bg-gray-50 border rounded rounded-lg border-gray-30 text-black"
                   />
@@ -88,7 +95,7 @@ export default function ConfirmPassword() {
                     name="new_password"
                     id="new_password"
                     value={password || ""}
-                    onChange={formChange}
+                    onChange={handleConfirmPasswordChange}
                     placeholder="********"
                     className="w-full bg-gray-50 border rounded rounded-lg border-gray-30 text-black"
                   />
@@ -99,12 +106,16 @@ export default function ConfirmPassword() {
 
               <button
                 type="submit"
-                className="w-full mt-8 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 font-medium rounded-lg text-lg px-5 py-2.5"
+                disabled={!isFormValid}
+                className={`w-full mt-8 text-white font-medium rounded-lg text-lg px-5 py-2.5 flex items-center justify-center gap-2 ${
+                  isFormValid
+                    ? "bg-blue-600 hover:bg-blue-700 focus:ring-4"
+                    : "bg-gray-400 cursor-not-allowed"
+                }`}
               >
                 <FontAwesomeIcon
-                  icon={faPaperPlane}
-                  className="w-10 h-5"
-                  size="lg"
+                  icon={!isFormValid ? faBan : faPaperPlane}
+                  className="w-5 h-5"
                 />
                 Submit
               </button>

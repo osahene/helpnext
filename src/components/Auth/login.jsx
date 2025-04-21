@@ -14,7 +14,6 @@ import {
 import { GetContact, GetDependants } from "@/redux/userSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { jwtDecode } from "jwt-decode";
 import { GoogleLogin } from "@react-oauth/google";
 import mainLogo from "../../../public/svg/Help Logo.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -34,12 +33,8 @@ export default function Login() {
   const router = useRouter();
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
-    const decoded = jwtDecode(credentialResponse.credential);
-    console.log("Decoded first:");
     const result = await dispatch(googleLogin(credentialResponse.credential));
-    console.log("Google Login Result:", result);
     try {
-      console.log("Decoded JWT:");
       if (
         result.meta.requestStatus === "fulfilled" &&
         result.payload.status === "redirect"
@@ -47,20 +42,6 @@ export default function Login() {
         console.log("Redirecting to:", result.payload.redirectUrl);
         router.push(result.payload.redirectUrl);
       } else {
-        console.error("Google Login Failed:", result);
-        const { first_name, last_name } = result.payload.data;
-        const { access, refresh } = result.payload.data.tokens;
-        console.log("I'm here:");
-        dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
-        console.log("Talkertive:");
-        dispatch(
-          userState({
-            first_name: first_name || decoded.given_name,
-            last_name: last_name || decoded.family_name,
-            isAuthenticated: true,
-            email: decoded.email,
-          })
-        );
         dispatch(GetContact());
         dispatch(GetDependants());
         console.log("User State:");
@@ -109,7 +90,7 @@ export default function Login() {
           <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
             <a
               href="#as"
-              className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
+              className="flex items-center mb-6 text-2xl font-semibold text-white"
             >
               <Image
                 width={60}

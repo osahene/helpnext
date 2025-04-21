@@ -25,7 +25,7 @@ export const googleLogin = createAsyncThunk(
         };
         return thunkAPI.fulfillWithValue({
           status: "redirect",
-          redirectUrl: error.response.data.redirect_url,
+          redirectUrl: error.response.data.redirect_next_url,
           tempAuthData,
         });
       }
@@ -195,12 +195,8 @@ export const authSlice = createSlice({
         state.error = null;
       })
       .addCase(googleLogin.fulfilled, (state, action) => {
-        console.log("Google google action Fulfilled:", action);
-        console.log("Google google action Fulfilled2:", action.payload);
-        console.log("Google google action Fulfilled3:", action.meta.arg);
         state.loading = false;
         if (action.payload?.status === "redirect") {
-          console.log("Google google action here:", action.payload);
           state.redirectUrl = action.payload.redirectUrl;
           const { tokens, user } = action.payload.tempAuthData;
           state.accessToken = tokens.access;
@@ -209,15 +205,16 @@ export const authSlice = createSlice({
           state.last_name = user.last_name;
           state.email = user.email;
         } else {
-          console.log("Google google action else:");
-          const { access, refresh } = action.payload.tempAuthData.tokens;
-          state.accessToken = access;
-          state.refreshToken = refresh;
+          const { tokens, user } = action.payload.tempAuthData;
+          state.accessToken = tokens.access;
+          state.refreshToken = tokens.refresh;
+          state.first_name = user.first_name;
+          state.last_name = user.last_name;
+          state.email = user.email;
           state.isAuthenticated = true;
         }
       })
       .addCase(googleLogin.rejected, (state, action) => {
-        console.log("Google google action rejected:", action);
         state.loading = false;
         state.error = action.payload;
       })

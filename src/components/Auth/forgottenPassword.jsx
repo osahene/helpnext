@@ -34,7 +34,7 @@ export default function ForgottenPassword() {
       const result = await dispatch(forgottenPasswordRequest({ email: email }));
       if (result.meta.requestStatus === "fulfilled") {
         dispatch(setforgottenPasswordRequest(email));
-        router.push("/auth/suucessConfirm");
+        router.push("/auth/successConfirm");
       }
     } catch (error) {
       console.error("An error occurred:", error);
