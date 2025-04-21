@@ -59,14 +59,24 @@ export default function Login() {
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      if (
-        result.meta.requestStatus === "rejected" &&
-        result.payload?.status === "redirect"
-      ) {
-        // Handle redirect to phone verification
-        router.push(result.payload.redirectUrl);
+      if (error.response?.status === 307) {
+        const { first_name, last_name } = result.payload;
+        const { access, refresh } = result.payload.token;
+        dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
+        dispatch(userState({ first_name: first_name, last_name: last_name }));
+        return thunkAPI.fulfillWithValue({
+          status: "redirect",
+          redirectUrl: error.response.data.redirect_url,
+        });
       }
-      console.error("An error occurred:", error);
+      // if (
+      //   result.meta.requestStatus === "rejected" &&
+      //   result.payload?.status === "redirect"
+      // ) {
+      //   // Handle redirect to phone verification
+      //   router.push(result.payload.redirectUrl);
+      // }
+      // console.error("An error occurred:", error);
     }
   };
 
