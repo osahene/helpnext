@@ -172,7 +172,8 @@ export const authSlice = createSlice({
       state.phone_number = action.payload;
     },
     userState: (state, action) => {
-      const { first_name, last_name } = action.payload;
+      console.log("userState action", action);
+      const { first_name, last_name } = action.payload.data;
       state.first_name = first_name;
       state.last_name = last_name;
       state.isAuthenticated = true;

@@ -43,7 +43,7 @@ export default function Login() {
       } else {
         const { first_name, last_name } = result.payload.data;
         const { access, refresh } = result.payload.data.tokens;
-
+        console.log("results", result);
         dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
         dispatch(
           userState({
