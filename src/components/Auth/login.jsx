@@ -22,7 +22,6 @@ import {
   faKey,
   faArrowRightToBracket,
 } from "@fortawesome/free-solid-svg-icons";
-import { Store } from "react-notifications-component";
 export default function Login() {
   const [formData, setFormData] = useState({
     email: "",
