@@ -56,19 +56,19 @@ export default function Login() {
         router.push("/");
       } else {
         console.error("Google Login Failed:", result);
+        if (result.response?.status === 307) {
+          const { first_name, last_name } = result.payload;
+          const { access, refresh } = result.payload.token;
+          dispatch(
+            refreshToken({ accessToken: access, refreshToken: refresh })
+          );
+          dispatch(userState({ first_name: first_name, last_name: last_name }));
+          router.push(result.payload.redirectUrl);
+        }
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      if (error.response?.status === 307) {
-        const { first_name, last_name } = result.payload;
-        const { access, refresh } = result.payload.token;
-        dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
-        dispatch(userState({ first_name: first_name, last_name: last_name }));
-        return thunkAPI.fulfillWithValue({
-          status: "redirect",
-          redirectUrl: error.response.data.redirect_url,
-        });
-      }
+
       // if (
       //   result.meta.requestStatus === "rejected" &&
       //   result.payload?.status === "redirect"
