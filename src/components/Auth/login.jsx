@@ -22,7 +22,7 @@ import {
   faKey,
   faArrowRightToBracket,
 } from "@fortawesome/free-solid-svg-icons";
-
+import { Store } from "react-notifications-component";
 export default function Login() {
   const [formData, setFormData] = useState({
     email: "",
@@ -40,6 +40,16 @@ export default function Login() {
         result.payload.status === "redirect"
       ) {
         console.log("Redirecting to:", result.payload.redirectUrl);
+        // Store.addNotification({
+        //   title: "Success",
+        //   message: result.payload.message,
+        //   type: "success",
+        //   container: "top-right",
+        //   dismiss: {
+        //     duration: 5000,
+        //     onScreen: true,
+        //   },
+        // });
         router.push(result.payload.redirectUrl);
       } else {
         dispatch(GetContact());
@@ -75,6 +85,16 @@ export default function Login() {
         dispatch(userState({ first_name: first_name, last_name: last_name }));
         dispatch(GetContact());
         dispatch(GetDependants());
+        // Store.addNotification({
+        //   title: "Success",
+        //   message: "Login Successful",
+        //   type: "success",
+        //   container: "top-right",
+        //   dismiss: {
+        //     duration: 5000,
+        //     onScreen: true,
+        //   },
+        // });
         router.push("/");
       } else {
         console.error("Login Failed:", result);

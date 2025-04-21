@@ -12,6 +12,7 @@ import {
   faUserSlash,
   faUsersSlash,
   faTriangleExclamation,
+  faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 // import { Store } from "react-notifications-component";
 
@@ -68,6 +69,29 @@ export default function TriggerCard({
   const handleTriggerAlert = async () => {
     try {
       const geolocation = await getGeolocation();
+      if (!geolocation.latitude || !geolocation.longitude) {
+        Store.addNotification({
+          title: "Location Error",
+          message: (
+            <div>
+              <FontAwesomeIcon
+                icon={faMapLocationDot}
+                style={{ color: "#ff0000", marginRight: "8px" }}
+              />
+              Operation failed. Make sure the location of the device is turned
+              on
+            </div>
+          ),
+          type: "danger",
+          insert: "top",
+          container: "top-right",
+          dismiss: {
+            duration: 5000,
+            onScreen: true,
+          },
+        });
+        return;
+      }
 
       const res = await dispatch(
         Trigger({
@@ -83,7 +107,16 @@ export default function TriggerCard({
       if (error === "User denied the request for Geolocation.") {
         Store.addNotification({
           title: "Location Required",
-          message: "Turn on location to complete the action.",
+          message: (
+            <div>
+              <FontAwesomeIcon
+                icon={faTriangleExclamation}
+                style={{ color: "#ff0000", marginRight: "8px" }}
+              />
+              Operation failed. Make sure the location of the device is turned
+              on
+            </div>
+          ),
           type: "warning",
           insert: "top",
           container: "top-right",

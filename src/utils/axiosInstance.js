@@ -105,7 +105,11 @@ $axios.interceptors.response.use(
       type: "notifications/addNotification",
       payload: {
         title: "Success",
-        message: response.data.message || "Request completed successfully",
+        message:
+          response.data.message ||
+          response.data.data.message ||
+          response.data.data.detail ||
+          "Request completed successfully",
         type: "success",
       },
     });
@@ -119,7 +123,12 @@ $axios.interceptors.response.use(
       payload: {
         title: "Error",
         message:
-          error.response.data.message || error.message || "Request failed",
+          error.response.data.message ||
+          error.response.data.data.message ||
+          error.message ||
+          error.response.detail ||
+          error.response.data.detail ||
+          "Request failed",
         type: "danger",
       },
     });

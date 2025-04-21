@@ -4,7 +4,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import authReducer from "./authSlice";
 import globalReducer from "./globalSlice";
 import contactReducer from "./userSlice";
-
+import notificationReducer from "./notificationSlice";
 // Persist configuration for auth and contact
 const authPersistConfig = {
   key: "auth",
@@ -20,6 +20,7 @@ const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   global: globalReducer, // Non-persisted reducer
   contact: persistReducer(contactPersistConfig, contactReducer),
+  notifications: notificationReducer,
   // contact: contactReducer,
 });
 
