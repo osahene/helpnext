@@ -24,11 +24,11 @@ export const googleLogin = createAsyncThunk(
         localStorage.setItem(
           "tempAuthData",
           JSON.stringify({
-            tokens: error.response.data.data,
+            tokens: error.response.data.data.token,
             user: {
-              email: error.response.data.email,
-              first_name: error.response.data.first_name,
-              last_name: error.response.data.last_name,
+              email: error.response.data.data.email,
+              first_name: error.response.data.data.first_name,
+              last_name: error.response.data.data.last_name,
             },
           })
         );

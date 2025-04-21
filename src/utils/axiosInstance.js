@@ -113,6 +113,9 @@ $axios.interceptors.response.use(
   },
   (error) => {
     console.error("Response error:", error);
+    console.error("Response error2:", error.message);
+    console.error("Response error3:", error.response.message);
+    console.error("Response error4:", error.response.data.message);
     store.dispatch(setGlobalLoading(false));
 
     store.dispatch({
@@ -120,7 +123,7 @@ $axios.interceptors.response.use(
       payload: {
         title: "Error",
         message:
-          error.response?.data?.detail || error.message || "Request failed",
+          error.response?.data?.message || error.message || "Request failed",
         type: "danger",
       },
     });
