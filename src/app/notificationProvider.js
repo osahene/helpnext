@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNotifications } from "react-notifications-component";
+import { ReactNotifications, Store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
