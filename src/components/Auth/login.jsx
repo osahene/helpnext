@@ -10,7 +10,6 @@ import {
   loginUser,
   refreshToken,
   userState,
-  setEmail,
 } from "@/redux/authSlice";
 import { GetContact, GetDependants } from "@/redux/userSlice";
 import Link from "next/link";
@@ -57,30 +56,18 @@ export default function Login() {
         router.push("/");
       } else {
         console.error("Google Login Failed:", result);
-        if (result.response?.status === 307) {
-          const { first_name, last_name, email } = result.payload.data;
-          const { access, refresh } = result.payload.data.token;
-          console.log("Google Login Redirect:", result.payload.redirectUrl);
-          dispatch(
-            refreshToken({ accessToken: access, refreshToken: refresh })
-          );
-          dispatch(userState({ first_name: first_name, last_name: last_name }));
-          dispatch(setEmail({ email: email }));
-          console.log("Redirecting to phone verification");
-          router.push(result.payload.redirectUrl);
-        }
       }
     } catch (error) {
       console.error("An error occurred:", error);
-
-      // if (
-      //   result.meta.requestStatus === "rejected" &&
-      //   result.payload?.status === "redirect"
-      // ) {
-      //   // Handle redirect to phone verification
-      //   router.push(result.payload.redirectUrl);
-      // }
-      // console.error("An error occurred:", error);
+      if (
+        result.meta.requestStatus === "rejected" &&
+        result.payload?.status === "redirect"
+      ) {
+        // Handle redirect to phone verification
+        console.log("Redirecting to:", result.payload.redirectUrl);
+        router.push(result.payload.redirectUrl);
+      }
+      console.error("An error occurred:", error);
     }
   };
 
