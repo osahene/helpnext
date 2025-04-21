@@ -39,16 +39,6 @@ export default function Login() {
         result.payload.status === "redirect"
       ) {
         console.log("Redirecting to:", result.payload.redirectUrl);
-        // Store.addNotification({
-        //   title: "Success",
-        //   message: result.payload.message,
-        //   type: "success",
-        //   container: "top-right",
-        //   dismiss: {
-        //     duration: 5000,
-        //     onScreen: true,
-        //   },
-        // });
         router.push(result.payload.redirectUrl);
       } else {
         dispatch(GetContact());
