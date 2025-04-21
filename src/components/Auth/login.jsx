@@ -58,6 +58,7 @@ export default function Login() {
         console.error("Google Login Failed:", result);
       }
     } catch (error) {
+      console.error("An error occurred:", error);
       if (
         result.meta.requestStatus === "rejected" &&
         result.payload?.status === "redirect"
