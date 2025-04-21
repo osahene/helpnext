@@ -10,6 +10,7 @@ import {
   loginUser,
   refreshToken,
   userState,
+  setEmail,
 } from "@/redux/authSlice";
 import { GetContact, GetDependants } from "@/redux/userSlice";
 import Link from "next/link";
@@ -57,12 +58,15 @@ export default function Login() {
       } else {
         console.error("Google Login Failed:", result);
         if (result.response?.status === 307) {
-          const { first_name, last_name } = result.payload;
-          const { access, refresh } = result.payload.token;
+          const { first_name, last_name, email } = result.payload.data;
+          const { access, refresh } = result.payload.data.token;
+          console.log("Google Login Redirect:", result.payload.redirectUrl);
           dispatch(
             refreshToken({ accessToken: access, refreshToken: refresh })
           );
           dispatch(userState({ first_name: first_name, last_name: last_name }));
+          dispatch(setEmail({ email: email }));
+          console.log("Redirecting to phone verification");
           router.push(result.payload.redirectUrl);
         }
       }
