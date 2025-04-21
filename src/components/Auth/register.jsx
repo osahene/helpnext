@@ -67,7 +67,9 @@ export default function Register() {
     const result = await dispatch(googleLogin(credentialResponse.credential));
     console.log("Google Login Result:", result);
     try {
+      console.log("gossips");
       if (result.meta.requestStatus === "fulfilled") {
+        console.log("gossips if clause");
         const { first_name, last_name } = result.payload.data;
         const { access, refresh } = result.payload.data.tokens;
 
@@ -80,6 +82,7 @@ export default function Register() {
             email: decoded.email,
           })
         );
+        console.log("gossips this far");
         dispatch(GetContact());
         dispatch(GetDependants());
         router.push("/");

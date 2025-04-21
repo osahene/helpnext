@@ -35,14 +35,24 @@ export default function Login() {
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     const decoded = jwtDecode(credentialResponse.credential);
+    console.log("Decoded first:");
     const result = await dispatch(googleLogin(credentialResponse.credential));
     console.log("Google Login Result:", result);
     try {
-      if (result.meta.requestStatus === "fulfilled") {
+      console.log("Decoded JWT:");
+      if (
+        result.meta.requestStatus === "fulfilled" &&
+        result.payload.status === "redirect"
+      ) {
+        console.log("Redirecting to:", result.payload.redirectUrl);
+        router.push(result.payload.redirectUrl);
+      } else {
+        console.error("Google Login Failed:", result);
         const { first_name, last_name } = result.payload.data;
         const { access, refresh } = result.payload.data.tokens;
-
+        console.log("I'm here:");
         dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
+        console.log("Talkertive:");
         dispatch(
           userState({
             first_name: first_name || decoded.given_name,
@@ -53,20 +63,10 @@ export default function Login() {
         );
         dispatch(GetContact());
         dispatch(GetDependants());
+        console.log("User State:");
         router.push("/");
-      } else {
-        console.error("Google Login Failed:", result);
       }
     } catch (error) {
-      console.error("An error occurred:", error);
-      if (
-        result.meta.requestStatus === "rejected" &&
-        result.payload?.status === "redirect"
-      ) {
-        // Handle redirect to phone verification
-        console.log("Redirecting to:", result.payload.redirectUrl);
-        router.push(result.payload.redirectUrl);
-      }
       console.error("An error occurred:", error);
     }
   };
