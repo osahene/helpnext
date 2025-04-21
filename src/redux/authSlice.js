@@ -200,25 +200,19 @@ export const authSlice = createSlice({
         console.log("Google google action Fulfilled:", action);
         console.log("Google google action Fulfilled2:", action.payload);
         console.log("Google google action Fulfilled3:", action.meta.arg);
-        console.log("Google google action Fulfilled4:", action.meta.arg.access);
-        console.log(
-          "Google google action Fulfilled5:",
-          action.meta.arg.refresh
-        );
-        console.log("Google google action Fulfilled6:", action.meta.arg.email);
         state.loading = false;
-        const { access, refresh } = action.meta.arg;
-        state.accessToken = access;
-        state.refreshToken = refresh;
-        state.isAuthenticated = true;
-      })
-      .addCase(googleLogin.rejected, (state, action) => {
-        console.error("Google Action Error:", action.payload);
         if (action.payload?.status === "redirect") {
           state.redirectUrl = action.payload.redirectUrl;
         } else {
-          state.error = action.payload;
+          const { access, refresh } = action.payload.data.token;
+          state.accessToken = access;
+          state.refreshToken = refresh;
+          state.isAuthenticated = true;
         }
+      })
+      .addCase(googleLogin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
       // Login User
       .addCase(loginUser.pending, (state) => {
