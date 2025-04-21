@@ -1,11 +1,13 @@
 "use client";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faHome } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/navigation";
 export default function SuccessConfirm() {
+  const router = useRouter();
   const handleSubmit = async (event) => {
     event.preventDefault();
-    window.close();
+    router.push("/");
   };
 
   return (
@@ -34,8 +36,8 @@ export default function SuccessConfirm() {
                 type="submit"
                 className="w-full mt-8 flex items-center justify-center gap-2 font-medium rounded-lg text-lg px-5 py-2.5 bg-blue-600 text-white hover:bg-blue-700"
               >
-                <FontAwesomeIcon icon={faClose} className="w-5 h-5" />
-                Close
+                <FontAwesomeIcon icon={faHome} className="w-5 h-5" />
+                Go to homepage
               </button>
             </form>
           </div>
