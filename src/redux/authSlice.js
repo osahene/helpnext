@@ -14,12 +14,6 @@ export const googleLogin = createAsyncThunk(
       console.log("Google Login Response:", res);
       return res;
     } catch (error) {
-      console.error("Google Login Error:", error);
-      console.error("Google Login Error2:", error.response?.status);
-      console.error("Google Login Error alpha:", error.response?.data.data);
-      console.error("Google Login Error alpha2:", error.response.data.data);
-      console.error("Google Login Error3:", error.response.data.email);
-      console.error("Google Login Error4:", error.response.data.first_name);
       if (error.response?.status === 307) {
         localStorage.setItem(
           "tempAuthData",
@@ -204,8 +198,16 @@ export const authSlice = createSlice({
       })
       .addCase(googleLogin.fulfilled, (state, action) => {
         console.log("Google google action Fulfilled:", action);
+        console.log("Google google action Fulfilled2:", action.payload);
+        console.log("Google google action Fulfilled3:", action.meta.arg);
+        console.log("Google google action Fulfilled4:", action.meta.arg.access);
+        console.log(
+          "Google google action Fulfilled5:",
+          action.meta.arg.refresh
+        );
+        console.log("Google google action Fulfilled6:", action.meta.arg.email);
         state.loading = false;
-        const { access, refresh } = action.data.data.token;
+        const { access, refresh } = action.meta.arg;
         state.accessToken = access;
         state.refreshToken = refresh;
         state.isAuthenticated = true;
@@ -213,7 +215,7 @@ export const authSlice = createSlice({
       .addCase(googleLogin.rejected, (state, action) => {
         console.error("Google Action Error:", action.payload);
         if (action.payload?.status === "redirect") {
-          state.redirectUrl = action.data.redirectUrl;
+          state.redirectUrl = action.payload.redirectUrl;
         } else {
           state.error = action.payload;
         }
