@@ -71,6 +71,17 @@ export default function Register() {
         console.log("Redirecting to:", result.payload.redirectUrl);
         router.push(result.payload.redirectUrl);
       } else {
+        const { first_name, last_name } = result.payload.data;
+        const { access, refresh } = result.payload.data.tokens;
+
+        dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
+        dispatch(
+          userState({
+            first_name: first_name,
+            last_name: last_name,
+            isAuthenticated: true,
+          })
+        );
         dispatch(GetContact());
         dispatch(GetDependants());
         console.log("User State:");
