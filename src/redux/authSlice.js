@@ -204,14 +204,15 @@ export const authSlice = createSlice({
       })
       .addCase(googleLogin.fulfilled, (state, action) => {
         state.loading = false;
-        const { access, refresh } = action.payload.data;
+        const { access, refresh } = action.payload.data.data.token;
         state.accessToken = access;
         state.refreshToken = refresh;
         state.isAuthenticated = true;
       })
       .addCase(googleLogin.rejected, (state, action) => {
+        console.error("Google Action Error:", action.payload);
         if (action.payload?.status === "redirect") {
-          state.redirectUrl = action.payload.redirectUrl;
+          state.redirectUrl = action.payload.data.redirectUrl;
         } else {
           state.error = action.payload;
         }
