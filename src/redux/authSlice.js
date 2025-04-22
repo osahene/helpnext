@@ -14,6 +14,21 @@ export const googleLogin = createAsyncThunk(
       console.log("hello wappi");
       console.log("Google Login Response:", res.data);
       if (res.status === 200) {
+        const { tokens, user } = res.data.data;
+        thunkAPI.dispatch(
+          userState({
+            data: {
+              first_name: user.first_name,
+              last_name: user.last_name,
+            },
+          })
+        );
+        thunkAPI.dispatch(
+          refreshToken({
+            accessToken: tokens.access,
+            refreshToken: tokens.refresh,
+          })
+        );
         console.log("Google Login Response:", res);
       }
       return res.data;
