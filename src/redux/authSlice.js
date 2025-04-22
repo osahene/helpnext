@@ -13,16 +13,13 @@ export const googleLogin = createAsyncThunk(
           id_token: cleanToken,
         })
       );
-      console.log("hello wappi");
-      console.log("Google Login Response:", res);
       if (res.status === 200) {
-        // const responseData = res.data.data ? res.data.data : res.data;
-        const { tokens, user } = res;
+        const { tokens, first_name, last_name } = res.data.data;
         thunkAPI.dispatch(
           userState({
             data: {
-              first_name: user.first_name,
-              last_name: user.last_name,
+              first_name: first_name,
+              last_name: last_name,
             },
           })
         );
@@ -32,7 +29,7 @@ export const googleLogin = createAsyncThunk(
             refreshToken: tokens.refresh,
           })
         );
-        console.log("Google Login Response:", res);
+        console.log("hurray");
       }
       return thunkAPI.rejectWithValue(res);
     } catch (error) {
