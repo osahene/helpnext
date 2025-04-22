@@ -41,10 +41,7 @@ export default function Login() {
       ) {
         console.log("Redirecting to:", result.payload.redirectUrl);
         router.push(result.payload.redirectUrl);
-      } else if (
-        result.meta.requestStatus === "fulfilled" &&
-        result.payload.status === "success"
-      ) {
+      } else if (result.meta.requestStatus === "fulfilled") {
         // console.log("Login Failed:", result);
         // const { first_name, last_name } = result.payload.data;
         // const { access, refresh } = result.payload.data.tokens;
@@ -57,12 +54,14 @@ export default function Login() {
         //     isAuthenticated: true,
         //   })
         // );
+        console.log("am i here?");
         dispatch(GetContact());
         dispatch(GetDependants());
         console.log("User State:");
         router.push("/");
       }
     } catch (error) {
+      console.log("rather here");
       console.error("An error occurred:", error);
     }
   };

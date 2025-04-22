@@ -4,17 +4,20 @@ import apiService from "@/utils/axios";
 export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
   async (googleToken, thunkAPI) => {
-    const cleanToken = googleToken.replace(/^"|"$/g, "");
-    const res = await apiService.googleLog(
-      JSON.stringify({
-        id_token: cleanToken,
-      })
-    );
     try {
+      console.log("Google Login Token:", googleToken);
+      console.log("here_thunk", thunkAPI);
+      const cleanToken = googleToken.replace(/^"|"$/g, "");
+      const res = await apiService.googleLog(
+        JSON.stringify({
+          id_token: cleanToken,
+        })
+      );
       console.log("hello wappi");
       console.log("Google Login Response:", res.data);
       if (res.status === 200) {
-        const { tokens, user } = res.data.data;
+        const responseData = res.data.data ? res.data.data : res.data;
+        const { tokens, user } = responseData;
         thunkAPI.dispatch(
           userState({
             data: {
@@ -31,7 +34,7 @@ export const googleLogin = createAsyncThunk(
         );
         console.log("Google Login Response:", res);
       }
-      return res.data;
+      return thunkAPI.rejectWithValue(res.data);
     } catch (error) {
       if (error.response?.status === 307) {
         const tempAuthData = {
@@ -50,7 +53,7 @@ export const googleLogin = createAsyncThunk(
       }
       console.log("Google Login Error:", error);
 
-      return thunkAPI.rejectWithValue(error.res.data);
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
