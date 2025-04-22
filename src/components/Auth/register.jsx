@@ -71,11 +71,9 @@ export default function Register() {
       ) {
         console.log("Redirecting to:", result.payload.redirectUrl);
         router.push(result.payload.redirectUrl);
-      } else {
-        console.log("Login Failed reg:", result);
-        const { first_name, last_name } = result.payload.data;
-        const { access, refresh } = result.payload.data.tokens;
-        console.log("results", result);
+      } else if (result.meta.requestStatus === "fulfilled") {
+        const { first_name, last_name } = result.payload;
+        const { access, refresh } = result.payload.tokens;
         dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
         dispatch(
           userState({
@@ -86,7 +84,6 @@ export default function Register() {
         );
         dispatch(GetContact());
         dispatch(GetDependants());
-        console.log("User State:");
         router.push("/");
       }
     } catch (error) {
