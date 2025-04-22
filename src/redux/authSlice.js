@@ -14,10 +14,10 @@ export const googleLogin = createAsyncThunk(
         })
       );
       console.log("hello wappi");
-      console.log("Google Login Response:", res.data);
+      console.log("Google Login Response:", res);
       if (res.status === 200) {
-        const responseData = res.data.data ? res.data.data : res.data;
-        const { tokens, user } = responseData;
+        // const responseData = res.data.data ? res.data.data : res.data;
+        const { tokens, user } = res;
         thunkAPI.dispatch(
           userState({
             data: {
@@ -34,7 +34,7 @@ export const googleLogin = createAsyncThunk(
         );
         console.log("Google Login Response:", res);
       }
-      return thunkAPI.rejectWithValue(res.data);
+      return thunkAPI.rejectWithValue(res);
     } catch (error) {
       if (error.response?.status === 307) {
         const tempAuthData = {
