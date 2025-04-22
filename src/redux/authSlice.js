@@ -4,13 +4,13 @@ import apiService from "@/utils/axios";
 export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
   async (googleToken, thunkAPI) => {
+    const cleanToken = googleToken.replace(/^"|"$/g, "");
+    const res = await apiService.googleLog(
+      JSON.stringify({
+        id_token: cleanToken,
+      })
+    );
     try {
-      const cleanToken = googleToken.replace(/^"|"$/g, "");
-      const res = await apiService.googleLog(
-        JSON.stringify({
-          id_token: cleanToken,
-        })
-      );
       console.log("hello wappi");
       console.log("Google Login Response:", res.data);
       if (res.status === 200) {
@@ -49,11 +49,8 @@ export const googleLogin = createAsyncThunk(
         });
       }
       console.log("Google Login Error:", error);
-      const message =
-        error.response?.data?.message ||
-        error.message ||
-        "An unknown error occurred during Google login";
-      return thunkAPI.rejectWithValue(message);
+
+      return thunkAPI.rejectWithValue(error.res.data);
     }
   }
 );
