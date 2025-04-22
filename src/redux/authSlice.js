@@ -48,7 +48,11 @@ export const googleLogin = createAsyncThunk(
           tempAuthData,
         });
       }
-      return thunkAPI.rejectWithValue(error.response.data);
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "An unknown error occurred during Google login";
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
