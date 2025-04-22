@@ -63,6 +63,7 @@ export default function Register() {
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     const result = await dispatch(googleLogin(credentialResponse.credential));
+
     try {
       if (
         result.meta.requestStatus === "fulfilled" &&
@@ -71,6 +72,7 @@ export default function Register() {
         console.log("Redirecting to:", result.payload.redirectUrl);
         router.push(result.payload.redirectUrl);
       } else {
+        console.log("Login Failed reg:", result);
         const { first_name, last_name } = result.payload.data;
         const { access, refresh } = result.payload.data.tokens;
         console.log("results", result);

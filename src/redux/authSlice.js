@@ -208,6 +208,7 @@ export const authSlice = createSlice({
           state.last_name = user.last_name;
           state.email = user.email;
         } else {
+          console.log("Google Login failed here:", action.payload);
           const { tokens, user } = action.payload.tempAuthData;
           state.accessToken = tokens.access;
           state.refreshToken = tokens.refresh;
@@ -218,6 +219,8 @@ export const authSlice = createSlice({
         }
       })
       .addCase(googleLogin.rejected, (state, action) => {
+        console.log("Google Login failed in reject:");
+        console.log("Google Login failed in reject 2:", action);
         state.loading = false;
         state.error = action.payload;
       })

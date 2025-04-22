@@ -41,6 +41,7 @@ export default function Login() {
         console.log("Redirecting to:", result.payload.redirectUrl);
         router.push(result.payload.redirectUrl);
       } else {
+        console.log("Login Failed:", result);
         const { first_name, last_name } = result.payload.data;
         const { access, refresh } = result.payload.data.tokens;
         console.log("results", result);
