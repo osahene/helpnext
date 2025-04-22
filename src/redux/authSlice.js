@@ -13,7 +13,9 @@ export const googleLogin = createAsyncThunk(
           id_token: cleanToken,
         })
       );
-      console.log("Google Login Response:", res);
+      if (res.status === 200) {
+        console.log("Google Login Response:", res);
+      }
       return res;
     } catch (error) {
       if (error.response?.status === 307) {
