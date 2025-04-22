@@ -5,8 +5,6 @@ export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
   async (googleToken, thunkAPI) => {
     try {
-      console.log("Google Login Token:", googleToken);
-      console.log("here_thunk", thunkAPI);
       const cleanToken = googleToken.replace(/^"|"$/g, "");
       const res = await apiService.googleLog(
         JSON.stringify({
@@ -14,7 +12,9 @@ export const googleLogin = createAsyncThunk(
         })
       );
       if (res.status === 200) {
-        const { tokens, first_name, last_name } = res.data.data;
+        console.log("login pass", res.data);
+        console.log("login pass2", res.data.data);
+        const { tokens, first_name, last_name } = res.data;
         thunkAPI.dispatch(
           userState({
             data: {
