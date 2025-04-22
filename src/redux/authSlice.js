@@ -5,18 +5,18 @@ export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
   async (googleToken, thunkAPI) => {
     try {
-      console.log("Hallo");
       const cleanToken = googleToken.replace(/^"|"$/g, "");
-      console.log("there");
       const res = await apiService.googleLog(
         JSON.stringify({
           id_token: cleanToken,
         })
       );
+      console.log("hello wappi");
+      console.log("Google Login Response:", res.data);
       if (res.status === 200) {
         console.log("Google Login Response:", res);
       }
-      return res;
+      return res || res.data;
     } catch (error) {
       if (error.response?.status === 307) {
         const tempAuthData = {
