@@ -16,7 +16,7 @@ export const googleLogin = createAsyncThunk(
       if (res.status === 200) {
         console.log("Google Login Response:", res);
       }
-      return res || res.data;
+      return res.data;
     } catch (error) {
       if (error.response?.status === 307) {
         const tempAuthData = {

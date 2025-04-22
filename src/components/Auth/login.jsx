@@ -33,6 +33,7 @@ export default function Login() {
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     const result = await dispatch(googleLogin(credentialResponse.credential));
+    console.log("why?", result);
     try {
       if (
         result.meta.requestStatus === "fulfilled" &&
