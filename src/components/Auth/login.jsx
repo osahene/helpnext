@@ -43,8 +43,8 @@ export default function Login() {
         router.push(result.payload.redirectUrl);
       } else if (result.meta.requestStatus === "fulfilled") {
         console.log("Login Failed:", result);
-        const { first_name, last_name } = result.payload;
-        const { access, refresh } = result.payload.tokens;
+        const { first_name, last_name } = result.payload.data;
+        const { access, refresh } = result.payload.data.tokens;
         console.log("results", result);
         dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
         dispatch(

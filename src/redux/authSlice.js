@@ -31,7 +31,7 @@ export const googleLogin = createAsyncThunk(
       //   );
       //   console.log("hurray");
       // }
-      return res.data.data;
+      return res.data;
     } catch (error) {
       if (error.response?.status === 307) {
         const tempAuthData = {
