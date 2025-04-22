@@ -48,6 +48,7 @@ export const googleLogin = createAsyncThunk(
           tempAuthData,
         });
       }
+      console.log("Google Login Error:", error);
       const message =
         error.response?.data?.message ||
         error.message ||
