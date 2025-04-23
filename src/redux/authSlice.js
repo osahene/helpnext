@@ -228,7 +228,7 @@ export const authSlice = createSlice({
           state.email = user.email;
         } else {
           console.log("Google Login failed here:", action.payload);
-          const { tokens, first_name, last_name } = action.payload;
+          const { tokens, first_name, last_name } = action.payload.data;
           state.accessToken = tokens.access;
           state.refreshToken = tokens.refresh;
           state.first_name = first_name;
