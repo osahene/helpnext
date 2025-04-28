@@ -69,19 +69,8 @@ export default function Register() {
         result.meta.requestStatus === "fulfilled" &&
         result.payload.status === "redirect"
       ) {
-        console.log("Redirecting to:", result.payload.redirectUrl);
         router.push(result.payload.redirectUrl);
       } else if (result.meta.requestStatus === "fulfilled") {
-        // const { first_name, last_name } = result.payload.data;
-        // const { access, refresh } = result.payload.data.tokens;
-        // dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
-        // dispatch(
-        //   userState({
-        //     first_name: first_name,
-        //     last_name: last_name,
-        //     isAuthenticated: true,
-        //   })
-        // );
         dispatch(GetContact());
         dispatch(GetDependants());
         router.push("/");

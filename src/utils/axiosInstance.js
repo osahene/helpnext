@@ -44,16 +44,16 @@ const TakeRefreshToken = async () => {
       }
     }
   } catch (error) {
-    const errorMessage =
-      error.response?.data?.detail || error.message || "Error refreshing token";
-    store.dispatch({
-      type: "notifications/addNotification",
-      payload: {
-        title: "Token Error",
-        message: errorMessage,
-        type: "danger",
-      },
-    });
+    // const errorMessage =
+    //   error.response?.data?.detail || error.message || "Error refreshing token";
+    // store.dispatch({
+    //   type: "notifications/addNotification",
+    //   payload: {
+    //     title: "Token Error",
+    //     message: errorMessage,
+    //     type: "danger",
+    //   },
+    // });
     return null;
   }
 };

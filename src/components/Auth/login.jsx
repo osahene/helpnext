@@ -39,29 +39,13 @@ export default function Login() {
         result.meta.requestStatus === "fulfilled" &&
         result.payload.status === "redirect"
       ) {
-        console.log("Redirecting to:", result.payload.redirectUrl);
         router.push(result.payload.redirectUrl);
       } else if (result.meta.requestStatus === "fulfilled") {
-        // console.log("Login Failed:", result);
-        // const { first_name, last_name } = result.payload.data;
-        // const { access, refresh } = result.payload.data.tokens;
-        // console.log("results", result);
-        // dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
-        // dispatch(
-        //   userState({
-        //     first_name: first_name,
-        //     last_name: last_name,
-        //     isAuthenticated: true,
-        //   })
-        // );
-        console.log("am i here?");
         dispatch(GetContact());
         dispatch(GetDependants());
-        console.log("User State:");
         router.push("/");
       }
     } catch (error) {
-      console.log("rather here");
       console.error("An error occurred:", error);
     }
   };
@@ -89,16 +73,6 @@ export default function Login() {
         dispatch(userState({ first_name: first_name, last_name: last_name }));
         dispatch(GetContact());
         dispatch(GetDependants());
-        // Store.addNotification({
-        //   title: "Success",
-        //   message: "Login Successful",
-        //   type: "success",
-        //   container: "top-right",
-        //   dismiss: {
-        //     duration: 5000,
-        //     onScreen: true,
-        //   },
-        // });
         router.push("/");
       } else {
         console.error("Login Failed:", result);

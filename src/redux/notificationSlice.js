@@ -13,9 +13,12 @@ const notificationSlice = createSlice({
         id: Date.now(),
         ...action.payload,
       });
+      setTimeout(() => {
+        store.dispatch(removeNotification(id));
+      }, 5000);
     },
     removeNotification: (state, action) => {
-      state.notifications.filter(
+      state.notifications = state.notifications.filter(
         (notification) => notification.id !== action.payload
       );
     },

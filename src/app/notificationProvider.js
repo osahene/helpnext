@@ -14,22 +14,26 @@ export default function NotificationsProvider({ children }) {
 
   useEffect(() => {
     notifications.forEach((notification) => {
-      Store.addNotification({
-        title: notification.title,
-        message: notification.message,
-        type: notification.type,
-        isMobile: true,
-        container: "top-right",
-        animationIn: ["animate__animated", "animate__fadeIn"],
-        animationOut: ["animate__animated", "animate__fadeOut"],
-        dismiss: {
-          duration: 5000,
-          onScreen: true,
-        },
-        onRemoval: () => {
-          dispatch(removeNotification(notification.id));
-        },
-      });
+      // Check if this notification is already displayed
+      if (!Store.getNotification(notification.id)) {
+        Store.addNotification({
+          id: notification.id,
+          title: notification.title,
+          message: notification.message,
+          type: notification.type,
+          insert: "top",
+          container: "top-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 5000,
+            onScreen: true,
+            pauseOnHover: true,
+            showIcon: true,
+          },
+          onRemoval: () => dispatch(removeNotification(notification.id)),
+        });
+      }
     });
   }, [notifications, dispatch]);
   return (
