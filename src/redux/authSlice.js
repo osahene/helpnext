@@ -173,7 +173,7 @@ const initialState = {
   phone_number: "",
 };
 
-export const authSlice = createSlice({
+const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
