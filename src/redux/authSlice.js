@@ -1,36 +1,32 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  isPending,
+  isRejected,
+} from "@reduxjs/toolkit";
 import apiService from "@/utils/axios";
 
+// Helper function to handle common async thunk patterns
+const createAuthThunk = (name, apiCall) =>
+  createAsyncThunk(`auth/${name}`, async (data, { rejectWithValue }) => {
+    try {
+      const response = await apiCall(data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error);
+    }
+  });
+
+// Special case for googleLogin due to its unique requirements
 export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
-  async (googleToken, thunkAPI) => {
+  async (googleToken, { fulfillWithValue, rejectWithValue }) => {
     try {
       const cleanToken = googleToken.replace(/^"|"$/g, "");
       const res = await apiService.googleLog(
-        JSON.stringify({
-          id_token: cleanToken,
-        })
+        JSON.stringify({ id_token: cleanToken })
       );
-      // if (res.status === 200) {
-      //   console.log("login pass", res.data);
-      //   console.log("login pass2", res.data.data);
-      //   const { tokens, first_name, last_name } = res.data;
-      //   thunkAPI.dispatch(
-      //     userState({
-      //       data: {
-      //         first_name: first_name,
-      //         last_name: last_name,
-      //       },
-      //     })
-      //   );
-      //   thunkAPI.dispatch(
-      //     refreshToken({
-      //       accessToken: tokens.access,
-      //       refreshToken: tokens.refresh,
-      //     })
-      //   );
-      //   console.log("hurray");
-      // }
+
       return res.data;
     } catch (error) {
       if (error.response?.status === 307) {
@@ -42,118 +38,44 @@ export const googleLogin = createAsyncThunk(
             last_name: error.response.data.data.last_name,
           },
         };
-        return thunkAPI.fulfillWithValue({
+        return fulfillWithValue({
           status: "redirect",
           redirectUrl: error.response.data.redirect_next_url,
           tempAuthData,
         });
       }
-      console.log("Google Login Error:", error);
+      return rejectWithValue(error);
+    }
+  }
+);
 
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
+// Standard thunks using the helper function
+export const loginUser = createAuthThunk("login", apiService.login);
+export const logoutUser = createAuthThunk("logout", apiService.logout);
+export const registerUser = createAuthThunk("register", apiService.register);
+export const verifyEmail = createAuthThunk(
+  "verifyEmail",
+  apiService.verifyEmail
 );
-export const loginUser = createAsyncThunk(
-  "auth/login",
-  async (userData, thunkAPI) => {
-    try {
-      console.log("hellos");
-      const res = await apiService.login(userData);
-      console.log("Login User response thunk:", res);
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
-    }
-  }
+export const verifyPhoneNumber = createAuthThunk(
+  "verifyPhoneNumber",
+  apiService.VerifyPhoneNumber
 );
-export const logoutUser = createAsyncThunk(
-  "auth/logout",
-  async (_, thunkAPI) => {
-    try {
-      const res = await apiService.logout();
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
-    }
-  }
+export const verifyPhoneNumberOTP = createAuthThunk(
+  "verifyPhoneNumberOTP",
+  apiService.VerifyPhoneNumberOTP
 );
-export const registerUser = createAsyncThunk(
-  "auth/register",
-  async (userData, thunkAPI) => {
-    try {
-      const res = await apiService.register(userData);
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
-    }
-  }
+export const requestOTP = createAuthThunk(
+  "requestOTP",
+  apiService.generateRegister
 );
-export const verifyEmail = createAsyncThunk(
-  "auth/verifyEmail",
-  async (userData, thunkAPI) => {
-    try {
-      const res = await apiService.verifyEmail(userData);
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
-    }
-  }
+export const forgottenPasswordRequest = createAuthThunk(
+  "forgottenPassword",
+  apiService.forgottenEmail
 );
-export const verifyPhoneNumber = createAsyncThunk(
-  "auth/verifyPhoneNumber",
-  async (userData, thunkAPI) => {
-    try {
-      const res = await apiService.VerifyPhoneNumber(userData);
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
-    }
-  }
-);
-export const verifyPhoneNumberOTP = createAsyncThunk(
-  "auth/verifyPhoneNumberOTP",
-  async (userData, { rejectWithValue }) => {
-    try {
-      const res = await apiService.VerifyPhoneNumberOTP(userData);
-      return res.data;
-    } catch (error) {
-      return rejectWithValue(error.res.data);
-    }
-  }
-);
-export const requestOTP = createAsyncThunk(
-  "auth/requestOTP",
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await apiService.generateRegister(data);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-export const forgottenPasswordRequest = createAsyncThunk(
-  "auth/forgottenPassword",
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await apiService.forgottenEmail(data);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-export const confirmPasswordRequest = createAsyncThunk(
-  "auth/confirmPassword",
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await apiService.confirmPassword(data);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
+export const confirmPasswordRequest = createAuthThunk(
+  "confirmPassword",
+  apiService.confirmPassword
 );
 
 const initialState = {
@@ -166,205 +88,134 @@ const initialState = {
   error: null,
   email: "",
   phone_number: "",
+  redirectUrl: null,
+};
+
+// Helper functions for state updates
+const handleAuthSuccess = (state, { tokens, user }) => {
+  state.accessToken = tokens?.access || null;
+  state.refreshToken = tokens?.refresh || null;
+  state.isAuthenticated = true;
+
+  if (user) {
+    state.first_name = user.first_name;
+    state.last_name = user.last_name;
+    state.email = user.email;
+  }
+};
+
+const resetAuthState = (state) => {
+  state.accessToken = null;
+  state.refreshToken = null;
+  state.first_name = null;
+  state.last_name = null;
+  state.isAuthenticated = false;
 };
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setTempAuthData: (state, action) => {
-      const { tokens, user } = action.payload;
-      state.accessToken = tokens.access;
-      state.refreshToken = tokens.refresh;
-      state.first_name = user.first_name;
-      state.last_name = user.last_name;
-      state.email = user.email;
+    setTempAuthData: (state, { payload: { tokens, user } }) => {
+      handleAuthSuccess(state, { tokens, user });
     },
-    setEmail(state, action) {
-      state.email = action.payload;
+    setEmail: (state, { payload }) => {
+      state.email = payload;
     },
-    setforgottenPasswordRequest(state, action) {
-      state.email = action.payload;
+    setforgottenPasswordRequest: (state, { payload }) => {
+      state.email = payload;
     },
-    setConfirmPassword(state, action) {
-      state.password = action.payload;
+    setConfirmPassword: (state, { payload }) => {
+      state.password = payload;
     },
-    setPhoneNumbers(state, action) {
-      state.phone_number = action.payload;
+    setPhoneNumbers: (state, { payload }) => {
+      state.phone_number = payload;
     },
-    userState: (state, action) => {
-      console.log("userState action", action);
-      const { first_name, last_name } = action.payload.data;
+    userState: (state, { payload: { first_name, last_name } }) => {
       state.first_name = first_name;
       state.last_name = last_name;
       state.isAuthenticated = true;
     },
-    logout: (state) => {
-      state.accessToken = null;
-      state.refreshToken = null;
-      state.first_name = null;
-      state.last_name = null;
-      state.isAuthenticated = false;
+    logout: resetAuthState,
+    refreshToken: (state, { payload: { accessToken, refreshToken } }) => {
+      state.accessToken = accessToken;
+      state.refreshToken = refreshToken;
     },
-    refreshToken: (state, action) => {
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
+    clearError: (state) => {
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      // Google Login
-      .addCase(googleLogin.pending, (state) => {
+      // Common loading and error handling
+      .addMatcher(isPending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(googleLogin.fulfilled, (state, action) => {
+      .addMatcher(isRejected, (state, { payload }) => {
         state.loading = false;
-        if (action.payload?.status === "redirect") {
-          state.redirectUrl = action.payload.redirectUrl;
-          const { tokens, user } = action.payload.tempAuthData;
-          state.accessToken = tokens.access;
-          state.refreshToken = tokens.refresh;
-          state.first_name = user.first_name;
-          state.last_name = user.last_name;
-          state.email = user.email;
+        state.error = payload;
+      })
+
+      // Google Login
+      .addCase(googleLogin.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        if (payload?.status === "redirect") {
+          state.redirectUrl = payload.redirectUrl;
+          handleAuthSuccess(state, payload.tempAuthData);
         } else {
-          console.log("Google Login failed here:", action.payload);
-          const { tokens, first_name, last_name } = action.payload.data;
-          state.accessToken = tokens.access;
-          state.refreshToken = tokens.refresh;
-          state.first_name = first_name;
-          state.last_name = last_name;
-          state.isAuthenticated = true;
+          handleAuthSuccess(state, {
+            tokens: payload.data?.tokens,
+            user: {
+              first_name: payload.data?.first_name,
+              last_name: payload.data?.last_name,
+            },
+          });
         }
       })
-      .addCase(googleLogin.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+
       // Login User
-      .addCase(loginUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
+      .addCase(loginUser.fulfilled, (state, { payload }) => {
         state.loading = false;
-        console.log("Login User success:", action);
-        const { access, refresh } = action.payload.data.tokens;
-        state.accessToken = access;
-        state.refreshToken = refresh;
-        state.isAuthenticated = true;
+        handleAuthSuccess(state, { tokens: payload.data?.tokens });
       })
-      .addCase(loginUser.rejected, (state, action) => {
-        console.log("Login User failed in reject:", action);
-        console.log("Login User failed in reject 2:", action.payload);
-        state.loading = false;
-        state.error = action.payload;
-      })
+
       // Logout User
-      .addCase(logoutUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(logoutUser.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(logoutUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      // Register User
-      .addCase(registerUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(registerUser.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+      .addCase(logoutUser.fulfilled, resetAuthState)
+
       // Verify Email
-      .addCase(verifyEmail.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(verifyEmail.fulfilled, (state, action) => {
+      .addCase(verifyEmail.fulfilled, (state, { payload }) => {
         state.loading = false;
-        const { access, refresh } = action.payload;
-        state.accessToken = access;
-        state.refreshToken = refresh;
+        handleAuthSuccess(state, { tokens: payload });
       })
-      .addCase(verifyEmail.rejected, (state, action) => {
+
+      // Verify Phone Number OTP
+      .addCase(verifyPhoneNumberOTP.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.error = action.payload;
+        handleAuthSuccess(state, { tokens: payload });
       })
-      // Verify phone_number
-      .addCase(verifyPhoneNumber.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(verifyPhoneNumber.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(verifyPhoneNumber.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      // Verify phone_number OTP
-      .addCase(verifyPhoneNumberOTP.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(verifyPhoneNumberOTP.fulfilled, (state, action) => {
-        state.loading = false;
-        const { access, refresh } = action.payload;
-        state.accessToken = access;
-        state.refreshToken = refresh;
-      })
-      .addCase(verifyPhoneNumberOTP.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      // request otp
-      .addCase(requestOTP.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(requestOTP.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(requestOTP.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      // Request ForgottenPassword
-      .addCase(forgottenPasswordRequest.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(forgottenPasswordRequest.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(forgottenPasswordRequest.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+
       // Confirm Password
-      .addCase(confirmPasswordRequest.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(confirmPasswordRequest.fulfilled, (state) => {
+      .addCase(confirmPasswordRequest.fulfilled, (state, { payload }) => {
         state.loading = false;
-        const { access, refresh } = action.payload;
-        state.accessToken = access;
-        state.refreshToken = refresh;
+        handleAuthSuccess(state, { tokens: payload });
       })
-      .addCase(confirmPasswordRequest.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
+
+      // Other fulfilled cases that just need to set loading to false
+      .addMatcher(
+        (action) =>
+          action.type.endsWith("/fulfilled") &&
+          ![
+            "googleLogin",
+            "loginUser",
+            "verifyEmail",
+            "verifyPhoneNumberOTP",
+            "confirmPasswordRequest",
+          ].some((type) => action.type.includes(type)),
+        (state) => {
+          state.loading = false;
+        }
+      );
   },
 });
 
@@ -376,5 +227,8 @@ export const {
   setforgottenPasswordRequest,
   setPhoneNumbers,
   userState,
+  setTempAuthData,
+  clearError,
 } = authSlice.actions;
+
 export default authSlice.reducer;
