@@ -79,7 +79,7 @@ export const logoutUser = createAsyncThunk(
       const res = await apiService.logout();
       return res.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -90,7 +90,7 @@ export const registerUser = createAsyncThunk(
       const res = await apiService.register(userData);
       return res.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -101,7 +101,7 @@ export const verifyEmail = createAsyncThunk(
       const res = await apiService.verifyEmail(userData);
       return res.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -112,7 +112,7 @@ export const verifyPhoneNumber = createAsyncThunk(
       const res = await apiService.VerifyPhoneNumber(userData);
       return res.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
