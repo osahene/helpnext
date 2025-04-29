@@ -13,10 +13,11 @@ import { faCircle, faFile } from "@fortawesome/free-solid-svg-icons";
 import DependantAction from "./dependantActionCard";
 
 export default function Dependents() {
-  const dependants =
-    JSON.parse(
-      JSON.stringify(useSelector((state) => state.contact.dependants)) || "{}"
-    ).results || [];
+  // const dependants =
+  //   JSON.parse(
+  //     JSON.stringify(useSelector((state) => state.contact.dependants)) || "{}"
+  //   ).results || [];
+  const dependants = useSelector((state) => state.contact.dependants) || [];
   const loadData = useSelector((state) => state.contact.loadData);
   const dispatch = useDispatch();
   const [actionModal, setActionModal] = useState({
@@ -128,19 +129,15 @@ export default function Dependents() {
                   >
                     <div className="ps-3">
                       <div className="text-base font-semibold">
-                        <span className="px-2">
-                          {dependant.created_by.first_name}
-                        </span>
-                        <span>{dependant.created_by.last_name}</span>
+                        <span className="px-2">{dependant.first_name}</span>
+                        <span>{dependant.last_name}</span>
                       </div>
                       <div className="font-normal text-gray-500">
-                        {dependant.created_by.email}
+                        {dependant.email}
                       </div>
                     </div>
                   </th>
-                  <td className="px-6 py-4">
-                    {dependant.created_by.phone_number}
-                  </td>
+                  <td className="px-6 py-4">{dependant.phone_number}</td>
                   <td className="px-6 py-4">{dependant.relation}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center">

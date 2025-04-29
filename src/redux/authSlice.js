@@ -60,7 +60,6 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (userData, thunkAPI) => {
     try {
-      console.log("hellos", userData);
       const res = await apiService.login(userData);
       return res.data;
     } catch (error) {
