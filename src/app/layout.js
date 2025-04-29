@@ -5,7 +5,6 @@ import GlobalLoading from "./GlobalLoading";
 import ReduxProvider from "./reduxProvider";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
-import GoogleOAuthInitializer from "./GoogleOAuthInitializer";
 config.autoAddCss = false;
 
 const geistSans = localFont({
@@ -32,9 +31,7 @@ export default function RootLayout({ children }) {
       >
         <ReduxProvider>
           <GlobalLoading />
-          <GoogleOAuthInitializer>
-            <NotificationsProvider>{children}</NotificationsProvider>
-          </GoogleOAuthInitializer>
+          <NotificationsProvider>{children}</NotificationsProvider>
         </ReduxProvider>
       </body>
     </html>
