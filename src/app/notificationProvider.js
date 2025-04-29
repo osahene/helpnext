@@ -8,6 +8,7 @@ import { removeNotification } from "../redux/notificationSlice";
 
 export default function NotificationsProvider({ children }) {
   const dispatch = useDispatch();
+  const [ready, setReady] = useState(false);
   const notifications = useSelector(
     (state) => state.notifications.notifications
   );
@@ -41,6 +42,12 @@ export default function NotificationsProvider({ children }) {
       }
     });
   }, [notifications, dispatch]);
+
+  useEffect(() => {
+    setReady(true);
+  }, []);
+
+  if (!ready) return children;
   return (
     <>
       <ReactNotifications />
