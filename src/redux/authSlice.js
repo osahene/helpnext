@@ -251,11 +251,14 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        const { access, refresh } = action.payload.data.tokens;
+        const { access, refresh } = action.payload.data.tokens.tokens;
         console.log("Login User success:", action.payload);
         console.log("Login User success 2:", action.payload.data.tokens);
         console.log("Login User success 3:", action.payload.data);
-        console.log("Login User success 4:", action.payload.data.tokens.access);
+        console.log(
+          "Login User success 4:",
+          action.payload.data.tokens.tokens.access
+        );
         console.log(
           "Login User success 5:",
           action.payload.data.tokens.refresh
@@ -267,8 +270,6 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
-        console.log("Login User failed in reject:", action);
-        console.log("Login User failed in reject 2:", action.payload);
         state.loading = false;
         state.error = action.payload;
       })

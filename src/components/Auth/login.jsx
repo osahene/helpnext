@@ -5,12 +5,7 @@ import {
   // useSelector
 } from "react-redux";
 import Image from "next/image";
-import {
-  googleLogin,
-  loginUser,
-  refreshToken,
-  userState,
-} from "@/redux/authSlice";
+import { googleLogin, loginUser } from "@/redux/authSlice";
 import { GetContact, GetDependants } from "@/redux/userSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -69,8 +64,6 @@ export default function Login() {
       const result = await dispatch(loginUser(formData));
       console.log("Login Result:", result);
       if (result.meta.requestStatus === "fulfilled") {
-        // const { first_name, last_name } = result.payload.data;
-        // dispatch(userState({ first_name: first_name, last_name: last_name }));
         dispatch(GetContact());
         dispatch(GetDependants());
         router.push("/");
