@@ -66,11 +66,12 @@ export default function Login() {
     e.preventDefault();
     try {
       const result = await dispatch(loginUser(formData));
+      console.log("Login Result:", result);
       if (result.meta.requestStatus === "fulfilled") {
-        // const { first_name, last_name } = result.payload.data;
+        const { first_name, last_name } = result.payload.data;
         const { access, refresh } = result.payload.data.tokens;
         dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
-        // dispatch(userState({ first_name: first_name, last_name: last_name }));
+        dispatch(userState({ first_name: first_name, last_name: last_name }));
         dispatch(GetContact());
         dispatch(GetDependants());
         router.push("/");
