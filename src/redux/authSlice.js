@@ -61,13 +61,9 @@ export const loginUser = createAsyncThunk(
     try {
       console.log("hellos", userData);
       const res = await apiService.login(userData);
-      console.log("Login User response thunk:", res);
-      console.log("Login User response thunk:", res.data);
-      return res.data || res;
+      return res.data;
     } catch (error) {
       const errorData = error.response?.data || error.data || error.message;
-      console.log("errrrr", error);
-      console.log("errrrrvvvvv", errorData);
       return thunkAPI.rejectWithValue(errorData);
     }
   }
@@ -120,10 +116,10 @@ export const verifyPhoneNumberOTP = createAsyncThunk(
   "auth/verifyPhoneNumberOTP",
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await apiService.VerifyPhoneNumberOTP(userData);
-      return res.data;
+      const response = await apiService.VerifyPhoneNumberOTP(userData);
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.res.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -213,8 +209,8 @@ const authSlice = createSlice({
     },
     refreshToken: (state, action) => {
       console.log("refreshToken action", action);
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
+      state.accessToken = action.payload.data.accessToken;
+      state.refreshToken = action.payload.data.refreshToken;
     },
   },
   extraReducers: (builder) => {
@@ -255,10 +251,11 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        console.log("Login User success:", action);
         const { access, refresh } = action.payload.data.tokens;
         state.accessToken = access;
         state.refreshToken = refresh;
+        state.first_name = action.payload.data.first_name;
+        state.last_name = action.payload.data.last_name;
         state.isAuthenticated = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
