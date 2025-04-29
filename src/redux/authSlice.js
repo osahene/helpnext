@@ -60,7 +60,7 @@ export const loginUser = createAsyncThunk(
     try {
       const res = await apiService.login(userData);
       console.log("login res", res);
-      return res;
+      return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.res.data);
     }
