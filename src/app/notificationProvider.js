@@ -2,7 +2,7 @@
 
 import { ReactNotifications, Store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeNotification } from "../redux/notificationSlice";
 
@@ -11,11 +11,12 @@ export default function NotificationsProvider({ children }) {
   const notifications = useSelector(
     (state) => state.notifications.notifications
   );
+  const displayedNotifications = useRef(new Set());
 
   useEffect(() => {
     notifications.forEach((notification) => {
       // Check if this notification is already displayed
-      if (!Store.getNotification(notification.id)) {
+      if (!displayedNotifications.current.has(notification.id)) {
         Store.addNotification({
           id: notification.id,
           title: notification.title,
@@ -31,8 +32,12 @@ export default function NotificationsProvider({ children }) {
             pauseOnHover: true,
             showIcon: true,
           },
-          onRemoval: () => dispatch(removeNotification(notification.id)),
+          onRemoval: (id) => {
+            dispatch(removeNotification(id));
+            displayedNotifications.current.delete(id);
+          },
         });
+        displayedNotifications.current.add(notification.id);
       }
     });
   }, [notifications, dispatch]);
