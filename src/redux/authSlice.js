@@ -62,9 +62,13 @@ export const loginUser = createAsyncThunk(
       console.log("hellos", userData);
       const res = await apiService.login(userData);
       console.log("Login User response thunk:", res);
-      return res.data;
+      console.log("Login User response thunk:", res.data);
+      return res.data || res;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
+      const errorData = error.response?.data || error.data || error.message;
+      console.log("errrrr", error);
+      console.log("errrrrvvvvv", errorData);
+      return thunkAPI.rejectWithValue(errorData);
     }
   }
 );
