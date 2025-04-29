@@ -1,26 +1,46 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  isPending,
-  isRejected,
-} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import apiService from "@/utils/axios";
 
-// Helper function to handle common async thunk patterns
+// Helper functions for common patterns
 const createAuthThunk = (name, apiCall) =>
   createAsyncThunk(`auth/${name}`, async (data, { rejectWithValue }) => {
     try {
-      const response = await apiCall(data);
-      return response.data;
+      const res = await apiCall(data);
+      return res.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || error);
+      return rejectWithValue(error.response?.data || error.message);
     }
   });
 
-// Special case for googleLogin due to its unique requirements
+const handleAuthSuccess = (state, action) => {
+  const { tokens, first_name, last_name, email } =
+    action.payload.data || action.payload;
+  if (tokens) {
+    state.accessToken = tokens.access;
+    state.refreshToken = tokens.refresh;
+  }
+  if (first_name) state.first_name = first_name;
+  if (last_name) state.last_name = last_name;
+  if (email) state.email = email;
+  state.isAuthenticated = true;
+  state.loading = false;
+  state.error = null;
+};
+
+const handlePendingState = (state) => {
+  state.loading = true;
+  state.error = null;
+};
+
+const handleRejectedState = (state, action) => {
+  state.loading = false;
+  state.error = action.payload;
+};
+
+// Thunks
 export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
-  async (googleToken, { fulfillWithValue, rejectWithValue }) => {
+  async (googleToken, thunkAPI) => {
     try {
       const cleanToken = googleToken.replace(/^"|"$/g, "");
       const res = await apiService.googleLog(
@@ -38,18 +58,17 @@ export const googleLogin = createAsyncThunk(
             last_name: error.response.data.data.last_name,
           },
         };
-        return fulfillWithValue({
+        return thunkAPI.fulfillWithValue({
           status: "redirect",
           redirectUrl: error.response.data.redirect_next_url,
           tempAuthData,
         });
       }
-      return rejectWithValue(error);
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-// Standard thunks using the helper function
 export const loginUser = createAuthThunk("login", apiService.login);
 export const logoutUser = createAuthThunk("logout", apiService.logout);
 export const registerUser = createAuthThunk("register", apiService.register);
@@ -91,129 +110,101 @@ const initialState = {
   redirectUrl: null,
 };
 
-// Helper functions for state updates
-const handleAuthSuccess = (state, { tokens, user }) => {
-  state.accessToken = tokens?.access || null;
-  state.refreshToken = tokens?.refresh || null;
-  state.isAuthenticated = true;
-
-  if (user) {
-    state.first_name = user.first_name;
-    state.last_name = user.last_name;
-    state.email = user.email;
-  }
-};
-
-const resetAuthState = (state) => {
-  state.accessToken = null;
-  state.refreshToken = null;
-  state.first_name = null;
-  state.last_name = null;
-  state.isAuthenticated = false;
-};
-
 export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setTempAuthData: (state, { payload: { tokens, user } }) => {
-      handleAuthSuccess(state, { tokens, user });
+    setTempAuthData: (state, action) => {
+      const { tokens, user } = action.payload;
+      state.accessToken = tokens.access;
+      state.refreshToken = tokens.refresh;
+      state.first_name = user.first_name;
+      state.last_name = user.last_name;
+      state.email = user.email;
     },
-    setEmail: (state, { payload }) => {
-      state.email = payload;
+    setEmail: (state, action) => {
+      state.email = action.payload;
     },
-    setforgottenPasswordRequest: (state, { payload }) => {
-      state.email = payload;
+    setforgottenPasswordRequest: (state, action) => {
+      state.email = action.payload;
     },
-    setConfirmPassword: (state, { payload }) => {
-      state.password = payload;
+    setConfirmPassword: (state, action) => {
+      state.password = action.payload;
     },
-    setPhoneNumbers: (state, { payload }) => {
-      state.phone_number = payload;
+    setPhoneNumbers: (state, action) => {
+      state.phone_number = action.payload;
     },
-    userState: (state, { payload: { first_name, last_name } }) => {
+    userState: (state, action) => {
+      console.log("userState action payload", action.payload);
+      const { first_name, last_name } = action.payload;
       state.first_name = first_name;
       state.last_name = last_name;
       state.isAuthenticated = true;
     },
-    logout: resetAuthState,
-    refreshToken: (state, { payload: { accessToken, refreshToken } }) => {
-      state.accessToken = accessToken;
-      state.refreshToken = refreshToken;
+    logout: (state) => {
+      Object.assign(state, initialState);
     },
-    clearError: (state) => {
-      state.error = null;
+    refreshToken: (state, action) => {
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
     },
   },
   extraReducers: (builder) => {
     builder
-      // Common loading and error handling
-      .addMatcher(isPending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addMatcher(isRejected, (state, { payload }) => {
-        state.loading = false;
-        state.error = payload;
-      })
+      // Common pending state for all async actions
+      .addMatcher(
+        (action) =>
+          action.type.startsWith("auth/") && action.type.endsWith("/pending"),
+        handlePendingState
+      )
 
-      // Google Login
-      .addCase(googleLogin.fulfilled, (state, { payload }) => {
-        state.loading = false;
-        if (payload?.status === "redirect") {
-          state.redirectUrl = payload.redirectUrl;
-          handleAuthSuccess(state, payload.tempAuthData);
+      // Common rejected state for all async actions
+      .addMatcher(
+        (action) =>
+          action.type.startsWith("auth/") && action.type.endsWith("/rejected"),
+        handleRejectedState
+      )
+
+      // Google Login specific handling
+      .addCase(googleLogin.fulfilled, (state, action) => {
+        if (action.payload?.status === "redirect") {
+          state.redirectUrl = action.payload.redirectUrl;
+          const { tokens, user } = action.payload.tempAuthData;
+          state.accessToken = tokens.access;
+          state.refreshToken = tokens.refresh;
+          state.first_name = user.first_name;
+          state.last_name = user.last_name;
+          state.email = user.email;
         } else {
-          handleAuthSuccess(state, {
-            tokens: payload.data?.tokens,
-            user: {
-              first_name: payload.data?.first_name,
-              last_name: payload.data?.last_name,
-            },
-          });
+          handleAuthSuccess(state, action);
         }
       })
 
-      // Login User
-      .addCase(loginUser.fulfilled, (state, { payload }) => {
-        state.loading = false;
-        handleAuthSuccess(state, { tokens: payload.data?.tokens });
-      })
-
-      // Logout User
-      .addCase(logoutUser.fulfilled, resetAuthState)
-
-      // Verify Email
-      .addCase(verifyEmail.fulfilled, (state, { payload }) => {
-        state.loading = false;
-        handleAuthSuccess(state, { tokens: payload });
-      })
-
-      // Verify Phone Number OTP
-      .addCase(verifyPhoneNumberOTP.fulfilled, (state, { payload }) => {
-        state.loading = false;
-        handleAuthSuccess(state, { tokens: payload });
-      })
-
-      // Confirm Password
-      .addCase(confirmPasswordRequest.fulfilled, (state, { payload }) => {
-        state.loading = false;
-        handleAuthSuccess(state, { tokens: payload });
-      })
-
-      // Other fulfilled cases that just need to set loading to false
+      // Actions that set auth state on success
       .addMatcher(
         (action) =>
-          action.type.endsWith("/fulfilled") &&
-          ![
-            "googleLogin",
-            "loginUser",
-            "verifyEmail",
-            "verifyPhoneNumberOTP",
-            "confirmPasswordRequest",
-          ].some((type) => action.type.includes(type)),
+          [
+            loginUser.fulfilled.type,
+            verifyEmail.fulfilled.type,
+            verifyPhoneNumberOTP.fulfilled.type,
+            confirmPasswordRequest.fulfilled.type,
+          ].includes(action.type),
+        handleAuthSuccess
+      )
+
+      // Actions that just need to set loading to false on success
+      .addMatcher(
+        (action) =>
+          [
+            logoutUser.fulfilled.type,
+            registerUser.fulfilled.type,
+            verifyPhoneNumber.fulfilled.type,
+            requestOTP.fulfilled.type,
+            forgottenPasswordRequest.fulfilled.type,
+          ].includes(action.type),
         (state) => {
           state.loading = false;
+          state.error = null;
         }
       );
   },
@@ -227,8 +218,5 @@ export const {
   setforgottenPasswordRequest,
   setPhoneNumbers,
   userState,
-  setTempAuthData,
-  clearError,
 } = authSlice.actions;
-
 export default authSlice.reducer;
