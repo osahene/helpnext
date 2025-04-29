@@ -2,6 +2,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser, logout } from "@/redux/authSlice";
 import { resetAllSlices } from "@/redux/rootActions";
+import { setGlobalLoading } from "@/redux/globalSlice";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -47,6 +48,7 @@ export default function HeaderBar() {
     try {
       if (result.meta.requestStatus === "fulfilled") {
         dispatch(resetAllSlices());
+        dispatch(setGlobalLoading(false));
         dispatch(logout());
         router.push("/");
       }
