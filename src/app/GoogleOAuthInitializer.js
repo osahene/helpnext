@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
 export default function GoogleOAuthInitializer({ children }) {
   const [clientId, setClientId] = useState(null);
@@ -17,6 +17,9 @@ export default function GoogleOAuthInitializer({ children }) {
   if (!clientId) return children;
 
   return (
-    <GoogleOAuthProvider clientId={clientId}>{children}</GoogleOAuthProvider>
+    <GoogleOAuthProvider clientId={clientId}>
+      <GoogleLogin onSuccess={handleGoogleLoginSuccess} />
+      {children}
+    </GoogleOAuthProvider>
   );
 }
