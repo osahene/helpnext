@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { resetAllSlices } from "./rootActions";
 import apiService from "@/utils/axios";
 
 export const googleLogin = createAsyncThunk(
@@ -206,6 +207,7 @@ const authSlice = createSlice({
       state.last_name = null;
       state.isAuthenticated = false;
       state.loading = false;
+      return initialState;
     },
     refreshToken: (state, action) => {
       console.log("refreshToken action", action);
@@ -276,6 +278,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = null;
       })
+      .addCase(logoutUser.fulfilled, () => initialState)
       .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -371,7 +374,8 @@ const authSlice = createSlice({
       .addCase(confirmPasswordRequest.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      .addCase(resetAllSlices, () => initialState);
   },
 });
 

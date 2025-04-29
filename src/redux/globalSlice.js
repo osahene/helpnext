@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+import { resetAllSlices } from "./rootActions";
 const globalSlice = createSlice({
   name: "global",
   initialState: { loading: false },
@@ -7,6 +7,9 @@ const globalSlice = createSlice({
     setGlobalLoading: (state, action) => {
       state.loading = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(resetAllSlices, () => ({ loading: false }));
   },
 });
 

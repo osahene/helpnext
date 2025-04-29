@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { resetAllSlices } from "./rootActions";
 import apiService from "@/utils/axios";
 
 export const createContact = createAsyncThunk(
@@ -261,7 +262,9 @@ const ContactSlice = createSlice({
       .addCase(Trigger.rejected, (state, action) => {
         state.loadData = "failed";
         state.error = action.payload;
-      });
+      })
+      // Add this at the end
+      .addCase(resetAllSlices, () => initialState);
   },
 });
 
