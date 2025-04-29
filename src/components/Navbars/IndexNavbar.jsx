@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import userImg from "../../../public/img/user.svg";
-import mainLogo from "../../../public/svg/Help Logo.svg"
+import mainLogo from "../../../public/svg/Help Logo.svg";
 
 export default function HeaderBar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);

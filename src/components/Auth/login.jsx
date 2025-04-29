@@ -60,7 +60,6 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      console.log("Form Data:", formData);
       const result = await dispatch(loginUser(formData));
       console.log("Login Result:", result);
       if (result.meta.requestStatus === "fulfilled") {

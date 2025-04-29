@@ -194,7 +194,6 @@ const authSlice = createSlice({
       state.phone_number = action.payload;
     },
     userState: (state, action) => {
-      console.log("userState action", action);
       const { first_name, last_name } = action.payload;
       state.first_name = first_name;
       state.last_name = last_name;
@@ -206,6 +205,7 @@ const authSlice = createSlice({
       state.first_name = null;
       state.last_name = null;
       state.isAuthenticated = false;
+      state.loading = false;
     },
     refreshToken: (state, action) => {
       console.log("refreshToken action", action);
@@ -252,17 +252,6 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         const { access, refresh } = action.payload.data.tokens.tokens;
-        console.log("Login User success:", action.payload);
-        console.log("Login User success 2:", action.payload.data.tokens);
-        console.log("Login User success 3:", action.payload.data);
-        console.log(
-          "Login User success 4:",
-          action.payload.data.tokens.tokens.access
-        );
-        console.log(
-          "Login User success 5:",
-          action.payload.data.tokens.refresh
-        );
         state.accessToken = access;
         state.refreshToken = refresh;
         state.first_name = action.payload.data.first_name;
@@ -279,7 +268,13 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(logoutUser.fulfilled, (state) => {
+        state.accessToken = null;
+        state.refreshToken = null;
+        state.first_name = null;
+        state.last_name = null;
+        state.isAuthenticated = false;
         state.loading = false;
+        state.error = null;
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;
