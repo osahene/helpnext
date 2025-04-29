@@ -63,7 +63,10 @@ export const GetContact = createAsyncThunk(
     try {
       const response = await apiService.getMyContacts();
       console.log("Contact response", response);
-      return response.data.results;
+      console.log("Contact response 2", response.data);
+      console.log("Contact response 3", response.data.results);
+      console.log("Contact response 4", response.results);
+      return response.results;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -75,7 +78,9 @@ export const GetDependants = createAsyncThunk(
     try {
       const response = await apiService.getMyDependants();
       console.log("Dependants response", response);
-      return response.data;
+      console.log("Dependants response 2", response.data);
+      console.log("Dependants response 3", response.data.data);
+      return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
