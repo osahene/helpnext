@@ -5,10 +5,10 @@ export const createContact = createAsyncThunk(
   "contact/createcontact",
   async (data, thunkAPI) => {
     try {
-      const res = await apiService.createRelation(data);
-      return res.data;
+      const response = await apiService.createRelation(data);
+      return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -16,10 +16,10 @@ export const approveContact = createAsyncThunk(
   "contact/approvecontact",
   async (data, thunkAPI) => {
     try {
-      const res = await apiService.approveDependant(data);
-      return res.data;
+      const response = await apiService.approveDependant(data);
+      return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -27,10 +27,10 @@ export const rejectContact = createAsyncThunk(
   "contact/rejectcontact",
   async (data, thunkAPI) => {
     try {
-      const res = await apiService.rejectDependant(data);
-      return res.data;
+      const response = await apiService.rejectDependant(data);
+      return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -38,10 +38,10 @@ export const EditContactInfo = createAsyncThunk(
   "contact/editcontact",
   async (data, thunkAPI) => {
     try {
-      const res = await apiService.updateContact(data);
-      return res.data;
+      const response = await apiService.updateContact(data);
+      return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -52,7 +52,7 @@ export const DeleteContact = createAsyncThunk(
       await apiService.deleteContact(data);
       return data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -60,10 +60,10 @@ export const GetContact = createAsyncThunk(
   "contact/getcontact",
   async (_, thunkAPI) => {
     try {
-      const res = await apiService.getMyContacts();
-      return res.data.results;
+      const response = await apiService.getMyContacts();
+      return response.data.results;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -71,10 +71,10 @@ export const GetDependants = createAsyncThunk(
   "contact/getdependants",
   async (_, thunkAPI) => {
     try {
-      const res = await apiService.getMyDependants();
-      return res.data;
+      const response = await apiService.getMyDependants();
+      return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -82,10 +82,10 @@ export const ContactInfo = createAsyncThunk(
   "contact/contactinfo",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await apiService.contactInfo(data);
-      return res.data;
+      const response = await apiService.contactInfo(data);
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.res.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );
