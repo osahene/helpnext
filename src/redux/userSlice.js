@@ -80,7 +80,7 @@ export const GetDependants = createAsyncThunk(
       console.log("Dependants response", response);
       console.log("Dependants response 2", response.data);
       console.log("Dependants response 3", response.data.data);
-      return response;
+      return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
