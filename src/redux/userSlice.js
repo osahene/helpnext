@@ -67,7 +67,7 @@ export const GetContact = createAsyncThunk(
       console.log("Contact response 34", response);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
