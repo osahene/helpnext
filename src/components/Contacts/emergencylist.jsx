@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function Emergency() {
-  const contacts = useSelector((state) => state.contact.contacts);
+  const contacts = useSelector((state) => state.contact.contacts) || [];
   const loadData = useSelector((state) => state.contact.loadData);
   // const error = useSelector((state) => state.contact.error);
   const [isEditing, setIsEditing] = useState(false);
@@ -28,7 +28,7 @@ export default function Emergency() {
     }
     fetchContacts();
   }, [dispatch]);
-
+  console.log("contacts role", contacts);
   const handleEditClick = (contact) => {
     setCurrentContact(contact);
     setIsEditing(true);

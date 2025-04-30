@@ -179,6 +179,8 @@ const ContactSlice = createSlice({
         state.loadData = "loading";
       })
       .addCase(GetContact.fulfilled, (state, action) => {
+        console.log("Contact action 1", action);
+        console.log("Contact actions 2", action.payload);
         state.loadData = "success";
         state.contacts = action.payload;
       })
