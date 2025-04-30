@@ -176,6 +176,9 @@ export default function TriggerCard({
       }
       setShowModal(false);
       setTimeout(onClose, 300);
+    } finally {
+      setShowModal(false);
+      setTimeout(onClose, 300);
     }
   };
 
