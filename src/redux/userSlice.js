@@ -17,7 +17,7 @@ export const approveContact = createAsyncThunk(
   "contact/approvecontact",
   async (data, thunkAPI) => {
     try {
-      const response = await apiService.approveDependant(data);
+      const response = await apiService.approveDependant({ id: data });
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -28,7 +28,7 @@ export const rejectContact = createAsyncThunk(
   "contact/rejectcontact",
   async (data, thunkAPI) => {
     try {
-      const response = await apiService.rejectDependant(data);
+      const response = await apiService.rejectDependant({ id: data });
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
