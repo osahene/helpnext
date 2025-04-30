@@ -41,8 +41,8 @@ export default function TriggerCard({
         navigator.geolocation.getCurrentPosition(
           (position) => {
             resolve({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
+              latitude: parseFloat(position.coords.latitude),
+              longitude: parseFloat(position.coords.longitude),
             });
           },
           (error) => {
