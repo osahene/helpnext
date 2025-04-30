@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import mainLogo from "../../../public/svg/Help Logo.svg"
+import mainLogo from "../../../public/svg/Help Logo.svg";
 import userImg from "../../../public/img/user.svg";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
@@ -67,12 +67,12 @@ export default function HeaderBar() {
               onClick={() => router.back()}
               className="flex items-center text-black space-x-3 rtl:space-x-reverse"
             >
-              <FontAwesomeIcon icon={faArrowLeftLong} size="2xl" />
+              <FontAwesomeIcon icon={faArrowLeftLong} size="xl" />
             </button>
           </div>
           <div>
-            <a
-              href="https://flowbite.com/"
+            <Link
+              href={"/"}
               className="flex items-center space-x-3 rtl:space-x-reverse"
             >
               <Image
@@ -84,7 +84,7 @@ export default function HeaderBar() {
               <span className="self-center text-lg font-semibold whitespace-nowrap dark:text-black">
                 Help oo Help
               </span>
-            </a>
+            </Link>
           </div>
           <div className="flex items-center gap-x-1 flex-nowrap">
             {/* Dropdown button */}

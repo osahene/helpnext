@@ -12,26 +12,6 @@ export const googleLogin = createAsyncThunk(
           id_token: cleanToken,
         })
       );
-      // if (res.status === 200) {
-      //   console.log("login pass", res.data);
-      //   console.log("login pass2", res.data.data);
-      //   const { tokens, first_name, last_name } = res.data;
-      //   thunkAPI.dispatch(
-      //     userState({
-      //       data: {
-      //         first_name: first_name,
-      //         last_name: last_name,
-      //       },
-      //     })
-      //   );
-      //   thunkAPI.dispatch(
-      //     refreshToken({
-      //       accessToken: tokens.access,
-      //       refreshToken: tokens.refresh,
-      //     })
-      //   );
-      //   console.log("hurray");
-      // }
       return res.data;
     } catch (error) {
       if (error.response?.status === 307) {

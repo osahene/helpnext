@@ -28,7 +28,6 @@ export default function Login() {
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     const result = await dispatch(googleLogin(credentialResponse.credential));
-    console.log("why?", result);
     try {
       if (
         result.meta.requestStatus === "fulfilled" &&
@@ -61,7 +60,6 @@ export default function Login() {
     e.preventDefault();
     try {
       const result = await dispatch(loginUser(formData));
-      console.log("Login Result:", result);
       if (result.meta.requestStatus === "fulfilled") {
         dispatch(GetContact());
         dispatch(GetDependants());

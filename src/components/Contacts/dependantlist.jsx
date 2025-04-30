@@ -47,7 +47,6 @@ export default function Dependents() {
       const res = await dispatch(action(dependant.pk)).unwrap();
 
       if (res.status === 200) {
-        console.log(`${type}d dependant successfully`);
         setActionModal({ open: false, dependant: null, type: "" });
       }
     } catch (error) {

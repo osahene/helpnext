@@ -19,7 +19,9 @@ export default function Emergency() {
   useEffect(() => {
     async function fetchContacts() {
       try {
+        console.log("here");
         await dispatch(GetContact());
+        console.log("there");
       } catch (error) {
         console.log("Error fetching contacts", error);
       }
@@ -66,8 +68,8 @@ export default function Emergency() {
         <caption className="p-5 text-xl font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
           My Emergency Contact
           <p className="mt-1 text-lg font-normal text-gray-500 dark:text-gray-400">
-            List of relations you can count on during an emergency. The
-            information can be updated.
+            List of relations you rely on during an emergency. The information
+            can be updated.
           </p>
         </caption>
         <thead className="text-lg text-center text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
