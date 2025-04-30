@@ -52,6 +52,8 @@ export default function Dependents() {
       }
     } catch (error) {
       console.error(`Error during ${type} operation`, error);
+    } finally {
+      setActionModal({ open: false, dependant: null, type: "" });
     }
   };
 
@@ -65,7 +67,7 @@ export default function Dependents() {
         <caption className="p-5 text-xl font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
           My Dependents
           <p className="mt-1 text-lg font-normal text-gray-500 dark:text-gray-400">
-            List of relations who count on you during emergency situations. The
+            List of relations who rely on you during emergency situations. The
             information can be updated.
           </p>
         </caption>

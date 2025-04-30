@@ -53,7 +53,7 @@ export default function DependantAction({
             </button>
             <button
               onClick={onCancel}
-              className="bg-gray-300 px-4 py-2 rounded-lg ml-2"
+              className="bg-gray-300 text-black px-4 py-2 rounded-lg ml-2"
             >
               Cancel
             </button>
