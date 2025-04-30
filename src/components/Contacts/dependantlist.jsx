@@ -18,7 +18,9 @@ export default function Dependents() {
   //     JSON.stringify(useSelector((state) => state.contact.dependants)) || "{}"
   //   ).results || [];
   const dependants = useSelector((state) => state.contact.dependants) || [];
-  console.log("working here");
+  const isPending = dependants.some(
+    (dependant) => dependant.status === "pending"
+  );
   const loadData = useSelector((state) => state.contact.loadData);
   const dispatch = useDispatch();
   const [actionModal, setActionModal] = useState({
