@@ -106,6 +106,9 @@ $axios.interceptors.response.use(
       payload: {
         title: "Success",
         message:
+          response ||
+          response.data ||
+          response.data.data ||
           response.data.message ||
           response.data.data.message ||
           response.data.data.detail ||
