@@ -70,6 +70,9 @@ export default function TriggerCard({
     try {
       const geolocation = await getGeolocation();
       if (!geolocation.latitude || !geolocation.longitude) {
+        window.alert(
+          "Geolocation data is not available. Please check your device settings."
+        );
         Store.addNotification({
           title: "Location Error",
           message: (
