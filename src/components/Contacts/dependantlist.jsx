@@ -17,15 +17,15 @@ export default function Dependents() {
   //   JSON.parse(
   //     JSON.stringify(useSelector((state) => state.contact.dependants)) || "{}"
   //   ).results || [];
-  const dependants = useSelector((state) => state.contact.dependants) || [];
-  const loadData = useSelector((state) => state.contact.loadData);
+  const dependants = useSelector((state) => state.contacts.dependants) || [];
+  const loadData = useSelector((state) => state.contacts.loadData);
   const dispatch = useDispatch();
   const [actionModal, setActionModal] = useState({
     open: false,
     dependant: null,
     type: "",
   });
-
+  console.log("dependants", dependants);
   const [approval, setApproval] = useState(false);
   const [reject, setReject] = useState(false);
   const [currentDependant, setCurrentDependant] = useState(null);

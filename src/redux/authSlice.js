@@ -7,7 +7,6 @@ export const googleLogin = createAsyncThunk(
   async (googleToken, thunkAPI) => {
     try {
       const cleanToken = googleToken.replace(/^"|"$/g, "");
-      console.log("Google Token:", cleanToken);
       const res = await apiService.googleLog(
         JSON.stringify({
           id_token: cleanToken,
@@ -232,7 +231,6 @@ const authSlice = createSlice({
           state.last_name = user.last_name;
           state.email = user.email;
         } else {
-          console.log("Google Login failed here:", action.payload);
           const { tokens, first_name, last_name } = action.payload.data;
           state.accessToken = tokens.access;
           state.refreshToken = tokens.refresh;
