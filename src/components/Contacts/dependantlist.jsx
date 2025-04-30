@@ -44,7 +44,7 @@ export default function Dependents() {
 
     try {
       const action = type === "approve" ? approveContact : rejectContact;
-      const res = await dispatch(action(dependant.id)).unwrap();
+      const res = await dispatch(action(dependant.pk)).unwrap();
 
       if (res.status === 200) {
         console.log(`${type}d dependant successfully`);
@@ -101,7 +101,7 @@ export default function Dependents() {
 
               return (
                 <tr
-                  key={dependant.id}
+                  key={dependant.pk}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
                   <th
