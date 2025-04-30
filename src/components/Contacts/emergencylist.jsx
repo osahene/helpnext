@@ -19,9 +19,7 @@ export default function Emergency() {
   useEffect(() => {
     async function fetchContacts() {
       try {
-        console.log("here");
         await dispatch(GetContact());
-        console.log("there");
       } catch (error) {
         console.log("Error fetching contacts", error);
       }
