@@ -80,7 +80,7 @@ export const GetDependants = createAsyncThunk(
       console.log("Dependants response", response);
       console.log("Dependants response 2", response.data);
       console.log("Dependants response 3", response.data.data);
-      return response.data;
+      return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -198,19 +198,11 @@ const ContactSlice = createSlice({
       })
       .addCase(GetDependants.fulfilled, (state, action) => {
         console.log("Dependants response", action);
-        console.log("Dependants response 2");
-        console.log("Dependants response 3");
-        console.log("Dependants response 4", action.payload.results);
-        console.log("Dependants response 5", action.payload.results.data);
-        console.log("Dependants response 6", action.payload.results.data.data);
-        console.log("Dependants response 7", action.payload.results.data.data);
-        console.log("Dependants response 9", state.dependants);
-        console.log(
-          "Dependants response 8",
-          action.payload.results.data.data[0]
-        );
+        console.log("Dependants response 2", action.payload);
+        console.log("Dependants response 3", action.payload.data);
+        console.log("Dependants response 4", action.payload.data.data);
         state.loadData = "success";
-        state.dependants = action.payload.data.data;
+        state.dependants = action.payload.data;
       })
       .addCase(GetDependants.rejected, (state, action) => {
         state.loadData = "failed";
