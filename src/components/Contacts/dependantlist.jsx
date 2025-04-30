@@ -17,8 +17,14 @@ export default function Dependents() {
   //   JSON.parse(
   //     JSON.stringify(useSelector((state) => state.contact.dependants)) || "{}"
   //   ).results || [];
-  const dependants = useSelector((state) => state.contacts.dependants) || [];
-  const loadData = useSelector((state) => state.contacts.loadData);
+  console.log("here");
+  const dependants = useSelector((state) => state.contact.dependants) || [];
+  console.log("dependants");
+  const isPending = dependants.some(
+    (dependant) => dependant.status === "pending"
+  );
+  console.log("working here");
+  const loadData = useSelector((state) => state.contact.loadData);
   const dispatch = useDispatch();
   const [actionModal, setActionModal] = useState({
     open: false,
@@ -49,7 +55,9 @@ export default function Dependents() {
   useEffect(() => {
     async function fetchDependants() {
       try {
+        console.log("Fetching dependants...");
         await dispatch(GetDependants());
+        console.log("Dependants fetched successfully");
       } catch (error) {
         console.log("Error fetching contacts", error);
       }

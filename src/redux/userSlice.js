@@ -197,19 +197,20 @@ const ContactSlice = createSlice({
         state.loadData = "loading";
       })
       .addCase(GetDependants.fulfilled, (state, action) => {
-        console.log("Dependants response", action.payload);
-        console.log("Dependants response 2", action.payload.data);
-        console.log("Dependants response 3", action.payload.data.results);
+        console.log("Dependants response", action);
+        console.log("Dependants response 2");
+        console.log("Dependants response 3");
         console.log("Dependants response 4", action.payload.results);
         console.log("Dependants response 5", action.payload.results.data);
         console.log("Dependants response 6", action.payload.results.data.data);
         console.log("Dependants response 7", action.payload.results.data.data);
+        console.log("Dependants response 9", state.dependants);
         console.log(
           "Dependants response 8",
           action.payload.results.data.data[0]
         );
         state.loadData = "success";
-        state.dependants = action.payload;
+        state.dependants = action.payload.data.data;
       })
       .addCase(GetDependants.rejected, (state, action) => {
         state.loadData = "failed";
