@@ -64,7 +64,8 @@ export const GetContact = createAsyncThunk(
       console.log("Contact response 1");
       const response = await apiService.getMyContacts();
       console.log("Contact response", response);
-      return response.results;
+      console.log("Contact response 34", response);
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -176,6 +177,8 @@ const ContactSlice = createSlice({
       })
       // Get contact
       .addCase(GetContact.pending, (state) => {
+        console.log("Contact state 1", state);
+        console.log("Contact state 2", state.contacts);
         state.loadData = "loading";
       })
       .addCase(GetContact.fulfilled, (state, action) => {
@@ -185,6 +188,7 @@ const ContactSlice = createSlice({
         state.contacts = action.payload;
       })
       .addCase(GetContact.rejected, (state, action) => {
+        console.log("Contact failed 1", action);
         state.loadData = "failed";
         state.error = action.payload;
       })
