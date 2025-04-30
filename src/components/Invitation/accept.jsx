@@ -28,14 +28,14 @@ export default function Accept() {
 
   const handleStatusChange = async (status) => {
     try {
-      const res = await dispatch(
+      const response = await dispatch(
         Invite({
           contact_id: contactId,
           action: status,
           token: token,
         })
       );
-      if (res.meta.requestStatus === "fulfilled") {
+      if (response.meta.requestStatus === "fulfilled") {
         router.push("/guestInvite/invite");
       }
     } catch (error) {

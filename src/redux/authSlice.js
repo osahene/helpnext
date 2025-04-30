@@ -7,12 +7,12 @@ export const googleLogin = createAsyncThunk(
   async (googleToken, thunkAPI) => {
     try {
       const cleanToken = googleToken.replace(/^"|"$/g, "");
-      const res = await apiService.googleLog(
+      const response = await apiService.googleLog(
         JSON.stringify({
           id_token: cleanToken,
         })
       );
-      return res.data;
+      return response.data;
     } catch (error) {
       if (error.response?.status === 307) {
         const tempAuthData = {
@@ -39,8 +39,8 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (userData, thunkAPI) => {
     try {
-      const res = await apiService.login(userData);
-      return res.data;
+      const response = await apiService.login(userData);
+      return response.data;
     } catch (error) {
       const errorData = error.response?.data || error.data || error.message;
       return thunkAPI.rejectWithValue(errorData);
@@ -51,8 +51,8 @@ export const logoutUser = createAsyncThunk(
   "auth/logout",
   async (_, thunkAPI) => {
     try {
-      const res = await apiService.logout();
-      return res.data;
+      const response = await apiService.logout();
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -62,8 +62,8 @@ export const registerUser = createAsyncThunk(
   "auth/register",
   async (userData, thunkAPI) => {
     try {
-      const res = await apiService.register(userData);
-      return res.data;
+      const response = await apiService.register(userData);
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -73,8 +73,8 @@ export const verifyEmail = createAsyncThunk(
   "auth/verifyEmail",
   async (userData, thunkAPI) => {
     try {
-      const res = await apiService.verifyEmail(userData);
-      return res.data;
+      const response = await apiService.verifyEmail(userData);
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -84,8 +84,8 @@ export const verifyPhoneNumber = createAsyncThunk(
   "auth/verifyPhoneNumber",
   async (userData, thunkAPI) => {
     try {
-      const res = await apiService.VerifyPhoneNumber(userData);
-      return res.data;
+      const response = await apiService.VerifyPhoneNumber(userData);
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }

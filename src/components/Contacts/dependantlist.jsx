@@ -44,9 +44,9 @@ export default function Dependents() {
 
     try {
       const action = type === "approve" ? approveContact : rejectContact;
-      const res = await dispatch(action(dependant.pk)).unwrap();
+      const response = await dispatch(action(dependant.pk)).unwrap();
 
-      if (res.status === 200) {
+      if (response.status === 200) {
         setActionModal({ open: false, dependant: null, type: "" });
       }
     } catch (error) {

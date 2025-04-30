@@ -96,13 +96,13 @@ export default function TriggerCard({
         return;
       }
 
-      const res = await dispatch(
+      const response = await dispatch(
         Trigger({
           alertType: `${cardName}`,
           location: geolocation,
         })
       );
-      if (res.meta.requestStatus === "fulfilled") {
+      if (response.meta.requestStatus === "fulfilled") {
         setShowModal(false);
         setTimeout(onClose, 300);
       }
