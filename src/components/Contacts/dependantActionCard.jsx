@@ -18,7 +18,7 @@ export default function DependantAction({
     <>
       Do you want to approve{" "}
       <strong>
-        {contact.created_by.first_name} {contact.created_by.last_name}
+        {contact.first_name} {contact.last_name}
       </strong>{" "}
       as your dependant?
     </>
@@ -26,7 +26,7 @@ export default function DependantAction({
     <>
       Do you want to reject{" "}
       <strong>
-        {contact.created_by.first_name} {contact.created_by.last_name}
+        {contact.first_name} {contact.last_name}
       </strong>{" "}
       as your dependant?
     </>

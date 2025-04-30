@@ -6,48 +6,23 @@ import {
   approveContact,
   rejectContact,
 } from "@/redux/userSlice";
-
-import ActionButton from "./../CallToAction/calltoaction";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle, faFile } from "@fortawesome/free-solid-svg-icons";
 import DependantAction from "./dependantActionCard";
+import ActionButton from "./../CallToAction/calltoaction";
 
 export default function Dependents() {
-  // const dependants =
-  //   JSON.parse(
-  //     JSON.stringify(useSelector((state) => state.contact.dependants)) || "{}"
-  //   ).results || [];
   const dependants = useSelector((state) => state.contact.dependants) || [];
-  const isPending = dependants.some(
-    (dependant) => dependant.status === "pending"
-  );
   const loadData = useSelector((state) => state.contact.loadData);
   const dispatch = useDispatch();
+
   const [actionModal, setActionModal] = useState({
     open: false,
     dependant: null,
     type: "",
   });
-  console.log("dependants", dependants);
-  const [approval, setApproval] = useState(false);
-  const [reject, setReject] = useState(false);
-  const [currentDependant, setCurrentDependant] = useState(null);
 
   const pendingCount = dependants.filter((d) => d.status === "pending").length;
-
-  const handleApprovalClick = (dependant) => {
-    setCurrentDependant(dependant);
-    setApproval(true);
-  };
-
-  const handleRejectClick = (dependant) => {
-    setCurrentDependant(dependant);
-    setReject(true);
-  };
-
-  const handleActionClick = (dependant, type) => {
-    setActionModal({ open: true, dependant, type });
-  };
 
   useEffect(() => {
     async function fetchDependants() {
@@ -59,6 +34,10 @@ export default function Dependents() {
     }
     fetchDependants();
   }, [dispatch]);
+
+  const handleActionClick = (dependant, type) => {
+    setActionModal({ open: true, dependant, type });
+  };
 
   const handleActionConfirm = async () => {
     const { dependant, type } = actionModal;
@@ -80,10 +59,8 @@ export default function Dependents() {
     setActionModal({ open: false, dependant: null, type: "" });
   };
 
-  // if (loading) return <p>Loading...</p>;
-
   return (
-    <div className=" overflow-x-auto shadow-md rounded rounded-lg">
+    <div className="overflow-x-auto shadow-md rounded rounded-lg">
       <table className="w-full text-lg text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <caption className="p-5 text-xl font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
           My Dependents
@@ -121,6 +98,7 @@ export default function Dependents() {
                   ? "#fe504b"
                   : "#ffd43b";
               const showBeatFade = dependant.status === "pending";
+
               return (
                 <tr
                   key={dependant.id}
@@ -154,77 +132,39 @@ export default function Dependents() {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    {isPending ? (
-                      <>
-                        <span
-                          className="text-blue-400 cursor-pointer"
-                          onClick={() =>
-                            handleActionClick(dependant, "approve")
-                          }
-                        >
-                          Approve
-                        </span>
-                        <span className="mx-5">|</span>
-                        <span
-                          className="text-red-400 cursor-pointer"
-                          onClick={() => handleActionClick(dependant, "reject")}
-                        >
-                          Reject
-                        </span>
-                      </>
-                    ) : (
-                      <span
-                        className={`cursor-pointer ${
-                          dependant.status === "approved"
-                            ? "text-red-400"
-                            : "text-blue-400"
-                        }`}
-                        onClick={() =>
-                          handleActionClick(
-                            dependant,
-                            dependant.status === "approved"
-                              ? "reject"
-                              : "approve"
-                          )
-                        }
-                      >
-                        {dependant.status === "approved" ? "Reject" : "Approve"}
-                      </span>
-                    )}
                     {dependant.status === "pending" && (
                       <>
-                        <span
-                          className="text-blue-400 cursor-pointer"
+                        <button
+                          className="text-blue-400 hover:text-blue-600 mr-4"
                           onClick={() =>
                             handleActionClick(dependant, "approve")
                           }
                         >
                           Approve
-                        </span>
-                        <span className="mx-5">|</span>
-                        <span
-                          className="text-red-400 cursor-pointer"
+                        </button>
+                        <button
+                          className="text-red-400 hover:text-red-600"
                           onClick={() => handleActionClick(dependant, "reject")}
                         >
                           Reject
-                        </span>
+                        </button>
                       </>
                     )}
                     {dependant.status === "approved" && (
-                      <span
-                        className="text-red-400 cursor-pointer"
-                        onClick={() => handleRejectClick(dependant)}
+                      <button
+                        className="text-red-400 hover:text-red-600"
+                        onClick={() => handleActionClick(dependant, "reject")}
                       >
                         Reject
-                      </span>
+                      </button>
                     )}
                     {dependant.status === "rejected" && (
-                      <span
-                        className="text-blue-400 cursor-pointer"
-                        onClick={() => handleApprovalClick(dependant)}
+                      <button
+                        className="text-blue-400 hover:text-blue-600"
+                        onClick={() => handleActionClick(dependant, "approve")}
                       >
                         Approve
-                      </span>
+                      </button>
                     )}
                   </td>
                 </tr>
@@ -246,8 +186,10 @@ export default function Dependents() {
           )}
         </tbody>
       </table>
+
+      {/* Action Confirmation Modal */}
       {actionModal.open && (
-        <div className="modal-backdrop">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <DependantAction
             contact={actionModal.dependant}
             onAction={handleActionConfirm}
@@ -256,26 +198,7 @@ export default function Dependents() {
           />
         </div>
       )}
-      {approval && (
-        <div className="modal-backdrop">
-          <DependantAction
-            contact={currentDependant}
-            onAction={handleApprovalConfirm}
-            onCancel={() => setApproval(false)}
-            actionType="approve"
-          />
-        </div>
-      )}
-      {reject && (
-        <div className="modal-backdrop">
-          <DependantAction
-            contact={currentDependant}
-            onAction={handleRejectConfirm}
-            onCancel={() => setReject(false)}
-            actionType="reject"
-          />
-        </div>
-      )}
+
       <div className="hidden">
         <ActionButton pendingCount={pendingCount} />
       </div>
