@@ -30,6 +30,10 @@ const apiService = {
   updateContact: (data) => $axios.post("/account/update-contact/", data),
   // trigger Alert
   triggerAlert: (data) => $axios.post("/account/trigger-alert/", data),
+  // verify emergency
+  verifyEmergency: (data) => $axios.post("/account/verify-alert/", data),
+  decodeEmrgencyToken: (data) =>
+    $axios.get(`/account/decode-alert-token/?token=${data}/`),
 };
 
 export default apiService;
