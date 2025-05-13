@@ -10,7 +10,10 @@ const $axios = axios.create({
     ? process.env.NEXT_PUBLIC_BASE_URL
     : "http://127.0.0.1:8000",
   withCredentials: true,
-  headers: { "Content-type": "application/json" },
+  headers: {
+    "Content-type": "application/json",
+    "X-API-KEY": process.env.FRONTEND_API_KEY,
+  },
 });
 
 const TakeRefreshToken = async () => {
