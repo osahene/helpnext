@@ -187,10 +187,10 @@ const authSlice = createSlice({
       state.last_name = null;
       state.isAuthenticated = false;
       state.loading = false;
-      return initialState;
+      // return initialState;
     },
     refreshToken: (state, action) => {
-      console.log("refreshToken action", action);
+      console.log("refreshToken action hard", action);
       state.accessToken = action.payload.data.accessToken;
       state.refreshToken = action.payload.data.refreshToken;
     },
