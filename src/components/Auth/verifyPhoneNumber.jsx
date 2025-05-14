@@ -18,6 +18,7 @@ export default function VerifyPhoneNumber() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      console.log("Phone number submitted:", phone_number);
       const result = await dispatch(
         verifyPhoneNumber({ phone_number: phone_number })
       );
