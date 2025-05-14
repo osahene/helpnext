@@ -54,8 +54,9 @@ export default function VerifyEmail() {
       console.log("something is cooking", result);
       if (result.meta.requestStatus === "fulfilled") {
         console.log("Email verification successful:", result);
-        const { access, refresh } = result.payload.tokens;
-        dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
+        // const { access, refresh } = result.payload.tokens;
+        // dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
+        console.log("Tokens set in Redux store");
         router.push("/auth/verifyPhoneNumber");
       } else {
         console.error("Email verification failed:", result);

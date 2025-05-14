@@ -76,7 +76,7 @@ export const verifyEmail = createAsyncThunk(
       const response = await apiService.verifyEmail(userData);
       console.log("verifyEmail response call", response);
       console.log("verifyEmail response call data", response.data);
-      return response || response.data;
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
