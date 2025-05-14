@@ -129,16 +129,16 @@ $axios.interceptors.response.use(
       payload: {
         title: "Error",
         message:
-          error.response.data.message ||
-          error.response.data.data.message ||
           error.message ||
           error.response.detail ||
-          error.response.data.detail ||
-          error.response.data.data.detail ||
-          error.response.data.data ||
-          error.response.data.data.error ||
-          error.response.data.error ||
           error.response.data ||
+          error.response.data.detail ||
+          error.response.data.data ||
+          error.response.data.error ||
+          error.response.data.message ||
+          error.response.data.data.message ||
+          error.response.data.data.detail ||
+          error.response.data.data.error ||
           "Request failed",
         type: "danger",
       },
