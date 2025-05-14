@@ -74,8 +74,6 @@ export const verifyEmail = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       const response = await apiService.verifyEmail(userData);
-      console.log("verifyEmail response call", response);
-      console.log("verifyEmail response call data", response.data);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -87,6 +85,8 @@ export const verifyPhoneNumber = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       const response = await apiService.VerifyPhoneNumber(userData);
+      console.log("verifyPhoneNumber response", response);
+      console.log("verifyPhoneNumber response data", response.data);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -279,21 +279,12 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(verifyEmail.fulfilled, (state, action) => {
-        console.log("verifyEmail is cooking", action);
-        console.log("verifyEmail is cooking payload", action.payload);
         state.loading = false;
         const { access, refresh } = action.payload.tokens;
         state.accessToken = access;
         state.refreshToken = refresh;
       })
       .addCase(verifyEmail.rejected, (state, action) => {
-        console.log("verifyEmail is cooking error", action);
-        console.log("verifyEmail is cooking error payload", action.payload);
-        console.log("verifyEmail is cooking error payload 1", action.error);
-        console.log(
-          "verifyEmail is cooking error payload 2",
-          action.error.message
-        );
         state.loading = false;
         state.error = action.payload;
       })
@@ -302,10 +293,13 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(verifyPhoneNumber.fulfilled, (state) => {
+      .addCase(verifyPhoneNumber.fulfilled, (state, action) => {
         console.log("verifyPhoneNumber is cooking", state);
         console.log("verifyPhoneNumber is cooking payload");
         state.loading = false;
+        const { access, refresh } = action.payload;
+        state.accessToken = access;
+        state.refreshToken = refresh;
       })
       .addCase(verifyPhoneNumber.rejected, (state, action) => {
         console.log("verifyPhoneNumber is cooking error", action);
