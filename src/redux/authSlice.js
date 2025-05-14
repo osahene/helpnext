@@ -87,9 +87,9 @@ export const verifyPhoneNumber = createAsyncThunk(
       const response = await apiService.VerifyPhoneNumber(userData);
       console.log("verifyPhoneNumber response", response);
       console.log("verifyPhoneNumber response data", response.data);
-      return response.data;
+      return response;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response?.data);
     }
   }
 );
@@ -100,7 +100,7 @@ export const verifyPhoneNumberOTP = createAsyncThunk(
       const response = await apiService.VerifyPhoneNumberOTP(userData);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data);
     }
   }
 );
