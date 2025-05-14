@@ -134,6 +134,11 @@ $axios.interceptors.response.use(
           error.message ||
           error.response.detail ||
           error.response.data.detail ||
+          error.response.data.data.detail ||
+          error.response.data.data ||
+          error.response.data.data.error ||
+          error.response.data.error ||
+          error.response.data ||
           "Request failed",
         type: "danger",
       },

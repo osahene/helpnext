@@ -51,7 +51,9 @@ export default function VerifyEmail() {
     event.preventDefault();
     try {
       const result = await dispatch(verifyEmail({ otp, email }));
+      console.log("something is cooking", result);
       if (result.meta.requestStatus === "fulfilled") {
+        console.log("Email verification successful:", result);
         const { access, refresh } = result.payload;
         dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
         router.push("/auth/verifyPhoneNumber");
