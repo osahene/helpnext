@@ -18,15 +18,11 @@ export default function VerifyPhoneNumber() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      console.log("Phone number submitted:", phone_number);
       const result = await dispatch(
         verifyPhoneNumber({ phone_number: phone_number })
       );
-      console.log("verifyPhone res", result);
       if (result.meta.requestStatus === "fulfilled") {
-        console.log("Phone number verified successfully");
         dispatch(setPhoneNumbers(phone_number));
-        console.log("Phone number set in Redux store:", phone_number);
         router.push("/auth/verifyPhoneNumberOTP");
       }
     } catch (error) {

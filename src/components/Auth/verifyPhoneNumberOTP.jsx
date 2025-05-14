@@ -1,18 +1,11 @@
 "use client";
-import {
-  verifyPhoneNumberOTP,
-  requestOTP,
-  refreshToken,
-  userState,
-} from "@/redux/authSlice";
+import { verifyPhoneNumberOTP, requestOTP } from "@/redux/authSlice";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function VerifyPhoneNumberOTP() {
-  const [otp, setOtp] = useState({
-    otp: "",
-  });
+  const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState({ minutes: 1, seconds: 59 });
   const dispatch = useDispatch();
   const phone_number = useSelector((state) => state.auth.phone_number);
@@ -36,7 +29,10 @@ export default function VerifyPhoneNumberOTP() {
   }, [timer]);
 
   const formChange = (e) => {
-    setOtp({ ...otp, [e.target.name]: e.target.value });
+    const value = e.target.value;
+    if (/^\d*$/.test(value) && value.length <= 6) {
+      setOtp(value);
+    }
   };
 
   const resendOTP = async (event) => {
@@ -56,11 +52,9 @@ export default function VerifyPhoneNumberOTP() {
       const result = await dispatch(
         verifyPhoneNumberOTP({ otp: otp, phone_number: phone_number })
       );
-
+      console.log("OTP result", result);
       if (result.meta.requestStatus === "fulfilled") {
-        const { access, refresh, first_name, last_name } = result.payload;
-        dispatch(refreshToken({ accessToken: access, refreshToken: refresh }));
-        dispatch(userState({ first_name: first_name, last_name: last_name }));
+        console.log("OTP verified successfully");
         router.push("/");
       } else {
         console.error("Email verification failed:", result);
@@ -91,9 +85,9 @@ export default function VerifyPhoneNumberOTP() {
                   name="otp"
                   id="otp"
                   placeholder="Enter OTP"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
+                  className="bg-gray-50 border border-gray-300 text-white rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
                   required
-                  value={otp.otp}
+                  value={otp}
                   onChange={formChange}
                 />
               </div>
