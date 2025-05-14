@@ -281,7 +281,7 @@ const authSlice = createSlice({
         console.log("verifyEmail is cooking", action);
         console.log("verifyEmail is cooking payload", action.payload);
         state.loading = false;
-        const { access, refresh } = action.payload;
+        const { access, refresh } = action.payload.tokens;
         state.accessToken = access;
         state.refreshToken = refresh;
       })
