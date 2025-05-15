@@ -320,21 +320,17 @@ const authSlice = createSlice({
       })
       .addCase(verifyPhoneNumberOTP.fulfilled, (state, action) => {
         console.log("verifyPhoneNumberOTP is cooking", state);
-        console.log("verifyPhoneNumberOTP is cooking payload", action.payload);
+        console.log("verifyPhoneNumberOTP is cooking action", action);
         state.loading = false;
-        const { access, refresh, first_name, last_name } = action.payload;
-        state.accessToken = access;
-        state.refreshToken = refresh;
+        const { first_name, last_name, tokens } = action.payload;
+        state.accessToken = tokens.access;
+        state.refreshToken = tokens.refresh;
         state.first_name = first_name;
         state.last_name = last_name;
         state.isAuthenticated = true;
       })
       .addCase(verifyPhoneNumberOTP.rejected, (state, action) => {
         console.log("verifyPhoneNumberOTP is cooking error", action);
-        console.log(
-          "verifyPhoneNumberOTP is cooking error payload",
-          action.payload
-        );
         state.loading = false;
         state.error = action.payload;
       })

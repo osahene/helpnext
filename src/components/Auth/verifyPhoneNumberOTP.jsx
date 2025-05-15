@@ -52,9 +52,7 @@ export default function VerifyPhoneNumberOTP() {
       const result = await dispatch(
         verifyPhoneNumberOTP({ otp: otp, phone_number: phone_number })
       );
-      console.log("OTP result", result);
       if (result.meta.requestStatus === "fulfilled") {
-        console.log("OTP verified successfully");
         router.push("/");
       } else {
         console.error("Email verification failed:", result);
