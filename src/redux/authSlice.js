@@ -297,11 +297,8 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(verifyPhoneNumber.fulfilled, (state, action) => {
+      .addCase(verifyPhoneNumber.fulfilled, (state) => {
         state.loading = false;
-        const { access, refresh } = action.payload;
-        state.accessToken = access;
-        state.refreshToken = refresh;
       })
       .addCase(verifyPhoneNumber.rejected, (state, action) => {
         console.log("verifyPhoneNumber is cooking error", action);

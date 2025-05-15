@@ -13,7 +13,7 @@ const rootPersistConfig = {
 };
 
 const rootReducer = combineReducers({
-  auth: authReducer, // No nested persist
+  auth: authReducer,
   global: globalReducer,
   contact: contactReducer,
 });
