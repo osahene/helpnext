@@ -80,7 +80,7 @@ $axios.interceptors.request.use(
         } else {
           // Refresh the token if expired
           const tokens = await TakeRefreshToken();
-          if (tokens && tokens.access_token) {
+          if (tokens && tokens?.access_token) {
             req.headers.Authorization = `Bearer ${tokens.access_token}`;
           } else {
             store.dispatch(logout()); // Clear Redux state

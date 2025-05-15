@@ -191,8 +191,10 @@ const authSlice = createSlice({
     },
     refreshToken: (state, action) => {
       console.log("refreshToken action hard", action);
-      state.accessToken = action.payload.data.accessToken;
-      state.refreshToken = action.payload.data.refreshToken;
+      state.accessToken =
+        action.payload.data.accessToken || action.payload.accessToken;
+      state.refreshToken =
+        action.payload.data.refreshToken || action.payload.refreshToken;
     },
   },
   extraReducers: (builder) => {
