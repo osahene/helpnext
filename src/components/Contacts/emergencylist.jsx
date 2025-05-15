@@ -15,6 +15,7 @@ export default function Emergency() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [currentContact, setCurrentContact] = useState(null);
   const dispatch = useDispatch();
+  console.log("contacts", contacts);
 
   useEffect(() => {
     async function fetchContacts() {

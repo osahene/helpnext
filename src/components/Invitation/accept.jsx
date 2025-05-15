@@ -62,7 +62,7 @@ export default function Accept() {
             <h1 className="text-2xl">Nomination Consent</h1>
           </div>
           <div className="border border-gray-200 w-auto shadow shadow-lg rounded rounded-xl">
-            <div className="p-4 text-lg bg-black rounded rounded-xl">
+            <div className="p-4 text-lg bg-black text-white rounded rounded-xl">
               <h3 className="text-center">
                 Hello, {contDetail.contact_first_name}{" "}
                 {contDetail.contact_last_name}

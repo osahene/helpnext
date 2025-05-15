@@ -181,8 +181,7 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
     },
     logout: (state) => {
-      console.log("Logout action dispatched", new Date().toISOString());
-      console.log("Logout action hard", state);
+      console.log("Logout action hard");
       state.accessToken = null;
       state.refreshToken = null;
       state.first_name = null;
@@ -319,8 +318,6 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(verifyPhoneNumberOTP.fulfilled, (state, action) => {
-        console.log("verifyPhoneNumberOTP is cooking", state);
-        console.log("verifyPhoneNumberOTP is cooking action", action);
         state.loading = false;
         const { first_name, last_name, tokens } = action.payload;
         state.accessToken = tokens.access;
@@ -330,7 +327,6 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
       })
       .addCase(verifyPhoneNumberOTP.rejected, (state, action) => {
-        console.log("verifyPhoneNumberOTP is cooking error", action);
         state.loading = false;
         state.error = action.payload;
       })

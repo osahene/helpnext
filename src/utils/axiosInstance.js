@@ -33,7 +33,7 @@ const TakeRefreshToken = async () => {
         }
       );
       const { access, refresh } = response.data;
-      console.log("Tokens refreshed:");
+      console.log("Tokens refreshed:", access);
       if (access) {
         store.dispatch(
           refreshToken({
@@ -77,31 +77,22 @@ $axios.interceptors.request.use(
         const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
 
         if (!isExpired) {
+          console.log("Token is valid", req);
           req.headers.Authorization = `Bearer ${accessToken}`;
-          return req;
         } else {
           // Refresh the token if expired
           const tokens = await TakeRefreshToken();
-          console.log("Tokens refresh triggered");
-          if (tokens && tokens?.access_token) {
+          console.log("Tokens:", tokens);
+          if (tokens && tokens.access_token) {
             req.headers.Authorization = `Bearer ${tokens.access_token}`;
-            return req;
-          }
-          // else {
-          //   store.dispatch(logout()); // Clear Redux state
-          //   window.location.href = "/auth/login";
-          // }
-          if (!window.location.pathname.includes("/auth/login")) {
-            console.log("Token expired, logging out...");
-            store.dispatch(logout());
+          } else {
+            store.dispatch(logout()); // Clear Redux state
             window.location.href = "/auth/login";
           }
-          return req;
         }
       } catch (error) {
         console.error("Token decoding error:", error);
-        // store.dispatch(logout());
-        return req;
+        store.dispatch(logout());
       }
     }
     return req;

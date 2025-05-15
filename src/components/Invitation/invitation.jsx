@@ -15,7 +15,7 @@ export default function Invite() {
       <main className="">
         <div className="w-auto p-10">
           <div className="border border-gray-200  w-auto shadow shadow-lg rounded rounded-xl">
-            <div className="p-5 bg-black rounded rounded-xl">
+            <div className="p-5 bg-black text-white rounded rounded-xl">
               <h3 className="text-center">
                 Hello, {""}
                 <span className="font-bold">
