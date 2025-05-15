@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { resetAllSlices } from "./rootActions";
+// import { resetAllSlices } from "./rootActions";
 import apiService from "@/utils/axios";
 
 export const googleLogin = createAsyncThunk(
@@ -181,6 +181,8 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
     },
     logout: (state) => {
+      console.log("Logout action dispatched", new Date().toISOString());
+      console.log("Logout action hard", state);
       state.accessToken = null;
       state.refreshToken = null;
       state.first_name = null;
@@ -376,8 +378,8 @@ const authSlice = createSlice({
       .addCase(confirmPasswordRequest.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      })
-      .addCase(resetAllSlices, () => initialState);
+      });
+    // .addCase(resetAllSlices, () => initialState);
   },
 });
 
