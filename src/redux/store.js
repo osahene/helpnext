@@ -9,6 +9,7 @@ import contactReducer from "./userSlice";
 const authPersistConfig = {
   key: "auth",
   storage,
+  whitelist: ["accessToken", "refreshToken", "isAuthenticated"],
 };
 
 const contactPersistConfig = {
