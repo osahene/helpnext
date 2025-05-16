@@ -81,17 +81,21 @@ export default function Verification() {
   if (verificationStatus === "verified") {
     return (
       <div className="w-auto p-10 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl text-green-500">
-            Alert verified successfully!
-          </h1>
-          <p className="mt-2">Thank you for confirming this emergency.</p>
-          <button
-            onClick={() => router.push("/")}
-            className="mt-4 text-white bg-[#1da1f2] hover:bg-[#89CFF0]/90 px-5 py-2.5 rounded-lg"
-          >
-            Return to Homepage
-          </button>
+        <div className="border border-gray-200 w-auto shadow-lg rounded-xl">
+          <div className="p-4 text-lg bg-black rounded-xl">
+            <div className="text-center">
+              <h1 className="text-2xl text-green-500">
+                Alert verified successfully!
+              </h1>
+              <p className="mt-2">Thank you for confirming this emergency.</p>
+              <button
+                onClick={() => router.push("/")}
+                className="mt-4 text-white bg-[#1da1f2] hover:bg-[#89CFF0]/90 px-5 py-2.5 rounded-lg"
+              >
+                Return to Homepage
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -100,7 +104,7 @@ export default function Verification() {
     <main className="w-auto p-10 flex items-center justify-center">
       <div className="flex flex-col max-w-2xl">
         <div className="pb-10 text-center">
-          <h1 className="text-2xl">Emergency Alert Verification</h1>
+          <h1 className="text-2xl text-black">Emergency Alert Verification</h1>
         </div>
         <div className="border border-gray-200 w-auto shadow-lg rounded-xl">
           <div className="p-4 text-lg bg-black rounded-xl">
