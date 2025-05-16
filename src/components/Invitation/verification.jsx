@@ -18,9 +18,13 @@ export default function Verification() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // First decode the token to get names
         const decodeResponse = await apiService.decodeEmrgencyToken(token);
-        console.log("decode res", decodeResponse);
+
+        // If already verified, show success message
+        if (decodeResponse.data.verification_status) {
+          setVerificationStatus("verified");
+        }
+
         setNames(decodeResponse.data);
         setLoading(false);
       } catch (err) {
@@ -37,15 +41,11 @@ export default function Verification() {
     }
   }, [token]);
 
-  const handleVerification = async (status) => {
+  const handleVerification = async () => {
     try {
       const response = await apiService.verifyEmergency(token);
       if (response.status === 200) {
-        alert("Alert verified successfully!");
         setVerificationStatus("verified");
-        setTimeout(() => {
-          router.push("/");
-        }, 2000);
       }
     } catch (err) {
       alert(
@@ -78,20 +78,24 @@ export default function Verification() {
       </div>
     );
 
-  if (verificationStatus === "verified")
+  if (verificationStatus === "verified") {
     return (
       <div className="w-auto p-10 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl text-green-500">
             Alert verified successfully!
           </h1>
-          <p className="mt-2">
-            You will be redirected to the homepage shortly...
-          </p>
+          <p className="mt-2">Thank you for confirming this emergency.</p>
+          <button
+            onClick={() => router.push("/")}
+            className="mt-4 text-white bg-[#1da1f2] hover:bg-[#89CFF0]/90 px-5 py-2.5 rounded-lg"
+          >
+            Return to Homepage
+          </button>
         </div>
       </div>
     );
-
+  }
   return (
     <main className="w-auto p-10 flex items-center justify-center">
       <div className="flex flex-col max-w-2xl">
@@ -119,7 +123,7 @@ export default function Verification() {
             )}
             <div className="flex m-6 justify-center gap-5">
               <button
-                onClick={() => handleVerification("verified")}
+                onClick={handleVerification}
                 type="button"
                 className="text-white flex justify-center w-[150px] bg-[#1da1f2] hover:bg-[#89CFF0]/90 focus:ring-4 focus:outline-none focus:ring-[#1da1f2]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#1da1f2]/55 me-2 mb-2"
               >
