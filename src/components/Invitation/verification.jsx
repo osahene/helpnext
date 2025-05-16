@@ -22,13 +22,6 @@ export default function Verification() {
         const decodeResponse = await apiService.decodeEmrgencyToken(token);
         console.log("decode res", decodeResponse);
         setNames(decodeResponse.data);
-
-        // Check if the token is already verified
-        const verifyResponse = await apiService.verifyEmergency(token);
-        console.log("verify token", verifyResponse);
-        if (verifyResponse.status === 200) {
-          setVerificationStatus("verified");
-        }
         setLoading(false);
       } catch (err) {
         setError(err.response?.data?.error || "Invalid or expired token.");
