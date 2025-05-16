@@ -19,9 +19,7 @@ export default function Verification() {
     const fetchData = async () => {
       try {
         // First decode the token to get names
-        const decodeResponse = await apiService.decodeEmrgencyToken({
-          token: token,
-        });
+        const decodeResponse = await apiService.decodeEmrgencyToken(token);
         console.log("decode res", decodeResponse);
         setNames(decodeResponse.data);
 

@@ -32,8 +32,8 @@ const apiService = {
   triggerAlert: (data) => $axios.post("/account/trigger-alert/", data),
   // verify emergency
   verifyEmergency: (data) => $axios.post("/account/verify-alert/", data),
-  decodeEmrgencyToken: (data) =>
-    $axios.get(`/account/decode-alert-token/?token=${data}/`),
+  decodeEmrgencyToken: (token) =>
+    $axios.get(`/account/decode-alert-token/?token=${token}/`),
 };
 
 export default apiService;
