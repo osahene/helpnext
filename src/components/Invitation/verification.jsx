@@ -13,16 +13,21 @@ export default function Verification() {
   const router = useRouter();
   const search = useSearchParams();
   const token = search.get("token");
+  console.log("token", token);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // First decode the token to get names
-        const decodeResponse = await apiService.decodeEmrgencyToken(token);
+        const decodeResponse = await apiService.decodeEmrgencyToken({
+          token: token,
+        });
+        console.log("decode res", decodeResponse);
         setNames(decodeResponse.data);
 
         // Check if the token is already verified
         const verifyResponse = await apiService.verifyEmergency(token);
+        console.log("verify token", verifyResponse);
         if (verifyResponse.status === 200) {
           setVerificationStatus("verified");
         }
