@@ -33,7 +33,7 @@ const apiService = {
   // verify emergency
   verifyEmergency: (data) => $axios.post("/account/verify-alert/", data),
   decodeEmrgencyToken: (token) =>
-    $axios.get(`/account/decode-alert-token/?token=${token}/`),
+    $axios.get(`/account/decode-alert-token/${encodeURIComponent(token)}//`),
 };
 
 export default apiService;
