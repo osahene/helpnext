@@ -39,31 +39,45 @@ export default function TriggerCard({
         reject("Geolocation is not supported by your browser");
       } else {
         navigator.geolocation.getCurrentPosition(
-          (position) => {
-            resolve({
-              latitude: parseFloat(position.coords.latitude),
-              longitude: parseFloat(position.coords.longitude),
-            });
+          () => {
+            // Once permission is granted, setup watchPosition
+            const watchId = navigator.geolocation.watchPosition(
+              (position) => {
+                resolve({
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+                  accuracy: position.coords.accuracy,
+                });
+                // Clear the watch immediately after getting position
+                navigator.geolocation.clearWatch(watchId);
+              },
+              (error) => handleGeolocationError(error, reject),
+              { enableHighAccuracy: true, timeout: 60000, maximumAge: 0 }
+            );
           },
-          (error) => {
-            switch (error.code) {
-              case error.PERMISSION_DENIED:
-                reject("User denied the request for Geolocation.");
-                break;
-              case error.POSITION_UNAVAILABLE:
-                reject("Location information is unavailable.");
-                break;
-              case error.TIMEOUT:
-                reject("The request to get user location timed out.");
-                break;
-              default:
-                reject("An unknown error occurred while retrieving location.");
-            }
-          },
-          { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+          (error) => handleGeolocationError(error, reject),
+          { enableHighAccuracy: true, timeout: 60000 }
         );
       }
     });
+  };
+
+  const handleGeolocationError = (error, reject) => {
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        console.log("User denied the request for Geolocation.");
+        break;
+      case error.POSITION_UNAVAILABLE:
+        console.log("Location information is unavailable.");
+        break;
+      case error.TIMEOUT:
+        console.log("The request to get user location timed out.");
+        break;
+      case error.UNKNOWN_ERROR:
+        console.log("An unknown error occurred.");
+        break;
+    }
+    reject(error);
   };
 
   const handleTriggerAlert = async () => {

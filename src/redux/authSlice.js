@@ -29,7 +29,6 @@ export const googleLogin = createAsyncThunk(
           tempAuthData,
         });
       }
-      console.log("Google Login Error:", error);
 
       return thunkAPI.rejectWithValue(error);
     }
@@ -85,8 +84,6 @@ export const verifyPhoneNumber = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       const response = await apiService.VerifyPhoneNumber(userData);
-      console.log("verifyPhoneNumber response", response);
-      console.log("verifyPhoneNumber response data", response.data);
       return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data);
@@ -181,7 +178,6 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
     },
     logout: (state) => {
-      console.log("Logout action hard");
       state.accessToken = null;
       state.refreshToken = null;
       state.first_name = null;
@@ -191,7 +187,6 @@ const authSlice = createSlice({
       // return initialState;
     },
     refreshToken: (state, action) => {
-      console.log("refreshToken action hard", action);
       state.accessToken =
         action.payload.data.accessToken || action.payload.accessToken;
       state.refreshToken =
@@ -300,15 +295,6 @@ const authSlice = createSlice({
         state.loading = false;
       })
       .addCase(verifyPhoneNumber.rejected, (state, action) => {
-        console.log("verifyPhoneNumber is cooking error", action);
-        console.log(
-          "verifyPhoneNumber is cooking error payload",
-          action.payload
-        );
-        console.log(
-          "verifyPhoneNumber is cooking error payload 1",
-          action.error
-        );
         state.loading = false;
         state.error = action.payload;
       })

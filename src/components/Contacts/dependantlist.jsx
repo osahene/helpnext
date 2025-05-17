@@ -15,7 +15,6 @@ export default function Dependents() {
   const dependants = useSelector((state) => state.contact.dependants) || [];
   const loadData = useSelector((state) => state.contact.loadData);
   const dispatch = useDispatch();
-  console.log("dependants", dependants);
   const [actionModal, setActionModal] = useState({
     open: false,
     dependant: null,

@@ -13,7 +13,6 @@ export default function Verification() {
   const router = useRouter();
   const search = useSearchParams();
   const token = search.get("token");
-  console.log("token", token);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,7 +86,9 @@ export default function Verification() {
               <h1 className="text-2xl text-green-500">
                 Alert verified successfully!
               </h1>
-              <p className="mt-2">Thank you for confirming this emergency.</p>
+              <p className="mt-2 text-white">
+                Thank you for confirming this emergency.
+              </p>
               <button
                 onClick={() => router.push("/")}
                 className="mt-4 text-white bg-[#1da1f2] hover:bg-[#89CFF0]/90 px-5 py-2.5 rounded-lg"

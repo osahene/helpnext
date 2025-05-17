@@ -33,7 +33,6 @@ const TakeRefreshToken = async () => {
         }
       );
       const { access, refresh } = response.data;
-      console.log("Tokens refreshed:", access);
       if (access) {
         store.dispatch(
           refreshToken({
@@ -77,12 +76,10 @@ $axios.interceptors.request.use(
         const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
 
         if (!isExpired) {
-          console.log("Token is valid", req);
           req.headers.Authorization = `Bearer ${accessToken}`;
         } else {
           // Refresh the token if expired
           const tokens = await TakeRefreshToken();
-          console.log("Tokens:", tokens);
           if (tokens && tokens.access_token) {
             req.headers.Authorization = `Bearer ${tokens.access_token}`;
           } else {
@@ -91,7 +88,6 @@ $axios.interceptors.request.use(
           }
         }
       } catch (error) {
-        console.error("Token decoding error:", error);
         store.dispatch(logout());
       }
     }
@@ -105,7 +101,6 @@ $axios.interceptors.request.use(
 
 $axios.interceptors.response.use(
   (response) => {
-    console.log("Intercept Response:", response);
     store.dispatch(setGlobalLoading(false));
     store.dispatch({
       type: "notifications/addNotification",
