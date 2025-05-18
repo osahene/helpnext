@@ -26,7 +26,6 @@ const TakeRefreshToken = async () => {
       if (refresh_token.startsWith('"') && refresh_token.endsWith('"')) {
         refresh_token = refresh_token.slice(1, -1);
       }
-      console.log("refreshing token");
       const response = await axios.post(
         `${$axios.defaults.baseURL}/account/token/refresh/`,
         {
@@ -34,9 +33,7 @@ const TakeRefreshToken = async () => {
         }
       );
       const { access, refresh } = response.data;
-      console.log("response from tokens taken", response.data);
       if (access) {
-        console.log("refresh action access token", access);
         store.dispatch(
           refreshToken({
             accessToken: access,
@@ -50,23 +47,12 @@ const TakeRefreshToken = async () => {
       }
     }
   } catch (error) {
-    // const errorMessage =
-    //   error.response?.data?.detail || error.message || "Error refreshing token";
-    // store.dispatch({
-    //   type: "notifications/addNotification",
-    //   payload: {
-    //     title: "Token Error",
-    //     message: errorMessage,
-    //     type: "danger",
-    //   },
-    // });
     console.error("Error refreshing token:", error);
     return null;
   }
 };
 
 const scheduleTokenRefresh = () => {
-  console.log("Scheduling token refresh");
   if (typeof window === "undefined") return; // Don't run on server
 
   setInterval(async () => {
@@ -75,13 +61,11 @@ const scheduleTokenRefresh = () => {
     const refreshToken = state.auth.refreshToken;
 
     if (accessToken && refreshToken) {
-      console.log("Scheduling token refresh to pick tokens");
       try {
         const user = jwtDecode(accessToken);
         const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 60; // 1 minute buffer
 
         if (isExpired) {
-          console.log("expired and refreshing token");
           await TakeRefreshToken();
         }
       } catch (error) {
@@ -135,21 +119,21 @@ $axios.interceptors.request.use(
 $axios.interceptors.response.use(
   (response) => {
     store.dispatch(setGlobalLoading(false));
-    store.dispatch({
-      type: "notifications/addNotification",
-      payload: {
-        title: "Success",
-        message:
-          response ||
-          response.data ||
-          response.data.data ||
-          response.data.message ||
-          response.data.data.message ||
-          response.data.data.detail ||
-          "Request completed successfully",
-        type: "success",
-      },
-    });
+    // store.dispatch({
+    //   type: "notifications/addNotification",
+    //   payload: {
+    //     title: "Success",
+    //     message:
+    //       response ||
+    //       response.data ||
+    //       response.data.data ||
+    //       response.data.message ||
+    //       response.data.data.message ||
+    //       response.data.data.detail ||
+    //       "Request completed successfully",
+    //     type: "success",
+    //   },
+    // });
     return response;
   },
   (error) => {
