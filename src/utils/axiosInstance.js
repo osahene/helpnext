@@ -26,6 +26,7 @@ const TakeRefreshToken = async () => {
       if (refresh_token.startsWith('"') && refresh_token.endsWith('"')) {
         refresh_token = refresh_token.slice(1, -1);
       }
+      console.log("refreshing token");
       const response = await axios.post(
         `${$axios.defaults.baseURL}/account/token/refresh/`,
         {
@@ -33,7 +34,9 @@ const TakeRefreshToken = async () => {
         }
       );
       const { access, refresh } = response.data;
+      console.log("response from tokens taken", response.data);
       if (access) {
+        console.log("refresh action access token", access);
         store.dispatch(
           refreshToken({
             accessToken: access,
@@ -57,6 +60,7 @@ const TakeRefreshToken = async () => {
     //     type: "danger",
     //   },
     // });
+    console.error("Error refreshing token:", error);
     return null;
   }
 };

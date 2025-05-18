@@ -187,6 +187,7 @@ const authSlice = createSlice({
       // return initialState;
     },
     refreshToken: (state, action) => {
+      console.log("refresh action with a cycle", action);
       state.accessToken =
         action.payload.data.accessToken || action.payload.accessToken;
       state.refreshToken =
