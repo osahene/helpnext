@@ -66,6 +66,7 @@ const TakeRefreshToken = async () => {
 };
 
 const scheduleTokenRefresh = () => {
+  console.log("Scheduling token refresh");
   if (typeof window === "undefined") return; // Don't run on server
 
   setInterval(async () => {
@@ -74,11 +75,13 @@ const scheduleTokenRefresh = () => {
     const refreshToken = state.auth.refreshToken;
 
     if (accessToken && refreshToken) {
+      console.log("Scheduling token refresh to pick tokens");
       try {
         const user = jwtDecode(accessToken);
         const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 60; // 1 minute buffer
 
         if (isExpired) {
+          console.log("expired and refreshing token");
           await TakeRefreshToken();
         }
       } catch (error) {
