@@ -14,7 +14,7 @@ import {
   faTriangleExclamation,
   faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
-// import { Store } from "react-notifications-component";
+import toast from "react-hot-toast";
 
 export default function TriggerCard({
   cardName,
@@ -65,16 +65,27 @@ export default function TriggerCard({
   const handleGeolocationError = (error, reject) => {
     switch (error.code) {
       case error.PERMISSION_DENIED:
-        console.log("User denied the request for Geolocation.");
+        toast.error(
+          "User denied the request for Geolocation. Please allow location access.",
+          { duration: 5000 }
+        );
         break;
       case error.POSITION_UNAVAILABLE:
-        console.log("Location information is unavailable.");
+        toast.error(
+          "Location information is unavailable. Please check your device settings.",
+          { duration: 5000 }
+        );
         break;
       case error.TIMEOUT:
-        console.log("The request to get user location timed out.");
+        toast.error(
+          "The request to get user location timed out. Please try again.",
+          { duration: 5000 }
+        );
         break;
       case error.UNKNOWN_ERROR:
-        console.log("An unknown error occurred.");
+        toast.error("An unknown error occurred. Please try again.", {
+          duration: 5000,
+        });
         break;
     }
     reject(error);
@@ -84,29 +95,10 @@ export default function TriggerCard({
     try {
       const geolocation = await getGeolocation();
       if (!geolocation.latitude || !geolocation.longitude) {
-        window.alert(
-          "Geolocation data is not available. Please check your device settings."
+        toast.error(
+          "Geolocation data is not available. Please check your device settings.",
+          { duration: 5000 }
         );
-        Store.addNotification({
-          title: "Location Error",
-          message: (
-            <div>
-              <FontAwesomeIcon
-                icon={faMapLocationDot}
-                style={{ color: "#ff0000", marginRight: "8px" }}
-              />
-              Operation failed. Make sure the location of the device is turned
-              on
-            </div>
-          ),
-          type: "danger",
-          insert: "top",
-          container: "top-right",
-          dismiss: {
-            duration: 5000,
-            onScreen: true,
-          },
-        });
         return;
       }
 
@@ -120,76 +112,16 @@ export default function TriggerCard({
         setShowModal(false);
         setTimeout(onClose, 300);
       }
+      toast.success(
+        response.payload?.message || "Alert triggered successfully.",
+        { duration: 5000, icon: <FontAwesomeIcon icon={faMapLocationDot} /> }
+      );
     } catch (error) {
       if (error === "User denied the request for Geolocation.") {
-        Store.addNotification({
-          title: "Location Required",
-          message: (
-            <div>
-              <FontAwesomeIcon
-                icon={faTriangleExclamation}
-                style={{ color: "#ff0000", marginRight: "8px" }}
-              />
-              Operation failed. Make sure the location of the device is turned
-              on
-            </div>
-          ),
-          type: "warning",
-          insert: "top",
-          container: "top-right",
-          dismiss: {
-            duration: 5000,
-            onScreen: true,
-          },
-        });
-      } else if (error === "Location information is unavailable.") {
-        Store.addNotification({
-          title: "PERMISSION DENIED",
-          message: "Location information is unavailable.",
-          type: "danger",
-          insert: "top",
-          container: "top-right",
-          dismiss: {
-            duration: 5000,
-            onScreen: true,
-          },
-        });
-      } else if (error === "Location information is unavailable.") {
-        Store.addNotification({
-          title: "POSITION UNAVAILABLE",
-          message: "Location information is unavailable.",
-          type: "danger",
-          insert: "top",
-          container: "top-right",
-          dismiss: {
-            duration: 5000,
-            onScreen: true,
-          },
-        });
-      } else if (error === "The request to get user location timed out.") {
-        Store.addNotification({
-          title: "TIMEOUT",
-          message: "The request to get user location timed out.",
-          type: "danger",
-          insert: "top",
-          container: "top-right",
-          dismiss: {
-            duration: 5000,
-            onScreen: true,
-          },
-        });
-      } else {
-        Store.addNotification({
-          title: "LOCATION PROBLEMS",
-          message: error.message,
-          type: "danger",
-          insert: "top",
-          container: "top-right",
-          dismiss: {
-            duration: 5000,
-            onScreen: true,
-          },
-        });
+        toast.error(
+          "User denied the request for Geolocation. Please allow location access.",
+          { duration: 5000 }
+        );
       }
       setShowModal(false);
       setTimeout(onClose, 300);

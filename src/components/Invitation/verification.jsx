@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { faThumbsUp, faThumbsDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import apiService from "@/utils/axios";
+import toast from "react-hot-toast";
 
 export default function Verification() {
   const [names, setNames] = useState(null);
@@ -44,11 +45,13 @@ export default function Verification() {
     try {
       const response = await apiService.verifyEmergency(token);
       if (response.status === 200) {
+        toast.success("Verified successfully.", { duration: 5000 });
         setVerificationStatus("verified");
       }
     } catch (err) {
-      alert(
-        err.response?.data?.error || "Verification failed. Please try again."
+      toast.error(
+        err.response?.data?.error || "Verification failed. Please try again.",
+        { duration: 5000 }
       );
     }
   };

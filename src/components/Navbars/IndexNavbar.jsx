@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import userImg from "../../../public/img/user.svg";
 import mainLogo from "../../../public/svg/Help Logo.svg";
+import toast from "react-hot-toast";
 
 export default function HeaderBar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -50,12 +51,14 @@ export default function HeaderBar() {
         dispatch(resetAllSlices());
         dispatch(setGlobalLoading(false));
         dispatch(logout());
+        toast.success("Logout successful. Redirecting...", { duration: 5000 });
         router.push("/");
       }
     } catch (error) {
       if (result.meta.requestStatus === "rejected") {
         console.log("Logout error", error);
       }
+      toast.error("Logout failed. Please try again.", { duration: 5000 });
     }
   };
 

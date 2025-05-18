@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle, faFile } from "@fortawesome/free-solid-svg-icons";
 import DependantAction from "./dependantActionCard";
 import ActionButton from "./../CallToAction/calltoaction";
+import toast from "react-hot-toast";
 
 export default function Dependents() {
   const dependants = useSelector((state) => state.contact.dependants) || [];
@@ -27,7 +28,13 @@ export default function Dependents() {
     async function fetchDependants() {
       try {
         await dispatch(GetDependants());
+        toast.success("Dependants fetched successfully!", {
+          duration: 5000,
+        });
       } catch (error) {
+        toast.error("Failed to fetch dependants. Please try again.", {
+          duration: 5000,
+        });
         console.log("Error fetching contacts", error);
       }
     }
@@ -47,8 +54,14 @@ export default function Dependents() {
 
       if (response.status === 200) {
         setActionModal({ open: false, dependant: null, type: "" });
+        toast.success(`Contact ${type}d successfully!`, {
+          duration: 5000,
+        });
       }
     } catch (error) {
+      toast.error(`Failed to ${type} contact. Please try again.`, {
+        duration: 5000,
+      });
       console.error(`Error during ${type} operation`, error);
     } finally {
       setActionModal({ open: false, dependant: null, type: "" });

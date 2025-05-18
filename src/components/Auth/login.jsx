@@ -34,20 +34,25 @@ export default function Login() {
         result.meta.requestStatus === "fulfilled" &&
         result.payload.status === "redirect"
       ) {
+        toast.success(result.payload.message || "Verify phone number", {
+          duration: 5000,
+        });
         router.push(result.payload.redirectUrl);
       } else if (result.meta.requestStatus === "fulfilled") {
         dispatch(GetContact());
         dispatch(GetDependants());
-        toast.success(result.payload.message || "Google Login Successful");
+        toast.success(result.payload.message || "Google Login Successful", {
+          duration: 5000,
+        });
         router.push("/");
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      toast.error(error.message || "An error occurred");
     }
   };
 
   const handleGoogleLoginFailure = () => {
-    console.log("Google Login Failed");
+    toast.error("Google Login Failed");
   };
 
   function togglePasswordVisibility() {
@@ -65,12 +70,34 @@ export default function Login() {
       if (result.meta.requestStatus === "fulfilled") {
         dispatch(GetContact());
         dispatch(GetDependants());
+        toast.success(result.payload.message || "Login Successful", {
+          duration: 5000,
+        });
         router.push("/");
       } else {
-        console.error("Login Failed:", result);
+        toast.error(result.payload.message || "Login Failed", {
+          duration: 5000,
+        });
+        if (result.payload.status === 401) {
+          toast.error("Invalid credentials", {
+            duration: 5000,
+          });
+        } else if (result.payload.status === 403) {
+          toast.error("Account not verified", {
+            duration: 5000,
+          });
+        } else if (result.payload.status === 404) {
+          toast.error("User not found", {
+            duration: 5000,
+          });
+        } else if (result.payload.status === 500) {
+          toast.error("Server error", {
+            duration: 5000,
+          });
+        }
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      toast.error(error.message || "An error occurred");
     }
   };
   return (

@@ -6,6 +6,7 @@ import EditContact from "./editInfo";
 import RemoveInfo from "./removeInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faCircle } from "@fortawesome/free-solid-svg-icons";
+import toast from "react-hot-toast";
 
 export default function Emergency() {
   const contacts = useSelector((state) => state.contact.contacts) || [];
@@ -34,7 +35,11 @@ export default function Emergency() {
   const handleEditSubmit = async (updatedContact) => {
     try {
       await dispatch(EditContactInfo(updatedContact));
+      toast.success("Contact updated successfully!", { duration: 5000 });
     } catch (error) {
+      toast.error("Failed to update contact. Please try again.", {
+        duration: 5000,
+      });
       console.error("Error updating contact:", error);
     } finally {
       setIsEditing(false);
@@ -49,7 +54,11 @@ export default function Emergency() {
   const handleDeleteConfirm = async () => {
     try {
       await dispatch(DeleteContact(currentContact));
+      toast.success("Contact deleted successfully!", { duration: 5000 });
     } catch (error) {
+      toast.error("Failed to delete contact. Please try again.", {
+        duration: 5000,
+      });
       console.error("Error deleting contact:", error);
     } finally {
       setIsDeleting(false);

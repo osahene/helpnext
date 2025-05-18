@@ -4,13 +4,14 @@ import { faPaperPlane, faPassport } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function VerifyEmail() {
   const [otp, setOtp] = useState({
     otp: "",
   });
-  const [timer, setTimer] = useState({ minutes: 0, seconds: 5 });
+  const [timer, setTimer] = useState({ minutes: 1, seconds: 10 });
   const email = useSelector((state) => state.auth.email);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function VerifyEmail() {
           if (prev.seconds > 0) {
             return { ...prev, seconds: prev.seconds - 1 };
           } else if (prev.minutes > 0) {
-            return { minutes: prev.minutes - 1, seconds: 59 };
+            return { minutes: prev.minutes - 1, seconds: 10 };
           } else {
             clearInterval(interval);
             return prev;
@@ -34,11 +35,13 @@ export default function VerifyEmail() {
   }, [timer]);
 
   const resendOTP = async (event) => {
-    setTimer({ minutes: 0, seconds: 30 }); // Reset timer
+    setTimer({ minutes: 1, seconds: 10 }); // Reset timer
     event.preventDefault();
     try {
       await dispatch(requestOTP({ email: email }));
+      toast.success("OTP sent to your email", { duration: 5000 });
     } catch (error) {
+      toast.error("Failed to resend OTP", { duration: 5000 });
       console.error("An error occurred:", error);
     }
   };
@@ -52,11 +55,23 @@ export default function VerifyEmail() {
     try {
       const result = await dispatch(verifyEmail({ otp, email }));
       if (result.meta.requestStatus === "fulfilled") {
+        toast.success(
+          result.payload.message ||
+            "Email verified successfully. Redirecting...",
+          { duration: 5000 }
+        );
         router.push("/auth/verifyPhoneNumber");
       } else {
+        toast.error("Email verification failed. Please try again.", {
+          duration: 5000,
+        });
         console.error("Email verification failed:", result);
       }
     } catch (error) {
+      toast.error(
+        error.response?.error || "An error occurred during email verification.",
+        { duration: 5000 }
+      );
       console.error("An error occurred:", error);
     }
   };

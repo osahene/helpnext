@@ -34,6 +34,10 @@ export default function ForgottenPassword() {
       const result = await dispatch(forgottenPasswordRequest({ email: email }));
       if (result.meta.requestStatus === "fulfilled") {
         dispatch(setforgottenPasswordRequest(email));
+        toast.success(
+          "Email sent successfully. Redirecting to confirmation page...",
+          { duration: 5000 }
+        );
         router.push("/auth/successConfirm");
       }
     } catch (error) {

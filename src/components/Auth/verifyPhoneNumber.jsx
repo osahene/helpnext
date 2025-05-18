@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { faPhoneFlip } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import toast from "react-hot-toast";
 
 export default function VerifyPhoneNumber() {
   const [phone_number, setPhone_Number] = useState("");
@@ -23,9 +24,14 @@ export default function VerifyPhoneNumber() {
       );
       if (result.meta.requestStatus === "fulfilled") {
         dispatch(setPhoneNumbers(phone_number));
+        toast.success(
+          result.payload.message ||
+            "Phone number verified successfully. Redirecting..."
+        );
         router.push("/auth/verifyPhoneNumberOTP");
       }
     } catch (error) {
+      toast.error(error.response?.error || "Request failed");
       console.error("An error occurred:", error);
     }
   };

@@ -19,6 +19,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import mainLogo from "../../../public/svg/Help Logo.svg";
 import React from "react";
+import toast from "react-hot-toast";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -46,11 +47,13 @@ export default function Register() {
       const result = await dispatch(registerUser(formData));
       if (result.meta.requestStatus === "fulfilled") {
         dispatch(setEmail(formData.email));
+        toast.success("OTP sent to your email. Proceed to verify your email.");
         router.push("/auth/verifyEmail");
       } else {
-        console.error("Registration failed:", result);
+        toast.error("Registration failed. Please try again.");
       }
     } catch (error) {
+      toast.error("An error occurred. Please try again.");
       console.error("An error occurred:", error);
     }
   };
@@ -63,19 +66,26 @@ export default function Register() {
         result.meta.requestStatus === "fulfilled" &&
         result.payload.status === "redirect"
       ) {
+        toast.success(result.payload.message || "Verify phone number", {
+          duration: 5000,
+        });
         router.push(result.payload.redirectUrl);
       } else if (result.meta.requestStatus === "fulfilled") {
         dispatch(GetContact());
         dispatch(GetDependants());
+        toast.success(result.payload.message || "Google Login Successful", {
+          duration: 5000,
+        });
         router.push("/");
       }
     } catch (error) {
+      toast.error("An error occurred. Please try again.");
       console.error("An error occurred:", error);
     }
   };
 
   const handleGoogleLoginFailure = () => {
-    console.log("Google Login Failed");
+    toast.error("Google Login Failed. Please try again.");
   };
 
   return (

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams, useRouter } from "next/navigation";
 import { faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import toast from "react-hot-toast";
 
 export default function Accept() {
   const contDetail = useSelector((state) => state.contact.contactDetails || []);
@@ -36,19 +37,20 @@ export default function Accept() {
         })
       );
       if (response.meta.requestStatus === "fulfilled") {
+        toast.success(
+          response.payload?.message || "Status updated successfully.",
+          { duration: 5000 }
+        );
         router.push("/guestInvite/invite");
       }
     } catch (error) {
-      if (error.response) {
-        // Server responded with a status code outside the range of 2xx
-        alert(`Error: ${error.response.data.error || "An error occurred."}`);
-      } else if (error.request) {
-        // Request was made but no response received
-        alert("Network error: Please check your internet connection.");
-      } else {
-        // Something else caused an error
-        alert(`Unexpected error: ${error.message}`);
-      }
+      toast.error(
+        error.response?.error ||
+          error.response?.data?.message ||
+          "Failed to update status. Please try again.",
+        { duration: 5000 }
+      );
+      console.error("Error updating status:", error);
     }
   };
 

@@ -2,11 +2,12 @@
 import { verifyPhoneNumberOTP, requestOTP } from "@/redux/authSlice";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function VerifyPhoneNumberOTP() {
   const [otp, setOtp] = useState("");
-  const [timer, setTimer] = useState({ minutes: 1, seconds: 59 });
+  const [timer, setTimer] = useState({ minutes: 1, seconds: 10 });
   const dispatch = useDispatch();
   const phone_number = useSelector((state) => state.auth.phone_number);
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function VerifyPhoneNumberOTP() {
           if (prev.seconds > 0) {
             return { ...prev, seconds: prev.seconds - 1 };
           } else if (prev.minutes > 0) {
-            return { minutes: prev.minutes - 1, seconds: 59 };
+            return { minutes: prev.minutes - 1, seconds: 10 };
           } else {
             clearInterval(interval);
             return prev;
@@ -37,11 +38,13 @@ export default function VerifyPhoneNumberOTP() {
 
   const resendOTP = async (event) => {
     // const phoneNumber = localStorage.getItem("phone_number");
-    setTimer({ minutes: 1, seconds: 59 }); // Reset timer
+    setTimer({ minutes: 1, seconds: 10 }); // Reset timer
     event.preventDefault();
     try {
       await dispatch(requestOTP({ email: phone_number }));
+      toast.success("OTP sent to your phone number", { duration: 5000 });
     } catch (error) {
+      toast.error("Failed to resend OTP");
       console.error("An error occurred:", error);
     }
   };
@@ -53,11 +56,24 @@ export default function VerifyPhoneNumberOTP() {
         verifyPhoneNumberOTP({ otp: otp, phone_number: phone_number })
       );
       if (result.meta.requestStatus === "fulfilled") {
+        toast.success(
+          result.payload.message ||
+            "Phone number verified successfully. Redirecting...",
+          { duration: 5000 }
+        );
         router.push("/");
       } else {
+        toast.error("Phone number verification failed. Please try again.", {
+          duration: 5000,
+        });
         console.error("Email verification failed:", result);
       }
     } catch (error) {
+      toast.error(
+        error.response?.error ||
+          "An error occurred during phone number verification.",
+        { duration: 5000 }
+      );
       console.error("An error occurred:", error);
     }
   };

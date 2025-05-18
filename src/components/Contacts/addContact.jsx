@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createContact, GetContact } from "@/redux/userSlice";
+import toast from "react-hot-toast";
 
 export default function AddContacts() {
   const [formData, setFormData] = useState({
@@ -31,9 +32,14 @@ export default function AddContacts() {
           relation: "",
         });
       }
+      toast.success(result.payload.message || "Contact created successfully.", {
+        duration: 5000,
+      });
     } catch (error) {
-      const errorMsg =
-        error.response?.data?.message || "An error occurred. Please try again.";
+      toast.error(
+        error.response?.data?.message || "An error occurred. Please try again.",
+        { duration: 5000 }
+      );
     }
   };
 

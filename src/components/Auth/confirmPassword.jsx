@@ -33,9 +33,13 @@ export default function ConfirmPassword() {
       );
       if (result.meta.requestStatus === "fulfilled") {
         dispatch(setConfirmPassword(password));
+        toast.success("Password confirmed successfully. Redirecting...", {
+          duration: 5000,
+        });
         router.push("/auth/confirmPasswrod");
       }
     } catch (error) {
+      toast.error("Request failed", { duration: 5000 });
       console.error("An error occurred:", error);
     }
   };
