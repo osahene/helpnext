@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
-// import NotificationsProvider from "./notificationProvider";
+import { ReactNotifications } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 import GlobalLoading from "./GlobalLoading";
 import ReduxProvider from "./reduxProvider";
 import { config } from "@fortawesome/fontawesome-svg-core";
@@ -31,9 +32,8 @@ export default function RootLayout({ children }) {
       >
         <ReduxProvider>
           <GlobalLoading />
-          {/* <NotificationsProvider> */}
+          <ReactNotifications />
           {children}
-          {/* </NotificationsProvider> */}
         </ReduxProvider>
       </body>
     </html>
