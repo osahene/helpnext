@@ -65,6 +65,32 @@ const TakeRefreshToken = async () => {
   }
 };
 
+const scheduleTokenRefresh = () => {
+  if (typeof window === "undefined") return; // Don't run on server
+
+  setInterval(async () => {
+    const state = store.getState();
+    const accessToken = state.auth.accessToken;
+    const refreshToken = state.auth.refreshToken;
+
+    if (accessToken && refreshToken) {
+      try {
+        const user = jwtDecode(accessToken);
+        const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 60; // 1 minute buffer
+
+        if (isExpired) {
+          await TakeRefreshToken();
+        }
+      } catch (error) {
+        console.error("Token refresh scheduling error:", error);
+      }
+    }
+  }, 30000); // Check every 30 seconds
+};
+
+// Call this when your app initializes
+scheduleTokenRefresh();
+
 $axios.interceptors.request.use(
   async (req) => {
     store.dispatch(setGlobalLoading(true));
