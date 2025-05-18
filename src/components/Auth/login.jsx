@@ -38,7 +38,7 @@ export default function Login() {
       } else if (result.meta.requestStatus === "fulfilled") {
         dispatch(GetContact());
         dispatch(GetDependants());
-        toast.success("Login Successful");
+        toast.success(result.payload.message || "Google Login Successful");
         router.push("/");
       }
     } catch (error) {
