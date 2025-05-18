@@ -18,6 +18,7 @@ import {
   faKey,
   faArrowRightToBracket,
 } from "@fortawesome/free-solid-svg-icons";
+import toast from "react-hot-toast";
 export default function Login() {
   const [formData, setFormData] = useState({
     email: "",
@@ -38,16 +39,7 @@ export default function Login() {
       } else if (result.meta.requestStatus === "fulfilled") {
         dispatch(GetContact());
         dispatch(GetDependants());
-        Store.addNotification({
-          title: "Success",
-          message: result.payload.message || "Login successful",
-          type: "success",
-          container: "top-right",
-          dismiss: {
-            duration: 3000,
-            onScreen: true,
-          },
-        });
+        toast.success("Login Successful");
         router.push("/");
       }
     } catch (error) {

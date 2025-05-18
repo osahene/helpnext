@@ -119,21 +119,6 @@ $axios.interceptors.request.use(
 $axios.interceptors.response.use(
   (response) => {
     store.dispatch(setGlobalLoading(false));
-    // store.dispatch({
-    //   type: "notifications/addNotification",
-    //   payload: {
-    //     title: "Success",
-    //     message:
-    //       response ||
-    //       response.data ||
-    //       response.data.data ||
-    //       response.data.message ||
-    //       response.data.data.message ||
-    //       response.data.data.detail ||
-    //       "Request completed successfully",
-    //     type: "success",
-    //   },
-    // });
     return response;
   },
   (error) => {
