@@ -1,7 +1,5 @@
 import localFont from "next/font/local";
 import "./globals.css";
-import { ReactNotifications } from "react-notifications-component";
-import "react-notifications-component/dist/theme.css";
 import GlobalLoading from "./GlobalLoading";
 import ReduxProvider from "./reduxProvider";
 import { config } from "@fortawesome/fontawesome-svg-core";
@@ -30,7 +28,6 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReactNotifications />
         <ReduxProvider>
           <GlobalLoading />
           {children}

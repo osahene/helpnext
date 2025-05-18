@@ -9,6 +9,7 @@ import { googleLogin, loginUser } from "@/redux/authSlice";
 import { GetContact, GetDependants } from "@/redux/userSlice";
 import Link from "next/link";
 import { Store } from "react-notifications-component";
+import NotificationsWrapper from "@/app/notificationProvider";
 import { useRouter } from "next/navigation";
 import { GoogleLogin } from "@react-oauth/google";
 import mainLogo from "../../../public/svg/Help Logo.svg";
@@ -85,6 +86,7 @@ export default function Login() {
   return (
     <>
       <div className="App-header-1 bg-cust-dark">
+        <NotificationsWrapper />
         <div className="w-auto">
           <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
             <a
