@@ -104,7 +104,7 @@ export default function AddContacts() {
                 <input
                   id="first-name"
                   name="first_name"
-                  placeholder="John"
+                  placeholder="Ama"
                   type="text"
                   value={formData.first_name}
                   onChange={formChange}
@@ -137,7 +137,7 @@ export default function AddContacts() {
                   id="last-name"
                   name="last_name"
                   type="text"
-                  placeholder="Musah"
+                  placeholder="Henewaa"
                   value={formData.last_name}
                   onChange={formChange}
                   autoComplete="family-name"
@@ -169,7 +169,7 @@ export default function AddContacts() {
                   id="email"
                   name="email_address"
                   type="email"
-                  placeholder="johnmusah@example.com"
+                  placeholder="amahenewaa@example.com"
                   value={formData.email_address}
                   onChange={formChange}
                   autoComplete="email"
