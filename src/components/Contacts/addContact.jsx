@@ -254,7 +254,7 @@ export default function AddContacts() {
       <div className="m-7 flex items-center justify-end gap-x-6">
         <button
           type="button"
-          className="text-lg font-semibold leading-6 text-white"
+          className="text-lg font-semibold leading-6 text-black dark:text-white"
         >
           Cancel
         </button>
