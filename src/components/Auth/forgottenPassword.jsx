@@ -48,7 +48,7 @@ export default function ForgottenPassword() {
   return (
     <div className="App-header bg-cust-dark">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div className="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full bg-gray-300 rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 sm:p-8">
             <h1 className="text-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Email
@@ -74,9 +74,14 @@ export default function ForgottenPassword() {
                     value={email || ""}
                     onChange={formChange}
                     placeholder="amahenewaa@example.com"
-                    className="w-full bg-gray-50 border rounded rounded-lg border-gray-30 text-black"
+                    className="border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   />
                 </div>
+                {email && !isValidEmail && (
+                  <p className="mt-1 text-sm text-red-600">
+                    Please enter a valid email address
+                  </p>
+                )}
               </div>
               {/* Resend OTP logic */}
 
@@ -87,7 +92,7 @@ export default function ForgottenPassword() {
                   ${
                     isValidEmail
                       ? "bg-blue-600 text-white hover:bg-blue-700"
-                      : "bg-gray-400 text-white cursor-not-allowed"
+                      : "bg-gray-400 text-gray-500 cursor-not-allowed"
                   }`}
               >
                 <FontAwesomeIcon

@@ -7,7 +7,8 @@ import MainPage from "@/components/Cards/pageCards";
 import ActionButton from "@/components/CallToAction/calltoaction";
 
 export default function Homepage() {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isAuthenticated = true;
+  // const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   return (
     <>
       <div className="bg-cust">

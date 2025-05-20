@@ -16,6 +16,7 @@ import {
   faEnvelope,
   faKey,
   faArrowRightToBracket,
+  faBan,
 } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
 export default function Login() {
@@ -61,6 +62,11 @@ export default function Login() {
 
   const formChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
   };
 
   const handleLogin = async (e) => {
@@ -118,7 +124,7 @@ export default function Login() {
               />
               Help OO Help
             </a>
-            <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+            <div className="w-full bg-gray-300 rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <div className="flex items-center justify-center w-full">
                   <GoogleLogin
@@ -134,7 +140,7 @@ export default function Login() {
                 </div>
                 <div className="flex items-center justify-center">
                   <div className="flex-grow h-px bg-indigo-600"></div>
-                  <h4 className="px-4 text-white">Or</h4>
+                  <h4 className="px-4 text-black dark:text-white">Or</h4>
                   <div className="flex-grow h-px bg-indigo-600"></div>
                 </div>
                 <form className="space-y-4 md:space-y-3" onSubmit={handleLogin}>
@@ -143,7 +149,7 @@ export default function Login() {
                       htmlFor="password"
                       className="block p-2 text-lg font-medium text-gray-900 dark:text-white"
                     >
-                      Email Address or Phone Number
+                      Email Address
                     </label>
                     <div className="flex items-center">
                       <FontAwesomeIcon
@@ -158,12 +164,17 @@ export default function Login() {
                         id="phone_number"
                         value={formData.email}
                         onChange={formChange}
-                        placeholder="+233123456789 or amahenewaa@example.com"
+                        placeholder="amahenewaa@example.com"
                         className="border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         required
                       />
                     </div>
                   </div>
+                  {formData.email && !validateEmail(formData.email) && (
+                    <p className="mt-1 text-sm text-red-600">
+                      Please enter a valid email address
+                    </p>
+                  )}
 
                   <div className="my-5">
                     <label
@@ -233,6 +244,11 @@ export default function Login() {
                       </button>
                     </div>
                   </div>
+                  {formData.password && formData.password.length <= 5 && (
+                    <p className="mt-1 text-sm text-red-600">
+                      Password must be at least 6 characters
+                    </p>
+                  )}
                   <div className="flex items-baseline justify-between ">
                     <div className="flex  items-center h-5">
                       <input
@@ -268,14 +284,28 @@ export default function Login() {
                     <div>
                       <button
                         type="submit"
-                        className="w-full mt-5 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        disabled={
+                          !validateEmail(formData.email) ||
+                          formData.password.length <= 5
+                        }
+                        className={`w-full mt-5 font-medium rounded-lg text-lg px-5 py-2.5 text-center ${
+                          !validateEmail(formData.email) ||
+                          formData.password.length <= 5
+                            ? "bg-gray-400 text-gray-500 cursor-not-allowed" // Disabled state
+                            : "bg-blue-600 text-white hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" // Enabled state
+                        }`}
                       >
                         <FontAwesomeIcon
-                          icon={faArrowRightToBracket}
+                          icon={
+                            !validateEmail(formData.email) ||
+                            formData.password.length <= 5
+                              ? faBan
+                              : faArrowRightToBracket
+                          }
                           className="w-10 h-5"
                           size="lg"
                         />
-                        {/* {loading ? "Signing in..." : "Sign in"} */} Sign In
+                        Sign In
                       </button>
                     </div>
                   </div>

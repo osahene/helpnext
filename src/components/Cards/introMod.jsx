@@ -2,6 +2,14 @@
 import Image from "next/image";
 import React from "react";
 import emergency from "../../../public/img/emergency.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGlobe } from "@fortawesome/free-solid-svg-icons";
+import {
+  faApple,
+  faAppStore,
+  faAppStoreIos,
+  faGooglePlay,
+} from "@fortawesome/free-brands-svg-icons";
 
 export default function IntroModal({ onClose }) {
   return (
@@ -52,13 +60,65 @@ export default function IntroModal({ onClose }) {
             </ol>
 
             {/* Action Button */}
-            <div className="mt-8 flex justify-center">
+            <div className="mt-8 flex justify-center space-x-4">
               <button
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg text-sm md:text-base font-medium shadow-md hover:bg-blue-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                className="bg-white-600 text-black px-2 py-3 border-[2px] border-blue-600 rounded-lg  text-sm md:text-base font-medium shadow-xl hover:bg-blue-700 hover:text-white transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300"
                 onClick={onClose}
               >
-                Got It!
+                <div className="flex flex-row items-center  space-x-2">
+                  <div className="flex ">
+                    <span>
+                      <FontAwesomeIcon icon={faGlobe} size="2xl" />
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-baseline  space-x-2">
+                    <span>Proceed</span>
+                    {/* <span>Continue Web</span> */}
+                  </div>
+                </div>
               </button>
+              {/* android */}
+              {/* <button
+                className="bg-gray-200 text-white px-1 py-1 border-[2px] border-blue-600 rounded-lg md:text-base font-medium shadow-lg hover:bg-blue-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                onClick={onClose}
+              >
+                <div className="flex flex-row items-center text-black space-x-2">
+                  <div className="flex ">
+                    <span>
+                      <FontAwesomeIcon
+                        icon={faGooglePlay}
+                        size="2xl"
+                        className="text-black"
+                      />
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-baseline  space-x-2">
+                    <span>GET IT ON</span>
+                    <span className="text-2xl ">Google Play</span>
+                  </div>
+                </div>
+              </button> */}
+              {/* ios */}
+              {/* <button
+                className="bg-white text-white px-2 py-1 border-[2px] border-gray-900 rounded-lg text-sm md:text-base font-medium shadow-lg hover:bg-blue-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                onClick={onClose}
+              >
+                <div className="flex flex-row items-center  space-x-2">
+                  <div className="flex ">
+                    <span>
+                      <FontAwesomeIcon
+                        icon={faApple}
+                        size="2xl"
+                        className="text-black"
+                      />
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-baseline text-black space-x-2">
+                    <span>Download on the</span>
+                    <span className="text-2xl ">App Store</span>
+                  </div>
+                </div>
+              </button> */}
             </div>
           </div>
         </div>

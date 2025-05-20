@@ -3,7 +3,11 @@ import React, { useState } from "react";
 import { verifyPhoneNumber, setPhoneNumbers } from "@/redux/authSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import { faPhoneFlip } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBan,
+  faPaperPlane,
+  faPhone,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import toast from "react-hot-toast";
 
@@ -13,7 +17,10 @@ export default function VerifyPhoneNumber() {
   const router = useRouter();
 
   const formChange = (e) => {
-    setPhone_Number(e.target.value);
+    const value = e.target.value;
+    if (/^\d*$/.test(value) && value.length <= 15) {
+      setPhone_Number(value);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -39,9 +46,9 @@ export default function VerifyPhoneNumber() {
   return (
     <div className="App-header bg-cust-dark">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div className="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div className="p-6 space-y-4 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+        <div className="w-full bg-gray-300 rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="p-6 space-y-6 sm:p-8">
+            <h1 className="text-xl font-bold text-center leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Enter your phone number
             </h1>
             <form className="space-y-4" onSubmit={handleSubmit}>
@@ -54,7 +61,7 @@ export default function VerifyPhoneNumber() {
                 </label>
                 <div className="flex items-center">
                   <FontAwesomeIcon
-                    icon={faPhoneFlip}
+                    icon={faPhone}
                     className="w-10 h-5 pr-2"
                     size="xl"
                   />
@@ -65,7 +72,7 @@ export default function VerifyPhoneNumber() {
                     value={phone_number || ""}
                     onChange={formChange}
                     placeholder="+2331234567890"
-                    className=" w-full bg-gray-50 border rounded rounded-lg border-gray-30 text-black"
+                    className="bg-gray-50 border border-gray-300 dark:text-white rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
                   />
                 </div>
               </div>
@@ -73,8 +80,18 @@ export default function VerifyPhoneNumber() {
 
               <button
                 type="submit"
-                className="w-full mt-8 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 font-medium rounded-lg text-lg px-5 py-2.5"
+                disabled={phone_number.length <= 5}
+                className={`w-full mt-8  font-medium rounded-lg text-lg px-5 py-2.5 ${
+                  phone_number.length <= 5
+                    ? "bg-gray-400 text-gray-500 cursor-not-allowed"
+                    : "bg-blue-600 text-white hover:bg-blue-700 focus:ring-4"
+                }`}
               >
+                <FontAwesomeIcon
+                  icon={phone_number.length <= 5 ? faBan : faPaperPlane}
+                  className="pr-2"
+                  size="lg"
+                />
                 Submit
               </button>
             </form>

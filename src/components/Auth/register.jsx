@@ -16,6 +16,7 @@ import {
   faFileSignature,
   faKey,
   faUserAlt,
+  faBan,
 } from "@fortawesome/free-solid-svg-icons";
 import mainLogo from "../../../public/svg/Help Logo.svg";
 import React from "react";
@@ -39,6 +40,26 @@ export default function Register() {
 
   const formChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const validatePassword = (password) => {
+    // At least 8 characters, contains letters and numbers
+    const re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return re.test(password);
+  };
+
+  const isFormValid = () => {
+    return (
+      formData.first_name.trim() !== "" &&
+      formData.last_name.trim() !== "" &&
+      validateEmail(formData.email) &&
+      validatePassword(formData.password)
+    );
   };
 
   const handleSubmit = async (event) => {
@@ -106,7 +127,7 @@ export default function Register() {
               />
               Help OO Help
             </a>
-            <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+            <div className="w-full bg-gray-300 rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <div className="flex items-center justify-center w-full">
                   <GoogleLogin
@@ -149,11 +170,16 @@ export default function Register() {
                           id="first_name"
                           value={formData.first_name}
                           onChange={formChange}
-                          className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="Akua"
+                          className="bg-gray-50 border border-gray-300 dark:text-white rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
+                          placeholder="Ama"
                           required
                         />
                       </div>
+                      {formData.first_name.trim() === "" && (
+                        <p className="mt-1 text-sm text-red-600">
+                          First name is required
+                        </p>
+                      )}
                     </div>
                     <div>
                       <label
@@ -174,11 +200,16 @@ export default function Register() {
                           id="last_name"
                           value={formData.last_name}
                           onChange={formChange}
-                          className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="Asumah"
+                          className="bg-gray-50 border border-gray-300 dark:text-white rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
+                          placeholder="Henewaa"
                           required
                         />
                       </div>
+                      {formData.last_name.trim() === "" && (
+                        <p className="mt-1 text-sm text-red-600">
+                          Last name is required
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="">
@@ -201,11 +232,16 @@ export default function Register() {
                           id="email_address"
                           value={formData.email}
                           onChange={formChange}
-                          className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="bg-gray-50 border border-gray-300 dark:text-white rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
                           placeholder="amahenewaa@example.com"
                           required
                         />
                       </div>
+                      {formData.email && !validateEmail(formData.email) && (
+                        <p className="mt-1 text-sm text-red-600">
+                          Please enter a valid email
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div>
@@ -229,7 +265,7 @@ export default function Register() {
                           value={formData.password}
                           onChange={formChange}
                           name="password"
-                          className="border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="bg-gray-50 border border-gray-300 dark:text-white rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
                           required
                         />
                       </div>
@@ -276,19 +312,30 @@ export default function Register() {
                         )}
                       </button>
                     </div>
+                    {formData.password &&
+                      !validatePassword(formData.password) && (
+                        <p className="mt-1 text-sm text-red-600">
+                          Password must be at least 8 characters and contain
+                          both letters and numbers
+                        </p>
+                      )}
                   </div>
                   <button
                     type="submit"
-                    className="w-full mt-8 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    disabled={!isFormValid()}
+                    className={`w-full mt-8 font-medium rounded-lg text-lg px-5 py-2.5 text-center ${
+                      !isFormValid()
+                        ? "bg-gray-400 text-gray-500 cursor-not-allowed" // Disabled state
+                        : "bg-blue-600 text-white hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" // Enabled state
+                    }`}
                   >
                     <FontAwesomeIcon
-                      icon={faFileSignature}
+                      icon={!isFormValid() ? faBan : faFileSignature}
                       className="w-10 h-5"
                       size="lg"
                     />
-                    {/* {loading ? "Registering..." : "Register"} */} Sign Up
+                    Sign Up
                   </button>
-
                   <p className="text-lg font-light text-gray-500 dark:text-gray-400">
                     Already have an account?{" "}
                     <Link
