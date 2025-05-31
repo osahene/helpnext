@@ -58,9 +58,9 @@ export default function Accept() {
 
   return (
     <>
-      <main className="w-auto p-10 flex items-center">
+      <main className="w-auto h-full p-10 flex items-center">
         <div className="flex flex-col">
-          <div className="pb-10 text-center">
+          <div className="pb-10 text-center text-black">
             <h1 className="text-2xl">Nomination Consent</h1>
           </div>
           <div className="border border-gray-200 w-auto shadow shadow-lg rounded rounded-xl">

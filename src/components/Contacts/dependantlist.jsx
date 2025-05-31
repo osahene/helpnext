@@ -23,7 +23,7 @@ export default function Dependents() {
   });
 
   const pendingCount = dependants.filter((d) => d.status === "pending").length;
-
+  console.log("pending counts", pendingCount);
   useEffect(() => {
     async function fetchDependants() {
       try {
