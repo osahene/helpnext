@@ -10,8 +10,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import toast from "react-hot-toast";
+import allCountries from "../../app/countries.json";
+
+const countryOptions = allCountries.map((c) => ({
+  name: c.name,
+  code: c.dial_code,
+  flag: `https://flagcdn.com/w20/${c.code.toLowerCase()}.png`,
+}));
 
 export default function VerifyPhoneNumber() {
+  const [selectedCountry, setSelectedCountry] = useState(countryOptions[79]);
   const [phone_number, setPhone_Number] = useState("");
   const dispatch = useDispatch();
   const router = useRouter();
@@ -25,12 +33,14 @@ export default function VerifyPhoneNumber() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const fullNumber = `${selectedCountry.code}${phone_number}`;
+
     try {
       const result = await dispatch(
-        verifyPhoneNumber({ phone_number: phone_number })
+        verifyPhoneNumber({ phone_number: fullNumber })
       );
       if (result.meta.requestStatus === "fulfilled") {
-        dispatch(setPhoneNumbers(phone_number));
+        dispatch(setPhoneNumbers(fullNumber));
         toast.success(
           result.payload.message ||
             "Phone number verified successfully. Redirecting..."
@@ -65,15 +75,57 @@ export default function VerifyPhoneNumber() {
                     className="w-10 h-5 pr-2"
                     size="xl"
                   />
-                  <input
-                    type="tel"
-                    name="phone_number"
-                    id="phone_number"
-                    value={phone_number || ""}
-                    onChange={formChange}
-                    placeholder="+2331234567890"
-                    className="bg-gray-50 border border-gray-300 dark:text-white rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
-                  />
+                  <div className="flex w-2 space-x-2">
+                    <div className="relative flex items-center bg-gray-50 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                      <button
+                        type="button"
+                        className="flex items-center w-32 px-2 py-2 space-x-2 text-sm text-gray-700 dark:text-gray-200"
+                      >
+                        <img
+                          src={selectedCountry.flag}
+                          alt={selectedCountry.name}
+                          className="w-5 h-4 rounded-sm"
+                        />
+                        <span>{selectedCountry.code}</span>
+                      </button>
+
+                      <select
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        value={selectedCountry.code}
+                        onChange={(e) => {
+                          const selected = countryOptions.find(
+                            (c) => c.code === e.target.value
+                          );
+                          setSelectedCountry(selected);
+                        }}
+                      >
+                        {countryOptions.map((country) => (
+                          <option
+                            className="bg-white text-black"
+                            key={country.code}
+                            value={country.code}
+                          >
+                            <span>
+                              <img
+                                src={country.flag}
+                                className="absolute w-5 h-4 rounded-sm"
+                              />
+                            </span>
+                            {country.name} {country.code}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <input
+                      type="tel"
+                      name="phone_number"
+                      id="phone_number"
+                      value={phone_number || ""}
+                      onChange={formChange}
+                      placeholder="1234567890"
+                      className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
                 </div>
               </div>
               {/* Resend OTP logic */}
