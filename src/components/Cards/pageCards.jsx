@@ -79,7 +79,7 @@ export default function MainPage() {
   };
 
   return (
-    <div className="p-2 min-h-auto grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
+    <div className="m-5 grid grid-cols-2 gap-7 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
       {cardsData.map((card, index) => (
         <div key={index} onClick={() => handleCardClick(card)}>
           <Cards
