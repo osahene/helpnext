@@ -79,23 +79,25 @@ export default function MainPage() {
   };
 
   return (
-    <div className="m-5 grid grid-cols-2 gap-7 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
-      {cardsData.map((card, index) => (
-        <div key={index} onClick={() => handleCardClick(card)}>
-          <Cards
-            cardName={card.cardName}
-            cardName2={card.cardName2}
-            cardLogo={card.cardLogo}
-            logoAlt={card.logoAlt}
-            bgColor={card.bgColor}
-            textColor={card.textColor}
-          />
-        </div>
-      ))}
-      {isOpen && (
-        <TriggerCard {...selectedCard} onClose={() => setIsOpen(false)} />
-      )}
-      {showIntro && <IntroModal onClose={() => setShowIntro(false)} />}
+    <div className="relative top-20">
+      <div className="m-5 grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
+        {cardsData.map((card, index) => (
+          <div key={index} onClick={() => handleCardClick(card)}>
+            <Cards
+              cardName={card.cardName}
+              cardName2={card.cardName2}
+              cardLogo={card.cardLogo}
+              logoAlt={card.logoAlt}
+              bgColor={card.bgColor}
+              textColor={card.textColor}
+            />
+          </div>
+        ))}
+        {isOpen && (
+          <TriggerCard {...selectedCard} onClose={() => setIsOpen(false)} />
+        )}
+        {showIntro && <IntroModal onClose={() => setShowIntro(false)} />}
+      </div>
     </div>
   );
 }
