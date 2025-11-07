@@ -23,36 +23,48 @@ export default function MainPage() {
       cardName2: "Crisis",
       cardLogo: health,
       logoAlt: "health crisis",
+      bgColor: "bg-card1",
+      textColor: "text-white",
     },
     {
       cardName: "Robbery",
       cardName2: "Attack",
       cardLogo: handcuffs,
       logoAlt: "robbery attack",
+      bgColor: "bg-card4",
+      textColor: "text-white",
     },
     {
       cardName: "Fire",
       cardName2: "Outbreak",
       cardLogo: fire,
       logoAlt: "fire outbreak",
+      bgColor: "bg-card2",
+      textColor: "text-black",
     },
     {
       cardName: "Flood",
       cardName2: "Alert",
       cardLogo: flood,
       logoAlt: "flood alert",
+      bgColor: "bg-card4",
+      textColor: "text-white",
     },
     {
       cardName: "Call",
       cardName2: "Emergency",
       cardLogo: callss,
       logoAlt: "call emergency",
+      bgColor: "bg-card2",
+      textColor: "text-black",
     },
     {
       cardName: "Violence",
       cardName2: "Alert",
       cardLogo: nonviolence,
       logoAlt: "violence alert",
+      bgColor: "bg-card4",
+      textColor: "text-white",
     },
   ];
   useEffect(() => {
@@ -67,7 +79,7 @@ export default function MainPage() {
   };
 
   return (
-    <div className="m-5 h-full  top-0 grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
+    <div className="p-2 min-h-screen grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
       {cardsData.map((card, index) => (
         <div
           key={index}
@@ -79,6 +91,8 @@ export default function MainPage() {
             cardName2={card.cardName2}
             cardLogo={card.cardLogo}
             logoAlt={card.logoAlt}
+            bgColor={card.bgColor}
+            textColor={card.textColor}
           />
         </div>
       ))}

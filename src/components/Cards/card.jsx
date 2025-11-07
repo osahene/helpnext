@@ -1,26 +1,39 @@
 import Image from "next/image";
 
-const Cards = ({ cardName, cardName2, cardLogo, logoAlt }) => {
+const Cards = ({
+  cardName,
+  cardName2,
+  cardLogo,
+  logoAlt,
+  bgColor,
+  textColor,
+}) => {
   return (
-    <div className="flex flex-col justify-between h-full backdrop-filter backdrop-blur-sm bg-opacity-10 bg-slate-200 overflow-hidden border-4 border-gray-900 rounded-xl shadow shadow-xl">
-      <div className="p-1 flex flex-col justify-center items-start content-fit">
-        <div className="ml-3 flex flex-col items-start">
-          <p className="font-bold text-[24px] xs:text-[40px] sm:text-[50px] text-black">
-            {cardName}
-          </p>
-          <p className=" font-bold text-[24px] xs:text-[40px] sm:text-[50px] text-black">
-            {cardName2}
-          </p>
-        </div>
-      </div>
-      <div className="ml-3 relative flex top-[10px] xs:top-[10px] sm:top-[30px] md:top-[50px] xs:z-[2] justify-start">
+    <div
+      className={`${bgColor} flex flex-row py-4 w-full h-full justify-around items-center px-8 rounded-xl shadow shadow-xl border-4 border-gray-900 bg-white hover:scale-105 transition-transform duration-300 ease-in-out`}
+    >
+      <div className="ml-3 relative flex xs:z-[2] justify-start">
         <Image
           className="rounded-t-lg h-[70px] xs:h-[100px] sm:h-[150px]"
-          width={70}
-          height={70}
+          width={90}
+          height={90}
           src={cardLogo}
           alt={logoAlt}
         />
+      </div>
+      <div className="p-1 flex flex-col justify-center items-start content-fit">
+        <div className="ml-3 flex flex-col items-start">
+          <p
+            className={`${textColor} font-bold text-[24px] xs:text-[40px] sm:text-[50px]`}
+          >
+            {cardName}
+          </p>
+          <p
+            className={`${textColor} font-bold text-[24px] xs:text-[40px] sm:text-[50px]`}
+          >
+            {cardName2}
+          </p>
+        </div>
       </div>
     </div>
   );
