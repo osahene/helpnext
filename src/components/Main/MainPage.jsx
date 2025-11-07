@@ -12,9 +12,9 @@ export default function Homepage() {
     <>
       <div className="bg-cust">
         <Navbar />
-        <div className="relative top-20">
-          <div className="flex flex-col h-[83vh]">
-            <section className="flex-grow">
+        <div className="">
+          <div className="flex flex-col ">
+            <section className="min-h-screen">
               <MainPage />
             </section>
           </div>
