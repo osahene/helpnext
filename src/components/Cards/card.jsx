@@ -10,9 +10,9 @@ const Cards = ({
 }) => {
   return (
     <div
-      className={`${bgColor} flex flex-col py-4 w-full min-h-full item-center justify-between overflow-hidden cursor-pointer rounded-xl shadow shadow-2xl border-2 border-gray-200 hover:scale-105 transition-transform duration-300 ease-in-out`}
+      className={`${bgColor} flex flex-col py-10 w-full min-h-full item-center justify-between overflow-hidden cursor-pointer rounded-xl shadow shadow-2xl border-2 border-gray-200 hover:scale-105 transition-transform duration-300 ease-in-out`}
     >
-      <div className="ml-3 relative flex xs:z-[2] justify-start">
+      <div className="ml-3 relative flex xs:z-[2] justify-center items-center content-fit">
         <Image
           className="rounded-t-lg h-[70px] xs:h-[100px] sm:h-[150px]"
           width={90}
