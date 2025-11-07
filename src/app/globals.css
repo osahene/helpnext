@@ -106,3 +106,9 @@ body {
 .bg-card4 {
   background-color: #365ea1;
 }
+.head-title {
+  font-weight: 400;
+  font-size: 2rem;
+  letter-spacing: 0.2rem;
+  padding: 0;
+}
