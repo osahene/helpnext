@@ -12,8 +12,16 @@ import {
   faPeopleArrows,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import allCountries from "../../app/countries.json";
+
+const countryOptions = allCountries.map((c) => ({
+  c_name: c.name,
+  c_code: c.dial_code,
+  c_flag: `https://flagcdn.com/w20/${c.code.toLowerCase()}.png`,
+}));
 
 export default function AddContacts() {
+  const [selectedCountry, setSelectedCountry] = useState(countryOptions[79]);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -49,7 +57,7 @@ export default function AddContacts() {
 
   const handleCreateContact = async (event) => {
     event.preventDefault();
-
+    const fullNumber = `${selectedCountry.code}${phone_number}`;
     try {
       const result = await dispatch(createContact(formData));
       if (result.meta.requestStatus === "fulfilled") {
@@ -197,17 +205,60 @@ export default function AddContacts() {
                   className="w-10 h-5 pr-2 text-black dark:text-white"
                   size="xl"
                 />
-                <input
-                  id="phonenumber"
-                  name="phone_number"
-                  type="tel"
-                  placeholder="+233241123456"
-                  value={formData.phone_number}
-                  onChange={formChange}
-                  autoComplete="phone_number"
-                  className="bg-gray-50 border border-gray-300 dark:text-white rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
-                  required
-                />
+                <div className="flex w-2 space-x-2 w-auto">
+                  <div className="relative flex items-center bg-gray-50 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                    <button
+                      type="button"
+                      hide-dropdown-arrow="false"
+                      className="flex items-center w-32 px-2 py-2 space-x-2 text-sm text-gray-700 dark:text-gray-200"
+                    >
+                      <img
+                        src={selectedCountry.c_flag}
+                        alt={selectedCountry.c_name}
+                        className="w-5 h-4 rounded-sm"
+                      />
+                      <span>{selectedCountry.c_code}</span>
+                    </button>
+
+                    <select
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      value={selectedCountry.c_code}
+                      onChange={(e) => {
+                        const selected = countryOptions.find(
+                          (c) => c.code === e.target.value
+                        );
+                        setSelectedCountry(selected);
+                      }}
+                    >
+                      {countryOptions.map((country) => (
+                        <option
+                          className="bg-white text-black"
+                          key={country.code}
+                          value={country.code}
+                        >
+                          <span>
+                            <img
+                              src={country.flag}
+                              className="absolute w-5 h-4 rounded-sm"
+                            />
+                          </span>
+                          {country.name} {country.code}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <input
+                    id="phonenumber"
+                    name="phone_number"
+                    type="tel"
+                    placeholder="241123456"
+                    value={formData.phone_number}
+                    onChange={formChange}
+                    autoComplete="phone_number"
+                    className="bg-gray-50 border border-gray-300 dark:text-white rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
+                    required
+                  />
+                </div>
               </div>
               {formData.phone_number &&
                 !validatePhoneNumber(formData.phone_number) && (
