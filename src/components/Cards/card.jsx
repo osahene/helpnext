@@ -1,7 +1,7 @@
-import Image from "next/image";
+'use client';
 import { useState } from "react";
 
-const Cards = ({ cardName, cardName2, cardLogo, logoAlt, accentColor }) => {
+const Cards = ({ cardName, cardName2, cardLogo, iconVariant, accentColor }) => {
   const [pressed, setPressed] = useState(false);
 
   // Derive a darker shade for gradient bottom
@@ -79,13 +79,12 @@ const Cards = ({ cardName, cardName2, cardLogo, logoAlt, accentColor }) => {
           flexShrink: 0,
         }}
       >
-        <Image
-          src={cardLogo}
-          alt={logoAlt}
-          width={36}
-          height={36}
-          style={{ filter: "brightness(0) invert(1)" }}
-        />
+        <span 
+            className={iconVariant} 
+            style={{ fontSize: '50px' }}
+          >
+            {cardLogo}
+          </span>
       </div>
 
       {/* Title */}

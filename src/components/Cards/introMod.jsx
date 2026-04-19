@@ -163,24 +163,63 @@ export default function IntroModal({ onClose }) {
                 ))}
               </div>
 
-              {/* CTA button */}
-              <button
-                onClick={handleClose}
-                style={{
-                  width: "100%", padding: "15px", borderRadius: "18px",
-                  background: "linear-gradient(135deg, #2C5FD4, #5B3FE8)",
-                  color: "#fff", fontWeight: 700, fontSize: "15.5px",
-                  boxShadow: "0 8px 24px rgba(91,63,232,0.35)",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
-                  cursor: "pointer",
-                }}
-              >
-                <svg style={{ width: "18px", height: "18px" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-                Proceed to App
-              </button>
+              {/* ── Buttons Section ────────────────────────── */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                {/* Store Buttons Row */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                  {/* App Store */}
+                  <button
+                    onClick={() => window.open("#", "_blank")}
+                    style={{
+                      background: "#000", color: "#fff", padding: "10px 12px", borderRadius: "12px",
+                      display: "flex", alignItems: "center", gap: "8px", border: "none", cursor: "pointer"
+                    }}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 384 512" fill="currentColor">
+                      <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 21.8-88.5 21.8-11.4 0-51.1-22.2-84.6-21-44 1.2-83.9 25.4-106.3 64.1-46 79.5-11.8 197.7 32.2 261.2 21.4 31.1 47.3 65.2 80.7 64 32.1-1.1 44.4-20.3 83.3-20.3 38.3 0 50 20.3 83.3 19.7 33.9-.6 56-30.5 77.3-61.5 24.5-35.5 34.5-69.9 34.8-71.6-.8-.3-67-25.7-67.2-102.5zM249.2 85.1C269.4 61.2 283.4 28.1 279.7 0c-26 1.1-57.4 17.2-76 38.6-16.7 19.3-31.1 52.7-27.2 79.7 29.1 2.3 58.4-15.6 72.7-33.2z"/>
+                    </svg>
+                    <div style={{ textAlign: "left", lineHeight: "1" }}>
+                      <div style={{ fontSize: "9px", opacity: 0.8 }}>Download on the</div>
+                      <div style={{ fontSize: "13px", fontWeight: "700" }}>App Store</div>
+                    </div>
+                  </button>
 
+                  {/* Google Play */}
+                  <button
+                    onClick={() => window.open("#", "_blank")}
+                    style={{
+                      background: "#000", color: "#fff", padding: "10px 12px", borderRadius: "12px",
+                      display: "flex", alignItems: "center", gap: "8px", border: "none", cursor: "pointer"
+                    }}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 512 512" fill="currentColor">
+                      <path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-10.3 18-28.5-1.2-40.8zM325.3 277.7l60.1 60.1L104.6 499l220.7-221.3z"/>
+                    </svg>
+                    <div style={{ textAlign: "left", lineHeight: "1" }}>
+                      <div style={{ fontSize: "9px", opacity: 0.8 }}>GET IT ON</div>
+                      <div style={{ fontSize: "13px", fontWeight: "700" }}>Google Play</div>
+                    </div>
+                  </button>
+                </div>
+
+                {/* Main Proceed Button */}
+                <button
+                  onClick={handleClose}
+                  style={{
+                    width: "100%", padding: "16px", borderRadius: "18px",
+                    background: "linear-gradient(135deg, #2C5FD4, #5B3FE8)",
+                    color: "#fff", fontWeight: 700, fontSize: "16px",
+                    boxShadow: "0 8px 24px rgba(91,63,232,0.35)",
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
+                    border: "none", cursor: "pointer",
+                  }}
+                >
+                  Proceed to Web App
+                  <svg style={{ width: "18px", height: "18px" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </button>
+              </div>
               <p style={{ textAlign: "center", color: "#8B94B2", fontSize: "12px", marginTop: "12px" }}>
                 By proceeding, you agree to share your location during emergencies.
               </p>

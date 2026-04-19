@@ -49,7 +49,7 @@ export function ContactNavbar() {
   return (
     <nav
       style={{
-        background: "linear-gradient(135deg, #1A0A0A 0%, #6B0F0F 100%)",
+        background: "linear-gradient(135deg, #667299 0%, #1A3A8F 100%)",
         boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,0.4)" : "none",
         transition: "box-shadow 0.3s ease",
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,

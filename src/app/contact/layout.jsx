@@ -1,4 +1,4 @@
-import FooterAdmin from "@/components/Footers/FooterAdmin";
+// import FooterAdmin from "@/components/Footers/FooterAdmin";
 import Navbar from "@/components/Navbars/ContactNavbar";
 import React from "react";
 
@@ -7,7 +7,7 @@ const layout = ({ children }) => {
     <>
       <Navbar />
       <div>{children}</div>
-      <FooterAdmin />
+      {/* <FooterAdmin /> */}
     </>
   );
 };

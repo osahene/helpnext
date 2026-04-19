@@ -3,56 +3,56 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Cards from "./card";
 import TriggerCard from "./cardTrigger";
-import health from "../../../public/img/health.svg";
-import handcuffs from "../../../public/img/handcuffs.svg";
-import flood from "../../../public/img/flood.svg";
-import fire from "../../../public/img/fire.svg";
-import callss from "../../../public/img/callss.svg";
-import nonviolence from "../../../public/img/nonviolence.svg";
 import IntroModal from "./introMod";
 
 const cardsData = [
   {
-    cardName: "Health",
-    cardName2: "Crisis",
-    cardLogo: health,
-    logoAlt: "health crisis",
-    accentColor: "#1A9E5C",
-  },
-  {
     cardName: "Robbery",
     cardName2: "Attack",
-    cardLogo: handcuffs,
+    cardLogo: "security", // Material Symbol Name
+    iconVariant: "material-symbols-outlined", 
     logoAlt: "robbery attack",
     accentColor: "#CC2222",
   },
   {
+    cardName: "Health",
+    cardName2: "Crisis",
+    cardLogo: "health_and_safety",
+    iconVariant: "material-symbols-rounded",
+    logoAlt: "health crisis",
+    accentColor: "#1A9E5C",
+  },
+  {
     cardName: "Fire",
     cardName2: "Outbreak",
-    cardLogo: fire,
+    cardLogo: "fire_truck",
+    iconVariant: "material-symbols-rounded",
     logoAlt: "fire outbreak",
     accentColor: "#E8500A",
   },
   {
     cardName: "Flood",
     cardName2: "Alert",
-    cardLogo: flood,
+    cardLogo: "flood",
+    iconVariant: "material-symbols-rounded",
     logoAlt: "flood alert",
     accentColor: "#0A72C4",
   },
   {
-    cardName: "Call",
-    cardName2: "Emergency",
-    cardLogo: callss,
-    logoAlt: "call emergency",
-    accentColor: "#7B22CE",
-  },
-  {
-    cardName: "Violence",
+    cardName: "Accident",
     cardName2: "Alert",
-    cardLogo: nonviolence,
+    cardLogo: "car_crash",
+    iconVariant: "material-symbols-rounded",
     logoAlt: "violence alert",
     accentColor: "#8B5C00",
+  },
+  {
+    cardName: "Call",
+    cardName2: "Emergency",
+    cardLogo: "sos",
+    iconVariant: "material-symbols-rounded",
+    logoAlt: "call emergency",
+    accentColor: "#7B22CE",
   },
 ];
 
@@ -73,7 +73,7 @@ export default function MainPage() {
 
   return (
     <div
-      style={{ minHeight: "100vh", background: "#0D0D0D" }}
+      style={{ minHeight: "100vh", background: "#FCF0F0" }}
       className="pt-20"
     >
       {/* ── Header Banner ─────────────────────────────────────── */}
@@ -126,10 +126,10 @@ export default function MainPage() {
       </div>
 
       {/* ── Section label ─────────────────────────────────────── */}
-      <div className="px-5 pt-6 pb-3 flex items-center gap-2">
-        <div style={{ width: "4px", height: "18px", background: "#CC2222", borderRadius: "2px" }} />
+      <div className="px-5 flex items-center gap-2">
+        <div style={{ width: "4px", height: "18px",  borderRadius: "2px" }} />
         <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "11px", fontWeight: 700, letterSpacing: "1.6px" }}>
-          SELECT EMERGENCY TYPE
+          {/* SELECT EMERGENCY TYPE */}
         </p>
       </div>
 
@@ -148,7 +148,7 @@ export default function MainPage() {
               cardName={card.cardName}
               cardName2={card.cardName2}
               cardLogo={card.cardLogo}
-              logoAlt={card.logoAlt}
+              iconVariant={card.iconVariant}
               accentColor={card.accentColor}
             />
           </div>
@@ -160,7 +160,7 @@ export default function MainPage() {
         <svg style={{ color: "rgba(255,255,255,0.2)", width: "14px", height: "14px" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <p style={{ color: "rgba(255,255,255,0.2)", fontSize: "12px" }}>
+        <p style={{ color: "rgba(7, 7, 7, 0.64)", fontSize: "18px" }}>
           Alerts include your live location.
         </p>
       </div>
