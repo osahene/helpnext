@@ -1,41 +1,118 @@
 import Image from "next/image";
+import { useState } from "react";
 
-const Cards = ({
-  cardName,
-  cardName2,
-  cardLogo,
-  logoAlt,
-  bgColor,
-  textColor,
-}) => {
+const Cards = ({ cardName, cardName2, cardLogo, logoAlt, accentColor }) => {
+  const [pressed, setPressed] = useState(false);
+
+  // Derive a darker shade for gradient bottom
+  const darken = (hex, amount = 30) => {
+    const num = parseInt(hex.replace("#", ""), 16);
+    const r = Math.max(0, (num >> 16) - amount);
+    const g = Math.max(0, ((num >> 8) & 0xff) - amount);
+    const b = Math.max(0, (num & 0xff) - amount);
+    return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+  };
+
+  const darkColor = darken(accentColor, 40);
+
   return (
     <div
-      className={`${bgColor} flex flex-col md:flex-row py-12 px-4 w-full min-h-full item-center justify-between overflow-hidden cursor-pointer rounded-xl shadow shadow-2xl border-2 border-gray-200 hover:scale-105 transition-transform duration-300 ease-in-out`}
+      onMouseDown={() => setPressed(true)}
+      onMouseUp={() => setPressed(false)}
+      onMouseLeave={() => setPressed(false)}
+      onTouchStart={() => setPressed(true)}
+      onTouchEnd={() => setPressed(false)}
+      style={{
+        background: `linear-gradient(135deg, ${accentColor}, ${darkColor})`,
+        boxShadow: pressed
+          ? "none"
+          : `0 8px 24px ${accentColor}55, 0 2px 10px ${accentColor}33`,
+        transform: pressed ? "scale(0.96)" : "scale(1)",
+        transition: "transform 0.15s ease, box-shadow 0.15s ease",
+        borderRadius: "20px",
+        cursor: "pointer",
+        overflow: "hidden",
+        position: "relative",
+        minHeight: "160px",
+      }}
+      className="flex flex-col items-center justify-center p-5 w-full select-none"
     >
-      <div className="ml-3 relative flex xs:z-[2] justify-center items-center content-fit">
+      {/* Decorative highlight circle top-left */}
+      <div
+        style={{
+          position: "absolute",
+          top: "-20px",
+          left: "-20px",
+          width: "90px",
+          height: "90px",
+          borderRadius: "50%",
+          background: "rgba(255,255,255,0.12)",
+          pointerEvents: "none",
+        }}
+      />
+      {/* Decorative dark circle bottom-right */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "-24px",
+          right: "-24px",
+          width: "100px",
+          height: "100px",
+          borderRadius: "50%",
+          background: "rgba(0,0,0,0.12)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Icon in frosted circle */}
+      <div
+        style={{
+          background: "rgba(255,255,255,0.2)",
+          border: "1.5px solid rgba(255,255,255,0.35)",
+          borderRadius: "50%",
+          width: "64px",
+          height: "64px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: "12px",
+          flexShrink: 0,
+        }}
+      >
         <Image
-          className="rounded-t-lg h-[70px] xs:h-[100px] sm:h-[150px]"
-          width={90}
-          height={90}
           src={cardLogo}
           alt={logoAlt}
+          width={36}
+          height={36}
+          style={{ filter: "brightness(0) invert(1)" }}
         />
       </div>
-      <div className="p-1 flex flex-col justify-center items-start content-fit">
-        <div className="ml-3 flex flex-col items-start">
-          <p
-            className={`${textColor} font-bold text-[24px] xs:text-[40px] sm:text-[50px]`}
-          >
-            {cardName}
-          </p>
-          <p
-            className={`${textColor} font-bold text-[24px] xs:text-[40px] sm:text-[50px]`}
-          >
-            {cardName2}
-          </p>
-        </div>
+
+      {/* Title */}
+      <p className="text-white font-extrabold text-center leading-tight"
+        style={{ fontSize: "clamp(14px, 3.5vw, 20px)", letterSpacing: "-0.02em" }}>
+        {cardName}
+      </p>
+      <p className="text-white font-extrabold text-center leading-tight"
+        style={{ fontSize: "clamp(14px, 3.5vw, 20px)", letterSpacing: "-0.02em" }}>
+        {cardName2}
+      </p>
+
+      {/* Tap to alert badge */}
+      <div
+        style={{
+          marginTop: "10px",
+          // background: "rgba(0,0,0,0.2)",
+          borderRadius: "20px",
+          padding: "3px 10px",
+        }}
+      >
+        <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "9px", fontWeight: 600, letterSpacing: "1px" }}>
+          {/* TAP TO ALERT */}
+        </p>
       </div>
     </div>
   );
 };
+
 export default Cards;

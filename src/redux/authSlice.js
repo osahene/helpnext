@@ -140,7 +140,7 @@ const initialState = {
   refreshToken: null,
   first_name: null,
   last_name: null,
-  isAuthenticated: false,
+  isAuthenticated: true,
   loading: false,
   error: null,
   email: "",

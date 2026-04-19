@@ -4,91 +4,142 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAdd,
   faContactBook,
-  // faReceipt,
-  // faBell,
-  // faGasPump,
-  // faGear,
   faExclamationCircle,
   faUserCog,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
+const menuItems = [
+  {
+    href: "/contact",
+    icon: faContactBook,
+    label: "Contacts",
+    gradient: "linear-gradient(135deg, #1A9E5C, #0D7A45)",
+    shadow: "rgba(26,158,92,0.4)",
+  },
+  {
+    href: "/contact/more",
+    icon: faUserCog,
+    label: "Settings",
+    gradient: "linear-gradient(135deg, #2C5FD4, #5B3FE8)",
+    shadow: "rgba(44,95,212,0.4)",
+  },
+];
+
 const ActionButton = ({ pendingCount }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const actionButtonRef = useRef(null);
 
-  // Toggle menu open/close
-  const toggleMenu = () => {
-    setMenuOpen((prevState) => !prevState);
-  };
-
-  // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        actionButtonRef.current &&
-        !actionButtonRef.current.contains(event.target)
-      ) {
+      if (actionButtonRef.current && !actionButtonRef.current.contains(event.target)) {
         setMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
     <div
       ref={actionButtonRef}
-      className="fixed bottom-0 right-0 p-10 flex items-end justify-end w-10"
+      style={{ position: "fixed", bottom: "28px", right: "24px", zIndex: 50 }}
     >
-      <div
-        onClick={toggleMenu}
-        className="w-15 h-[4rem] text-white shadow-xl flex items-center justify-center p-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 z-50 cursor-pointer"
-      >
-        <FontAwesomeIcon
-          className={`w-10 h-10 transition-all duration-[0.6s] ${
-            menuOpen ? "rotate-90" : ""
-          }`}
-          icon={faAdd}
-        />
-        {pendingCount > 0 && (
-          <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">
-            <FontAwesomeIcon icon={faExclamationCircle} />
-          </div>
-        )}
+      {/* Menu items */}
+      <div style={{
+        display: "flex", flexDirection: "column", alignItems: "center",
+        gap: "12px", marginBottom: "16px",
+        transition: "all 0.3s cubic-bezier(0.34,1.56,0.64,1)",
+        transform: menuOpen ? "scale(1) translateY(0)" : "scale(0.8) translateY(20px)",
+        opacity: menuOpen ? 1 : 0,
+        pointerEvents: menuOpen ? "auto" : "none",
+      }}>
+        {menuItems.map((item, i) => (
+          <Link key={i} href={item.href}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              {/* Label pill */}
+              <div style={{
+                background: "#fff",
+                borderRadius: "20px",
+                padding: "5px 12px",
+                boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+                border: "1px solid #DDE3F5",
+                transition: "all 0.2s ease",
+                transitionDelay: `${i * 0.05}s`,
+              }}>
+                <span style={{ color: "#0F1B3E", fontSize: "12.5px", fontWeight: 700 }}>
+                  {item.label}
+                </span>
+              </div>
+              {/* Icon button */}
+              <button
+                style={{
+                  width: "48px", height: "48px", borderRadius: "50%",
+                  background: item.gradient,
+                  boxShadow: `0 6px 20px ${item.shadow}`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: "#fff", cursor: "pointer",
+                  border: "none",
+                  position: "relative",
+                }}
+              >
+                <FontAwesomeIcon icon={item.icon} style={{ width: "18px", height: "18px" }} />
+                {item.href === "/contact" && pendingCount > 0 && (
+                  <div style={{
+                    position: "absolute", top: "-3px", right: "-3px",
+                    width: "18px", height: "18px", borderRadius: "50%",
+                    background: "#CC2222",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: "9px", fontWeight: 700, color: "#fff",
+                    border: "2px solid #fff",
+                  }}>
+                    {pendingCount}
+                  </div>
+                )}
+              </button>
+            </div>
+          </Link>
+        ))}
       </div>
 
-      {/* Menu items */}
-      <div
-        className={`absolute mb-[4rem] transition-all duration-[0.3s] ease-out flex flex-col items-center space-y-4 ${
-          menuOpen ? "scale-110 opacity-100" : "scale-0 opacity-0"
-        }`}
-        style={{ bottom: "4rem" }} // Adjust position slightly above the button
+      {/* Main FAB */}
+      <button
+        onClick={() => setMenuOpen((v) => !v)}
+        style={{
+          width: "58px", height: "58px", borderRadius: "50%",
+          background: menuOpen
+            ? "linear-gradient(135deg, #CC2222, #6B0F0F)"
+            : "linear-gradient(135deg, #1A0A0A, #6B0F0F)",
+          boxShadow: menuOpen
+            ? "0 8px 28px rgba(204,34,34,0.5)"
+            : "0 8px 28px rgba(107,15,15,0.5)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          cursor: "pointer", border: "none",
+          transition: "all 0.3s ease",
+          position: "relative",
+        }}
       >
-        <Link href={`contact`}>
-          <div className="rounded-full p-2 bg-green-300 hover:bg-green-400 text-white">
-            <FontAwesomeIcon className="w-8 h-8" icon={faContactBook} />
+        <FontAwesomeIcon
+          icon={faAdd}
+          style={{
+            width: "22px", height: "22px", color: "#fff",
+            transition: "transform 0.35s cubic-bezier(0.34,1.56,0.64,1)",
+            transform: menuOpen ? "rotate(45deg)" : "rotate(0deg)",
+          }}
+        />
+        {/* Pending badge */}
+        {pendingCount > 0 && !menuOpen && (
+          <div style={{
+            position: "absolute", top: "-2px", right: "-2px",
+            width: "18px", height: "18px", borderRadius: "50%",
+            background: "#E07A1A",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            border: "2px solid #0D0D0D",
+          }}>
+            <FontAwesomeIcon icon={faExclamationCircle} style={{ width: "10px", color: "#fff" }} />
           </div>
-          {pendingCount > 0 && (
-            <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">
-              {pendingCount}
-            </div>
-          )}
-        </Link>
-        <Link href={`/contact/more`}>
-          <div className="rounded-full p-2 bg-blue-300 hover:bg-blue-400 text-white">
-            <FontAwesomeIcon className="w-8 h-8" icon={faUserCog} />
-          </div>
-        </Link>
-        {/* <div className="rounded-full p-2 bg-yellow-300 hover:bg-yellow-400 text-white">
-          <FontAwesomeIcon className="w-8 h-8" icon={faBell} />
-        </div>
-        <div className="rounded-full p-2 mb-5 p bg-yellow-300 hover:bg-yellow-400 text-white">
-          <FontAwesomeIcon className="w-8 h-8" icon={faGasPump} />
-        </div> */}
-      </div>
+        )}
+      </button>
     </div>
   );
 };

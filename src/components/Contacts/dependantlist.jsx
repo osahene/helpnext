@@ -1,220 +1,187 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  GetDependants,
-  approveContact,
-  rejectContact,
-} from "@/redux/userSlice";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircle, faFile } from "@fortawesome/free-solid-svg-icons";
-import DependantAction from "./dependantActionCard";
-import ActionButton from "./../CallToAction/calltoaction";
+import { GetDependants, approveContact, rejectContact } from "@/redux/userSlice";
+import DependantAction from "./modals";
 import toast from "react-hot-toast";
+
+const statusConfig = {
+  approved: { color: "#1A9E5C", bg: "#E8F8F0", label: "Approved" },
+  rejected: { color: "#CC2222", bg: "#FFF0F0", label: "Rejected" },
+  pending:  { color: "#E07A1A", bg: "#FFF3E0", label: "Pending" },
+};
+
+const avatarColors = ["#5B3FE8", "#2C5FD4", "#D4368A", "#1A9E5C", "#E07A1A"];
 
 export default function Dependents() {
   const dependants = useSelector((state) => state.contact.dependants) || [];
-  const loadData = useSelector((state) => state.contact.loadData);
   const dispatch = useDispatch();
-  const [actionModal, setActionModal] = useState({
-    open: false,
-    dependant: null,
-    type: "",
-  });
+  const [expanded, setExpanded] = useState(null);
+  const [actionModal, setActionModal] = useState({ open: false, dependant: null, type: "" });
 
-  const pendingCount = dependants.filter((d) => d.status === "pending").length;
-  console.log("pending counts", pendingCount);
   useEffect(() => {
-    async function fetchDependants() {
-      try {
-        await dispatch(GetDependants());
-        toast.success("Dependants fetched successfully!", {
-          duration: 5000,
-        });
-      } catch (error) {
-        toast.error("Failed to fetch dependants. Please try again.", {
-          duration: 5000,
-        });
-        console.log("Error fetching contacts", error);
-      }
-    }
-    fetchDependants();
+    dispatch(GetDependants()).catch(() => {});
   }, [dispatch]);
-
-  const handleActionClick = (dependant, type) => {
-    setActionModal({ open: true, dependant, type });
-  };
 
   const handleActionConfirm = async () => {
     const { dependant, type } = actionModal;
-
     try {
       const action = type === "approve" ? approveContact : rejectContact;
-      const response = await dispatch(action(dependant.pk)).unwrap();
-
-      if (response.status === 200) {
-        setActionModal({ open: false, dependant: null, type: "" });
-        toast.success(`Contact ${type}d successfully!`, {
-          duration: 5000,
-        });
-      }
-    } catch (error) {
-      toast.error(`Failed to ${type} contact. Please try again.`, {
-        duration: 5000,
-      });
-      console.error(`Error during ${type} operation`, error);
+      await dispatch(action(dependant.pk)).unwrap();
+      toast.success(`Contact ${type}d successfully!`, { duration: 5000 });
+    } catch {
+      toast.error(`Failed to ${type} contact.`, { duration: 5000 });
     } finally {
       setActionModal({ open: false, dependant: null, type: "" });
     }
   };
 
-  const closeModal = () => {
-    setActionModal({ open: false, dependant: null, type: "" });
-  };
-
   return (
-    <div className="overflow-x-auto shadow-md rounded rounded-lg">
-      <table className="w-full text-lg text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <caption className="p-5 text-xl font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
-          My Dependents
-          <p className="mt-1 text-lg font-normal text-gray-500 dark:text-gray-400">
-            List of relations who rely on you during emergency situations. The
-            information can be updated.
+    <div>
+      {/* Header */}
+      <div style={{ marginBottom: "16px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+          <div style={{ width: "4px", height: "18px", background: "#5B3FE8", borderRadius: "2px" }} />
+          <p style={{ color: "#5B3FE8", fontSize: "11px", fontWeight: 700, letterSpacing: "1.5px" }}>
+            MY DEPENDENTS
           </p>
-        </caption>
-        <thead className="text-lg text-center text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              Name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Phone Number
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Relation
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Status
-            </th>
-            <th scope="col" className="px-6 py-3 text-center">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody className="text-lg text-center">
-          {dependants.length > 0 ? (
-            dependants.map((dependant) => {
-              const statusColor =
-                dependant.status === "approved"
-                  ? "#63E6BE"
-                  : dependant.status === "rejected"
-                  ? "#fe504b"
-                  : "#ffd43b";
-              const showBeatFade = dependant.status === "pending";
+        </div>
+        <p style={{ color: "#8B94B2", fontSize: "12.5px", paddingLeft: "12px" }}>
+          People who rely on you during emergencies
+        </p>
+      </div>
 
-              return (
-                <tr
-                  key={dependant.pk}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+      {dependants.length === 0 ? (
+        <div style={{
+          background: "#fff", borderRadius: "20px", padding: "40px 20px",
+          textAlign: "center", border: "1px solid #DDE3F5",
+          boxShadow: "0 4px 16px rgba(44,95,212,0.06)",
+        }}>
+          <div style={{ width: "72px", height: "72px", borderRadius: "50%", background: "#F0F4FF", border: "2px solid #DDE3F5", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
+            <svg style={{ width: "32px", height: "32px", color: "#8B94B2" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </div>
+          <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "15px", marginBottom: "6px" }}>No Dependents in Records</p>
+          <p style={{ color: "#8B94B2", fontSize: "13px", lineHeight: 1.6 }}>
+            Dependents are people who have<br />added you as their emergency contact.
+          </p>
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          {dependants.map((dep) => {
+            const name = `${dep.first_name} ${dep.last_name}`;
+            const status = statusConfig[dep.status] || statusConfig.pending;
+            const avatarColor = avatarColors[name.charCodeAt(0) % avatarColors.length];
+            const isOpen = expanded === dep.pk;
+
+            return (
+              <div
+                key={dep.pk}
+                style={{
+                  background: "#fff", borderRadius: "20px",
+                  border: "1px solid #DDE3F5",
+                  boxShadow: "0 4px 16px rgba(44,95,212,0.06)",
+                  overflow: "hidden",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setExpanded(isOpen ? null : dep.pk)}
+                  style={{
+                    width: "100%", padding: "16px", display: "flex", alignItems: "center",
+                    gap: "14px", background: "transparent", border: "none", cursor: "pointer",
+                    textAlign: "left",
+                  }}
                 >
-                  <th
-                    scope="row"
-                    className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
+                  <div style={{
+                    width: "44px", height: "44px", borderRadius: "50%", flexShrink: 0,
+                    background: `${avatarColor}15`, border: `1.5px solid ${avatarColor}44`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <span style={{ color: avatarColor, fontWeight: 800, fontSize: "17px" }}>
+                      {name[0]?.toUpperCase()}
+                    </span>
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "15px", marginBottom: "4px" }}>{name}</p>
+                    <span style={{
+                      background: status.bg, color: status.color,
+                      fontSize: "11px", fontWeight: 600, padding: "2px 8px", borderRadius: "20px",
+                      display: "inline-block",
+                    }}>
+                      {dep.status === "pending" && "⏳ "}{status.label}
+                    </span>
+                  </div>
+                  <svg
+                    style={{ width: "18px", height: "18px", color: "#8B94B2", flexShrink: 0, transition: "transform 0.2s", transform: isOpen ? "rotate(180deg)" : "rotate(0)" }}
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
                   >
-                    <div className="ps-3">
-                      <div className="text-base font-semibold">
-                        <span className="px-2">{dependant.first_name}</span>
-                        <span>{dependant.last_name}</span>
-                      </div>
-                      <div className="font-normal text-gray-500">
-                        {dependant.email}
-                      </div>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {isOpen && (
+                  <div style={{ borderTop: "1px solid #F0F4FF", padding: "14px 16px 16px" }}>
+                    <div style={{ background: "#F0F4FF", borderRadius: "14px", padding: "14px", marginBottom: "14px" }}>
+                      {[
+                        { label: dep.email, icon: "✉", color: "#2C5FD4" },
+                        { label: dep.phone_number, icon: "📞", color: "#1A9E5C" },
+                      ].map((row, i) => (
+                        <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: i === 0 ? "10px" : 0 }}>
+                          <div style={{ width: "30px", height: "30px", borderRadius: "9px", background: `${row.color}15`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <span style={{ fontSize: "13px" }}>{row.icon}</span>
+                          </div>
+                          <span style={{ color: "#0F1B3E", fontSize: "13.5px", fontWeight: 500 }}>{row.label}</span>
+                        </div>
+                      ))}
                     </div>
-                  </th>
-                  <td className="px-6 py-4">{dependant.phone_number}</td>
-                  <td className="px-6 py-4">{dependant.relation}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center">
-                      <FontAwesomeIcon
-                        className="h-2.5 w-2.5 me-2"
-                        icon={faCircle}
-                        beatFade={showBeatFade}
-                        style={{ color: statusColor }}
-                      />{" "}
-                      {dependant.status}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    {dependant.status === "pending" && (
-                      <>
+
+                    {dep.status === "pending" && (
+                      <div style={{ display: "flex", gap: "10px" }}>
                         <button
-                          className="text-blue-400 hover:text-blue-600 mr-4"
-                          onClick={() =>
-                            handleActionClick(dependant, "approve")
-                          }
+                          onClick={() => setActionModal({ open: true, dependant: dep, type: "approve" })}
+                          style={{ flex: 1, padding: "10px", borderRadius: "12px", background: "#E8F8F0", color: "#1A9E5C", fontWeight: 700, fontSize: "13.5px", border: "1px solid #B2EECC", cursor: "pointer" }}
                         >
-                          Approve
+                          ✓ Accept
                         </button>
                         <button
-                          className="text-red-400 hover:text-red-600"
-                          onClick={() => handleActionClick(dependant, "reject")}
+                          onClick={() => setActionModal({ open: true, dependant: dep, type: "reject" })}
+                          style={{ flex: 1, padding: "10px", borderRadius: "12px", background: "#FFF0F0", color: "#CC2222", fontWeight: 700, fontSize: "13.5px", border: "1px solid #FFCCCC", cursor: "pointer" }}
                         >
-                          Reject
+                          ✕ Reject
                         </button>
-                      </>
+                      </div>
                     )}
-                    {dependant.status === "approved" && (
+                    {dep.status === "approved" && (
                       <button
-                        className="text-red-400 hover:text-red-600"
-                        onClick={() => handleActionClick(dependant, "reject")}
+                        onClick={() => setActionModal({ open: true, dependant: dep, type: "reject" })}
+                        style={{ width: "100%", padding: "10px", borderRadius: "12px", background: "#FFF0F0", color: "#CC2222", fontWeight: 700, fontSize: "13.5px", border: "1px solid #FFCCCC", cursor: "pointer" }}
                       >
                         Reject
                       </button>
                     )}
-                    {dependant.status === "rejected" && (
+                    {dep.status === "rejected" && (
                       <button
-                        className="text-blue-400 hover:text-blue-600"
-                        onClick={() => handleActionClick(dependant, "approve")}
+                        onClick={() => setActionModal({ open: true, dependant: dep, type: "approve" })}
+                        style={{ width: "100%", padding: "10px", borderRadius: "12px", background: "#E8F8F0", color: "#1A9E5C", fontWeight: 700, fontSize: "13.5px", border: "1px solid #B2EECC", cursor: "pointer" }}
                       >
                         Approve
                       </button>
                     )}
-                  </td>
-                </tr>
-              );
-            })
-          ) : (
-            <tr>
-              <td colSpan="5" className="px-6 py-4 bg-gray-300 text-center">
-                <FontAwesomeIcon
-                  className="text-gray-500"
-                  icon={faFile}
-                  size="2xl"
-                />
-                <p className="mt-4 text-lg font-semibold text-gray-600">
-                  No dependants contact available
-                </p>
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-
-      {/* Action Confirmation Modal */}
-      {actionModal.open && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <DependantAction
-            contact={actionModal.dependant}
-            onAction={handleActionConfirm}
-            onCancel={closeModal}
-            actionType={actionModal.type}
-          />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 
-      <div className="hidden">
-        <ActionButton pendingCount={pendingCount} />
-      </div>
+      {actionModal.open && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+          <DependantAction contact={actionModal.dependant} onAction={handleActionConfirm} onCancel={() => setActionModal({ open: false, dependant: null, type: "" })} actionType={actionModal.type} />
+        </div>
+      )}
     </div>
   );
 }

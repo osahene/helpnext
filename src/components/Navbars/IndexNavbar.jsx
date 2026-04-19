@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 
 export default function HeaderBar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -21,28 +22,25 @@ export default function HeaderBar() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
-  };
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target) && // Clicked outside the dropdown
-        !buttonRef.current.contains(event.target) // Clicked outside the button
+        !dropdownRef.current.contains(event.target) &&
+        !buttonRef.current.contains(event.target)
       ) {
         setDropdownOpen(false);
       }
     };
-
-    document.addEventListener("mousedown", handleClickOutside); // Add event listener
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside); // Cleanup on unmount
-    };
-  }, [dropdownRef]);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleLogout = async () => {
     const result = await dispatch(logoutUser());
@@ -55,113 +53,186 @@ export default function HeaderBar() {
         router.push("/");
       }
     } catch (error) {
-      if (result.meta.requestStatus === "rejected") {
-        console.log("Logout error", error);
-      }
       toast.error("Logout failed. Please try again.", { duration: 5000 });
     }
   };
 
+  const initials = `${first_name?.[0] ?? ""}${last_name?.[0] ?? ""}`.toUpperCase();
+
   return (
-    <>
-      <div>
-        {/* Sticky navbar */}
-        <nav className="top-0 fixed z-50 w-full flex flex-nowrap justify-between items-center px-4 py-3 navbar-expand-lg bg-white shadow">
-          <div>
-            <Link
-              href={"/"}
-              className="flex items-center space-x-3 rtl:space-x-reverse"
+    <nav
+      style={{
+        background: "linear-gradient(135deg, #1A0A0A 0%, #6B0F0F 100%)",
+        boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,0.4)" : "none",
+        transition: "box-shadow 0.3s ease",
+      }}
+      className="top-0 fixed z-50 w-full flex items-center justify-between px-5 py-3"
+    >
+      {/* ── Logo ─────────────────────────────────────────── */}
+      <Link href="/" className="flex items-center gap-3">
+        {/* Live dot */}
+        <span className="relative flex h-2.5 w-2.5">
+          <span
+            className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+            style={{ backgroundColor: "#FF3B3B" }}
+          />
+          <span
+            className="relative inline-flex rounded-full h-2.5 w-2.5"
+            style={{ backgroundColor: "#FF3B3B" }}
+          />
+        </span>
+        <Image src={mainLogo} width={36} height={36} alt="Help oo Help Logo" />
+        <span
+          className="font-bold text-white text-lg tracking-tight"
+          style={{ letterSpacing: "-0.02em" }}
+        >
+          Help OO Help
+        </span>
+      </Link>
+
+      {/* ── Right controls ────────────────────────────────── */}
+      <div className="flex items-center gap-3 relative">
+        {isAuthenticated ? (
+          <>
+            {/* Avatar button */}
+            <button
+              ref={buttonRef}
+              onClick={() => setDropdownOpen(!isDropdownOpen)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-200"
+              style={{
+                background: "rgba(255,255,255,0.1)",
+                border: "1px solid rgba(255,255,255,0.2)",
+              }}
             >
-              <Image
-                src={mainLogo}
-                width={50}
-                height={50}
-                alt="Help oo Help Logo"
-              />
-              <span className="self-center text-lg font-semibold whitespace-nowrap dark:text-black">
-                Help oo Help
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                style={{
+                  background: "linear-gradient(135deg, #2C5FD4, #5B3FE8)",
+                  color: "#fff",
+                }}
+              >
+                {initials || "?"}
+              </div>
+              <span className="text-white text-sm font-medium hidden sm:block">
+                {first_name}
               </span>
+              <svg
+                className={`w-4 h-4 text-white/60 transition-transform duration-200 ${
+                  isDropdownOpen ? "rotate-180" : ""
+                }`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {/* Dropdown */}
+            <div
+              ref={dropdownRef}
+              className={`absolute top-12 right-0 w-56 rounded-2xl overflow-hidden transition-all duration-200 ${
+                isDropdownOpen
+                  ? "opacity-100 translate-y-0 pointer-events-auto"
+                  : "opacity-0 -translate-y-3 pointer-events-none"
+              }`}
+              style={{
+                background: "#fff",
+                boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
+                border: "1px solid #DDE3F5",
+              }}
+            >
+              {/* User info header */}
+              <div
+                className="px-4 py-4"
+                style={{
+                  background: "linear-gradient(135deg, #2C5FD4, #5B3FE8)",
+                }}
+              >
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white mb-2"
+                  style={{ background: "rgba(255,255,255,0.2)" }}
+                >
+                  {initials || "?"}
+                </div>
+                <p className="text-white font-bold text-sm">
+                  {first_name} {last_name}
+                </p>
+                <p className="text-white/60 text-xs mt-0.5">Active Member</p>
+              </div>
+
+              <div className="p-2">
+                <Link href="/subscribe">
+                  <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-colors hover:bg-blue-50 group"
+                    style={{ color: "#0F1B3E" }}>
+                    <span
+                      className="w-7 h-7 rounded-lg flex items-center justify-center text-xs"
+                      style={{ background: "#F0F4FF", color: "#2C5FD4" }}
+                    >
+                      ✦
+                    </span>
+                    Subscription Plan
+                    <span
+                      className="ml-auto text-xs font-bold px-2 py-0.5 rounded-full"
+                      style={{ background: "#EEF2FF", color: "#2C5FD4" }}
+                    >
+                      FREE
+                    </span>
+                  </button>
+                </Link>
+
+                <div className="my-1.5 h-px" style={{ background: "#F0F4FF" }} />
+
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors hover:bg-red-50"
+                  style={{ color: "#CC2222" }}
+                >
+                  <span
+                    className="w-7 h-7 rounded-lg flex items-center justify-center"
+                    style={{ background: "#FFF0F0" }}
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                  </span>
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Link href="/auth/register">
+              <button
+                className="px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200"
+                style={{
+                  background: "rgba(255,255,255,0.1)",
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  color: "#fff",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.2)")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.1)")}
+              >
+                Register
+              </button>
+            </Link>
+            <Link href="/auth/login">
+              <button
+                className="px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200"
+                style={{
+                  background: "#fff",
+                  color: "#6B0F0F",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#f5f5f5")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}
+              >
+                Login
+              </button>
             </Link>
           </div>
-          <div className="flex items-center gap-x-1 flex-nowrap">
-            {/* Dropdown button */}
-            {isAuthenticated ? (
-              <>
-                <button
-                  type="button"
-                  ref={buttonRef}
-                  className="flex text-sm bg-gray-100 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                  aria-expanded={isDropdownOpen}
-                  onClick={toggleDropdown}
-                >
-                  <span className="sr-only">Open user menu</span>
-                  <Image
-                    className="w-8 h-8 rounded-full"
-                    src={userImg}
-                    alt="user"
-                  />
-                </button>
-
-                <div
-                  ref={dropdownRef}
-                  className={`absolute top-[50px] right-[10px]  z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 transform transition-all duration-300 ease-in-out ${
-                    isDropdownOpen
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 -translate-y-4 pointer-events-none"
-                  }`}
-                  id="user-dropdown"
-                >
-                  <div className="px-4 w-full flex flex-row py-3">
-                    <span className="block text-sm text-gray-900 dark:text-white">
-                      {first_name}
-                    </span>
-                    <span className="block px-2 text-sm text-gray-500 truncate dark:text-gray-400">
-                      {last_name}
-                    </span>
-                  </div>
-                  <ul className="py-2" aria-labelledby="user-menu-button">
-                    <li>
-                      <Link href={"/subscribe"}>
-                        <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                          Subscription plan{" "}
-                          <span className="text-blue-300">FREE</span>
-                        </button>
-                      </Link>
-                    </li>
-                  </ul>
-                  <ul className="py-2" aria-labelledby="user-menu-button">
-                    <li>
-                      <button
-                        onClick={handleLogout}
-                        className="block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                      >
-                        Sign out
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="mx-2">
-                  <Link href={"/auth/register"}>
-                    <button className="px-4 py-2 text-lg font-medium border border-2 rounded-md  text-gray-700 hover:bg-gray-100 dark:text-gray-600 dark:hover:text-black">
-                      Register
-                    </button>
-                  </Link>
-                </div>
-                <div className="mx-2">
-                  <Link href={"/auth/login"}>
-                    <button className="px-4 py-2 text-lg font-medium border border-2 rounded-md text-gray-700 hover:bg-gray-100  dark:text-gray-600 dark:hover:text-black">
-                      Login
-                    </button>
-                  </Link>
-                </div>
-              </>
-            )}
-          </div>
-        </nav>
+        )}
       </div>
-    </>
+    </nav>
   );
 }

@@ -1,17 +1,18 @@
+/* ─── contactNavbar.jsx ─────────────────────────────────────────────────────
+   Same as IndexNavbar but with a back arrow on the left
+──────────────────────────────────────────────────────────────────────────── */
 "use client";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser, logout } from "@/redux/authSlice";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import mainLogo from "../../../public/svg/Help Logo.svg";
-import userImg from "../../../public/img/user.svg";
-import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
-export default function HeaderBar() {
+export function ContactNavbar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -20,151 +21,122 @@ export default function HeaderBar() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
-  };
-
-  // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target) && // Clicked outside the dropdown
-        !buttonRef.current.contains(event.target) // Clicked outside the button
-      ) {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target) && !buttonRef.current?.contains(e.target))
         setDropdownOpen(false);
-      }
     };
-
-    document.addEventListener("mousedown", handleClickOutside); // Add event listener
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside); // Cleanup on unmount
-    };
-  }, [dropdownRef]);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleLogout = async () => {
     const result = await dispatch(logoutUser());
-    try {
-      if (result.meta.requestStatus === "fulfilled") {
-        dispatch(logout());
-        router.push("/");
-      }
-    } catch (error) {
-      if (result.meta.requestStatus === "rejected") {
-        console.log("Logout error", error);
-      }
+    if (result.meta.requestStatus === "fulfilled") {
+      dispatch(logout());
+      router.push("/");
     }
   };
 
+  const initials = `${first_name?.[0] ?? ""}${last_name?.[0] ?? ""}`.toUpperCase();
+
   return (
-    <>
-      <div>
-        {/* Sticky navbar */}
-        <nav className="top-0 fixed z-50 w-full flex flex-nowrap justify-between items-center px-4 py-3 navbar-expand-lg bg-white shadow">
-          <div>
+    <nav
+      style={{
+        background: "linear-gradient(135deg, #1A0A0A 0%, #6B0F0F 100%)",
+        boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,0.4)" : "none",
+        transition: "box-shadow 0.3s ease",
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "12px 20px",
+      }}
+    >
+      {/* Back button */}
+      <button
+        onClick={() => router.back()}
+        style={{
+          width: "38px", height: "38px", borderRadius: "11px",
+          background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
+          display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+        }}
+      >
+        <svg style={{ width: "18px", height: "18px", color: "#fff" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+      </button>
+
+      {/* Logo */}
+      <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <Image src={mainLogo} width={34} height={34} alt="Help oo Help Logo" />
+        <span style={{ color: "#fff", fontWeight: 800, fontSize: "17px", letterSpacing: "-0.02em" }}>
+          Help OO Help
+        </span>
+      </Link>
+
+      {/* User menu */}
+      <div style={{ position: "relative" }}>
+        {isAuthenticated ? (
+          <>
             <button
-              onClick={() => router.back()}
-              className="flex items-center text-black space-x-3 rtl:space-x-reverse"
+              ref={buttonRef}
+              onClick={() => setDropdownOpen(!isDropdownOpen)}
+              style={{
+                display: "flex", alignItems: "center", gap: "8px",
+                padding: "6px 10px", borderRadius: "10px",
+                background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
+                cursor: "pointer",
+              }}
             >
-              <FontAwesomeIcon icon={faArrowLeftLong} size="xl" />
+              <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "linear-gradient(135deg, #2C5FD4, #5B3FE8)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "11px", fontWeight: 800 }}>
+                {initials || "?"}
+              </div>
+              <svg style={{ width: "14px", height: "14px", color: "rgba(255,255,255,0.6)", transition: "transform 0.2s", transform: isDropdownOpen ? "rotate(180deg)" : "rotate(0)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
             </button>
-          </div>
-          <div>
-            <Link
-              href={"/"}
-              className="flex items-center space-x-3 rtl:space-x-reverse"
+            <div
+              ref={dropdownRef}
+              style={{
+                position: "absolute", top: "44px", right: 0, width: "200px",
+                background: "#fff", borderRadius: "18px", overflow: "hidden",
+                boxShadow: "0 20px 60px rgba(0,0,0,0.2)", border: "1px solid #DDE3F5",
+                transition: "all 0.2s ease",
+                opacity: isDropdownOpen ? 1 : 0,
+                transform: isDropdownOpen ? "translateY(0)" : "translateY(-8px)",
+                pointerEvents: isDropdownOpen ? "auto" : "none",
+              }}
             >
-              <Image
-                src={mainLogo}
-                width={50}
-                height={50}
-                alt="Help oo Help Logo"
-              />
-              <span className="self-center text-lg font-semibold whitespace-nowrap dark:text-black">
-                Help oo Help
-              </span>
+              <div style={{ background: "linear-gradient(135deg, #2C5FD4, #5B3FE8)", padding: "14px" }}>
+                <p style={{ color: "#fff", fontWeight: 700, fontSize: "13.5px" }}>{first_name} {last_name}</p>
+              </div>
+              <div style={{ padding: "8px" }}>
+                <button onClick={handleLogout} style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", background: "transparent", color: "#CC2222", fontWeight: 600, fontSize: "13.5px", border: "none", cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: "8px" }}>
+                  <span style={{ width: "28px", height: "28px", borderRadius: "8px", background: "#FFF0F0", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg style={{ width: "13px", height: "13px", color: "#CC2222" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                  </span>
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div style={{ display: "flex", gap: "8px" }}>
+            <Link href="/auth/login">
+              <button style={{ padding: "8px 14px", borderRadius: "10px", background: "#fff", color: "#6B0F0F", fontWeight: 700, fontSize: "13px", border: "none", cursor: "pointer" }}>Login</button>
             </Link>
           </div>
-          <div className="flex items-center gap-x-1 flex-nowrap">
-            {/* Dropdown button */}
-            {isAuthenticated ? (
-              <>
-                <button
-                  type="button"
-                  ref={buttonRef}
-                  className="flex text-sm bg-gray-100 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                  aria-expanded={isDropdownOpen}
-                  onClick={toggleDropdown}
-                >
-                  <span className="sr-only">Open user menu</span>
-                  <Image
-                    className="w-8 h-8 rounded-full"
-                    src={userImg}
-                    alt="user"
-                  />
-                </button>
-
-                <div
-                  ref={dropdownRef}
-                  className={`absolute top-[50px] right-[10px]  z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 transform transition-all duration-300 ease-in-out ${
-                    isDropdownOpen
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 -translate-y-4 pointer-events-none"
-                  }`}
-                  id="user-dropdown"
-                >
-                  <div className="px-4 w-full flex flex-row py-3">
-                    <span className="block text-sm text-gray-900 dark:text-white">
-                      {first_name}
-                    </span>
-                    <span className="block px-2 text-sm text-gray-500 truncate dark:text-gray-400">
-                      {last_name}
-                    </span>
-                  </div>
-                  <ul className="py-2" aria-labelledby="user-menu-button">
-                    <li>
-                      <Link href={"/subscribe"}>
-                        <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                          Subscription plan{" "}
-                          <span className="text-blue-300">FREE</span>
-                        </button>
-                      </Link>
-                    </li>
-                  </ul>
-                  <ul className="py-2" aria-labelledby="user-menu-button">
-                    <li>
-                      <button
-                        onClick={handleLogout}
-                        className="block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                      >
-                        Sign out
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="mx-2">
-                  <Link href={"/auth/register"}>
-                    <button className="px-4 py-2 text-lg font-medium border border-2 rounded-md  text-gray-700 hover:bg-gray-100 dark:text-gray-600 dark:hover:text-black">
-                      Register
-                    </button>
-                  </Link>
-                </div>
-                <div className="mx-2">
-                  <Link href={"/auth/login"}>
-                    <button className="px-4 py-2 text-lg font-medium border border-2 rounded-md text-gray-700 hover:bg-gray-100  dark:text-gray-600 dark:hover:text-black">
-                      Login
-                    </button>
-                  </Link>
-                </div>
-              </>
-            )}
-          </div>
-        </nav>
+        )}
       </div>
-    </>
+    </nav>
   );
 }
+
+export default ContactNavbar;
