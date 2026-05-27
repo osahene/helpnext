@@ -65,7 +65,7 @@ function CountryDropdown({ selected, onChange }) {
           fontFamily: "inherit",
         }}
       >
-        <Image
+        <img
           src={selected.flag}
           alt={selected.name}
           width={20}
@@ -145,7 +145,7 @@ function CountryDropdown({ selected, onChange }) {
                   onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = C.surface; }}
                   onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = "transparent"; }}
                 >
-                  <Image
+                  <img
                     src={country.flag} alt={country.name}
                     width={20} height={14}
                     style={{ borderRadius: 3, objectFit: "cover", flexShrink: 0 }}

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createContact } from "@/redux/userSlice";
 import toast from "react-hot-toast";
-import Image from "next/image";
 import allCountries from "../../app/countries.json";
 
 const countryOptions = allCountries.map((c) => ({
@@ -168,7 +167,7 @@ export default function AddContacts() {
                     cursor: "pointer", whiteSpace: "nowrap",
                   }}
                 >
-                  <Image src={selectedCountry.c_flag} alt={selectedCountry.c_name} style={{ width: "20px", height: "14px", borderRadius: "2px" }} />
+                  <img src={selectedCountry.c_flag} alt={selectedCountry.c_name} style={{ width: "20px", height: "14px", borderRadius: "2px" }} />
                   <span style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13.5px" }}>{selectedCountry.c_code}</span>
                   <svg style={{ width: "14px", height: "14px", color: "#8B94B2" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -318,7 +317,7 @@ export default function AddContacts() {
                       cursor: "pointer", marginBottom: "4px", textAlign: "left",
                     }}
                   >
-                    <Image src={c.c_flag} alt={c.c_name} style={{ width: "22px", height: "15px", borderRadius: "2px", flexShrink: 0 }} />
+                    <img src={c.c_flag} alt={c.c_name} style={{ width: "22px", height: "15px", borderRadius: "2px", flexShrink: 0 }} />
                     <span style={{ flex: 1, color: isSel ? "#2C5FD4" : "#0F1B3E", fontSize: "14px", fontWeight: isSel ? 700 : 500 }}>{c.c_name}</span>
                     <span style={{ color: isSel ? "#2C5FD4" : "#8B94B2", fontSize: "13.5px", fontWeight: 600 }}>{c.c_code}</span>
                     {isSel && <svg style={{ width: "16px", height: "16px", color: "#2C5FD4" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}

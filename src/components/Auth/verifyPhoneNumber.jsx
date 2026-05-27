@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { verifyPhoneNumber, setPhoneNumbers } from "@/redux/authSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import {
   faBan,
   faPaperPlane,
@@ -82,7 +81,7 @@ export default function VerifyPhoneNumber() {
                         type="button"
                         className="flex items-center w-32 px-2 py-2 space-x-2 text-sm text-gray-700 dark:text-gray-200"
                       >
-                        <Image
+                        <img
                           src={selectedCountry.flag}
                           alt={selectedCountry.name}
                           className="w-5 h-4 rounded-sm"
@@ -107,7 +106,7 @@ export default function VerifyPhoneNumber() {
                             value={country.code}
                           >
                             <span>
-                              <Image
+                              <img
                                 src={country.flag}
                                 className="absolute w-5 h-4 rounded-sm"
                               />
