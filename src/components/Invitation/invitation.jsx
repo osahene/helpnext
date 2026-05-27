@@ -56,7 +56,7 @@ export default function Invite() {
               <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#FF3B3B", display: "block", position: "relative" }} />
             </span>
             <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "11px", fontWeight: 700, letterSpacing: "1.4px" }}>
-              YOU'VE BEEN INVITED
+              YOU{"'"}VE BEEN INVITED
             </p>
           </div>
 
@@ -82,7 +82,7 @@ export default function Invite() {
               Help OO Help lets people quickly reach their loved ones during emergencies.
               With <strong>location enabled</strong> and a single tap, an automated message
               and voice call is sent to their <strong>In Case of Emergency (ICE)</strong> list.
-              Click <strong>Let's Go</strong> to create your own ICE list now.
+              Click <strong>Let{"'"}s Go</strong> to create your own ICE list now.
             </p>
           </div>
 
@@ -138,7 +138,7 @@ export default function Invite() {
                 <svg style={{ width: "16px", height: "16px" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
-                Let's Go
+                Let{"'"}s Go
               </button>
             </Link>
           </div>

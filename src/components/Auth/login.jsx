@@ -65,7 +65,7 @@ function CountryDropdown({ selected, onChange }) {
           fontFamily: "inherit",
         }}
       >
-        <img
+        <Image
           src={selected.flag}
           alt={selected.name}
           width={20}
@@ -145,7 +145,7 @@ function CountryDropdown({ selected, onChange }) {
                   onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = C.surface; }}
                   onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = "transparent"; }}
                 >
-                  <img
+                  <Image
                     src={country.flag} alt={country.name}
                     width={20} height={14}
                     style={{ borderRadius: 3, objectFit: "cover", flexShrink: 0 }}
@@ -393,7 +393,7 @@ export default function Login() {
                 )}
               </button>
  <p style={{ textAlign: "center", fontSize: 14, color: C.textSecondary, margin: 0 }}>
-                Don't have an account?{" "}
+                Don{"'"}t have an account?{" "}
                 <Link href="/auth/register" style={{ color: C.accent, fontWeight: 700, textDecoration: "none" }}>
                   Register
                 </Link>

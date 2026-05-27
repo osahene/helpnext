@@ -210,7 +210,7 @@ export default function Verification() {
                     <strong style={{ color: "#CC2222" }}>
                       {names.user_first_name} {names.user_last_name}
                     </strong>.
-                    Please verify to confirm you've received it.
+                    Please verify to confirm you{"'"}ve received it.
                   </p>
                 </div>
               </div>

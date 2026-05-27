@@ -64,7 +64,7 @@ function CountryDropdown({ selected, onChange }) {
           transition: "border-color 0.2s", fontFamily: "inherit",
         }}
       >
-        <img src={selected.flag} alt={selected.name} width={20} height={14}
+        <Image src={selected.flag} alt={selected.name} width={20} height={14}
           style={{ borderRadius: 3, objectFit: "cover", flexShrink: 0 }}
           onError={e => { e.target.style.display = "none"; }}
         />
@@ -112,7 +112,7 @@ function CountryDropdown({ selected, onChange }) {
                   onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = C.surface; }}
                   onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = "transparent"; }}
                 >
-                  <img src={country.flag} alt={country.name} width={20} height={14}
+                  <Image src={country.flag} alt={country.name} width={20} height={14}
                     style={{ borderRadius: 3, objectFit: "cover", flexShrink: 0 }}
                     onError={e => { e.target.style.display = "none"; }}
                   />
@@ -178,7 +178,7 @@ function ConfirmModal({ firstName, lastName, fullPhone, countryFlag, countryName
 
         {/* Info card */}
         <div style={{ background: C.accentLight, borderRadius: 12, padding: "12px 16px", border: `1px solid rgba(79,142,247,0.2)`, display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
-          <img src={countryFlag} alt={countryName} width={24} height={17} style={{ borderRadius: 3, objectFit: "cover", flexShrink: 0 }} onError={e => { e.target.style.display = "none"; }} />
+          <Image src={countryFlag} alt={countryName} width={24} height={17} style={{ borderRadius: 3, objectFit: "cover", flexShrink: 0 }} onError={e => { e.target.style.display = "none"; }} />
           <div>
             <p style={{ fontSize: 12, color: C.textSecondary, margin: 0 }}>{countryName}</p>
             <p style={{ fontSize: 15, fontWeight: 700, color: C.textPrimary, margin: 0 }}>{fullPhone}</p>

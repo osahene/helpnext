@@ -102,7 +102,7 @@ export default function MainPage() {
           <div className="flex items-center justify-between">
             <div>
               <p style={{ color: "#fff", fontWeight: 800, fontSize: "18px", letterSpacing: "-0.02em", marginBottom: "4px" }}>
-                What's your emergency?
+                What{"'"}s your emergency?
               </p>
               <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "13px", lineHeight: 1.5 }}>
                 Tap a situation below to instantly<br />alert your emergency contacts.

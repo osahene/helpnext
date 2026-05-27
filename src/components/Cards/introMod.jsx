@@ -100,7 +100,7 @@ export default function IntroModal({ onClose }) {
                 Welcome to Help OO Help
               </h2>
               <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "13.5px", lineHeight: 1.5 }}>
-                Your personal emergency alert platform. Here's how it works.
+                Your personal emergency alert platform. Here{"'"}s how it works.
               </p>
 
               {/* Live dot */}
