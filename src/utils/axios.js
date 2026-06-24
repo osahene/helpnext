@@ -7,7 +7,7 @@ const apiService = {
   VerifyPhoneNumber: (data) =>
     $axios.post("/account/verify-phone-number/", data),
   VerifyPhoneNumberOTP: (data) =>
-    $axios.post("/account/verify-phone-number-otp/", data),
+    $axios.post("/account/verify-otp/", data),
   login: (data) => $axios.post("/account/user-login/", data),
   logout: () => $axios.post("/account/user-logout/"),
   // Reset Password
@@ -15,7 +15,7 @@ const apiService = {
   confirmPassword: (data) => $axios.post("/account/password-reset/", data),
   // Generate OTP
   generateRegister: (data) =>
-    $axios.post("/account/user-register-generate-otp/", data),
+    $axios.post("/account/send-otp/", data),
   // Invitation accept / reject
   contactInfo: (contactId) => $axios.get(`/account/contacts/${contactId}/`),
   inviteStatus: (data) => $axios.post("/account/update-status/", data),

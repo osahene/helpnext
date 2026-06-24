@@ -12,8 +12,7 @@ export default function Homepage() {
     <div style={{ background: "#0D0D0D", minHeight: "100vh" }}>
       <Navbar />
       <MainPage />
-      <ActionButton />
-      {/* {isAuthenticated && <ActionButton />} */}
+      {isAuthenticated ? <ActionButton /> : <></>}
     </div>
   );
 }

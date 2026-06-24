@@ -4,6 +4,7 @@ import { verifyPhoneNumberOTP, requestOTP } from "@/redux/authSlice";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { counter } from "@fortawesome/fontawesome-svg-core";
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
 const C = {
@@ -126,6 +127,7 @@ export default function VerifyPhoneNumberOTP() {
 
   const inputRefs = useRef([]);
   const dispatch = useDispatch();
+  const country_code = useSelector((state) => state.auth.country_code);
   const phone_number = useSelector((state) => state.auth.phone_number);
   const router = useRouter();
 
@@ -184,7 +186,7 @@ export default function VerifyPhoneNumberOTP() {
     if (isLoading) return;
     setIsLoading(true);
     try {
-      const result = await dispatch(verifyPhoneNumberOTP({ otp: code, phone_number }));
+      const result = await dispatch(verifyPhoneNumberOTP({ otp: code, country_code: country_code, phone_number: phone_number }));
       if (result.meta.requestStatus === "fulfilled") {
         toast.success(result.payload?.message || "Phone number verified successfully. Redirecting...", { duration: 5000 });
         router.push("/");
@@ -212,7 +214,7 @@ export default function VerifyPhoneNumberOTP() {
     setDigits(["", "", "", "", "", ""]);
     setTimeout(() => focusBox(0), 100);
     try {
-      await dispatch(requestOTP({ email: phone_number }));
+      await dispatch(requestOTP({ country_code: country_code, phone_number: phone_number }));
       toast.success("OTP sent to your phone number", { duration: 5000 });
     } catch (error) {
       toast.error("Failed to resend OTP");

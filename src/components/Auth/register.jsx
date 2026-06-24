@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
-import { setEmail, registerUser, googleLogin } from "@/redux/authSlice";
+import { setPhoneNumbers, registerUser, googleLogin } from "@/redux/authSlice";
 import { GetContact, GetDependants } from "@/redux/userSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -308,7 +308,7 @@ function BrandPanel() {
 export default function Register() {
   const [selectedCountry, setSelectedCountry] = useState(countryOptions[79]);
   const [phone_number, setPhone_Number] = useState("");
-  const [formData, setFormData] = useState({ first_name: "", last_name: "" });
+  const [formData, setFormData] = useState({ first_name: "", last_name: "", country_code: selectedCountry.code });
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
@@ -344,11 +344,11 @@ export default function Register() {
     setShowModal(false);
     setIsLoading(true);
     try {
-      const result = await dispatch(registerUser({ ...formData, phone_number: fullNumber }));
+      const result = await dispatch(registerUser({ ...formData, phone_number: phone_number }));
       if (result.meta.requestStatus === "fulfilled") {
-        dispatch(setEmail(formData.email));
+        dispatch(setPhoneNumbers({country_code: selectedCountry.code, phone_number: phone_number}));
         toast.success("OTP sent. Proceed to verify your phone number.");
-        router.push("/auth/verifyEmail");
+        router.push("/auth/verifyPhoneNumberOTP");
       } else {
         toast.error("Registration failed. Please try again.");
       }

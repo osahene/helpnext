@@ -92,45 +92,45 @@ export const verifyPhoneNumber = createAsyncThunk(
 );
 export const verifyPhoneNumberOTP = createAsyncThunk(
   "auth/verifyPhoneNumberOTP",
-  async (userData, { rejectWithValue }) => {
+  async (userData, thunkAPI) => {
     try {
       const response = await apiService.VerifyPhoneNumberOTP(userData);
-      return response.data;
+      return response;
     } catch (error) {
-      return rejectWithValue(error.response?.data);
+      return thunkAPI.rejectWithValue(error.response?.data);
     }
   }
 );
 export const requestOTP = createAsyncThunk(
   "auth/requestOTP",
-  async (data, { rejectWithValue }) => {
+  async (data, thunkAPI) => {
     try {
       const response = await apiService.generateRegister(data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
 export const forgottenPasswordRequest = createAsyncThunk(
   "auth/forgottenPassword",
-  async (data, { rejectWithValue }) => {
+  async (data, thunkAPI) => {
     try {
       const response = await apiService.forgottenEmail(data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
 export const confirmPasswordRequest = createAsyncThunk(
   "auth/confirmPassword",
-  async (data, { rejectWithValue }) => {
+  async (data, thunkAPI) => {
     try {
       const response = await apiService.confirmPassword(data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -140,10 +140,11 @@ const initialState = {
   refreshToken: null,
   first_name: null,
   last_name: null,
-  isAuthenticated: true,
+  isAuthenticated: false,
   loading: false,
   error: null,
   email: "",
+  country_code: "",
   phone_number: "",
 };
 
@@ -169,7 +170,8 @@ const authSlice = createSlice({
       state.password = action.payload;
     },
     setPhoneNumbers(state, action) {
-      state.phone_number = action.payload;
+      state.country_code = action.payload.country_code;
+      state.phone_number = action.payload.phone_number;
     },
     userState: (state, action) => {
       const { first_name, last_name } = action.payload;
@@ -303,11 +305,11 @@ const authSlice = createSlice({
       })
       .addCase(verifyPhoneNumberOTP.fulfilled, (state, action) => {
         state.loading = false;
-        const { first_name, last_name, tokens } = action.payload;
-        state.accessToken = tokens.access;
-        state.refreshToken = tokens.refresh;
-        state.first_name = first_name;
-        state.last_name = last_name;
+        const { user, token, refresh } = action.payload.data;
+        state.accessToken = token;         // Backend uses "token", not "tokens.access"
+        state.refreshToken = refresh;       // Backend uses "refresh", not "tokens.refresh"
+        state.first_name = user.first_name;
+        state.last_name = user.last_name;
         state.isAuthenticated = true;
       })
       .addCase(verifyPhoneNumberOTP.rejected, (state, action) => {
