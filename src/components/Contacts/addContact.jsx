@@ -79,31 +79,78 @@ export default function AddContacts() {
   const errors = {
     first_name: formData.first_name && formData.first_name.trim() === "" ? "Required" : null,
     last_name: formData.last_name && formData.last_name.trim() === "" ? "Required" : null,
-    email_address: formData.email_address && !validateEmail(formData.email_address) ? "Invalid email" : null,
+    // email_address: formData.email_address && !validateEmail(formData.email_address) ? "Invalid email" : null,
     phone_number: formData.phone_number && !validatePhone(formData.phone_number) ? "Invalid phone" : null,
     relation: formData.relation && formData.relation.trim() === "" ? "Required" : null,
   };
 
   const isValid = formData.first_name.trim() && formData.last_name.trim() &&
-    validateEmail(formData.email_address) && validatePhone(formData.phone_number) &&
-    formData.relation.trim();
+    validatePhone(formData.phone_number) &&
+    formData.relation.trim() && selectedSituations.length > 0;
 
   const formChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const toggleSituation = (s) =>
     setSelectedSituations((prev) => prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]);
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const result = await dispatch(createContact({ ...formData, country_code: selectedCountry.c_code, situations: selectedSituations }));
+  //     if (result.meta.requestStatus === "fulfilled") {
+  //       setFormData({ first_name: "", last_name: "", email_address: "", phone_number: "", relation: "" });
+  //       setSelectedSituations([]);
+  //     }
+  //     toast.success(result.payload?.message || "Contact created successfully.", { duration: 5000 });
+  //   } catch (err) {
+  //     toast.error("An error occurred. Please try again.", { duration: 5000 });
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const result = await dispatch(createContact({ ...formData, country_code: selectedCountry.c_code, situations: selectedSituations }));
-      if (result.meta.requestStatus === "fulfilled") {
-        setFormData({ first_name: "", last_name: "", email_address: "", phone_number: "", relation: "" });
+      const result = await dispatch(
+        createContact({
+          ...formData,
+          country_code: selectedCountry.c_code,
+          situations: selectedSituations
+        })
+      );
+
+      // 1. Check if the slice request successfully completed
+      if (createContact.fulfilled.match(result)) {
+        // Clear fields on success
+        setFormData({
+          first_name: "",
+          last_name: "",
+          email_address: "",
+          phone_number: "",
+          relation: ""
+        });
         setSelectedSituations([]);
+
+        toast.success(result.payload?.message || "Contact created successfully.", { duration: 5000 });
+      } else {
+        // 2. The request was rejected by the backend API rules
+        const payload = result.payload;
+
+        if (payload?.errors && Array.isArray(payload.errors)) {
+          // Handle array validation conflicts (e.g. "You have already registered...")
+          payload.errors.forEach((errObj) => {
+            toast.error(errObj.error || "Validation error occurred.", { duration: 6000 });
+          });
+        } else if (payload?.error) {
+          // Handle standalone server messages (e.g. subscription limits)
+          toast.error(payload.error, { duration: 5000 });
+        } else {
+          toast.error("Failed to save contact. Please check your data.", { duration: 5000 });
+        }
       }
-      toast.success(result.payload?.message || "Contact created successfully.", { duration: 5000 });
     } catch (err) {
-      toast.error("An error occurred. Please try again.", { duration: 5000 });
+      // Falls back here if network connectivity drops entirely
+      toast.error("A network connectivity error occurred. Please try again.", { duration: 5000 });
     }
   };
 
@@ -143,9 +190,8 @@ export default function AddContacts() {
         <SectionLabel color="#5B3FE8" label="Contact Details" />
         <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginBottom: "24px" }}>
           <InputField
-            label="Email Address" name="email_address" type="email" placeholder="amahenewaa@example.com"
-            value={formData.email_address} onChange={formChange} required
-            error={errors.email_address}
+            label="Email Address (Optional)" name="email_address" type="email" placeholder="amahenewaa@example.com"
+            value={formData.email_address} onChange={formChange}
             icon={<svg style={{ width: "16px", height: "16px" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>}
           />
 

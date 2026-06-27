@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
-import { verifyPhoneNumber, setPhoneNumbers } from "@/redux/authSlice";
+import { requestOTP, setPhoneNumbers } from "@/redux/authSlice";
 import { useRouter } from "next/navigation";
 import mainLogo from "../../../public/svg/Help Logo.svg";
 import toast from "react-hot-toast";
@@ -241,15 +241,16 @@ export default function Login() {
     if (!isValid) return;
     setIsLoading(true);
     try {
-      const result = await dispatch(verifyPhoneNumber({ phone_number: fullNumber }));
+      const result = await dispatch(requestOTP({ phone_number: phone_number, country_code: selectedCountry.code }));
       if (result.meta.requestStatus === "fulfilled") {
-        dispatch(setPhoneNumbers(fullNumber));
+        dispatch(setPhoneNumbers({country_code: selectedCountry.code, phone_number: phone_number}));
         toast.success(result.payload?.message || "OTP sent. Redirecting...");
         router.push("/auth/verifyPhoneNumberOTP");
       } else {
         toast.error(result.payload?.message || "Request failed. Please try again.");
       }
     } catch (error) {
+      console.error("Error during OTP request:", error);
       toast.error(error.response?.error || "An error occurred.");
     } finally {
       setIsLoading(false);
@@ -296,7 +297,7 @@ export default function Login() {
       `}</style>
 
       <div className="auth-root">
-        <div className="brand-panel"><BrandPanel /></div>
+        {/* <div className="brand-panel"><BrandPanel /></div> */}
 
         <div className="form-panel">
           <div className="form-inner">
