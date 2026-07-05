@@ -45,8 +45,7 @@ export default function VerifyEmail() {
       await dispatch(requestOTP({ email: email }));
       toast.success("OTP sent to your email", { duration: 5000 });
     } catch (error) {
-      toast.error("Failed to resend OTP", { duration: 5000 });
-      console.error("An error occurred:", error);
+      toast.error(`Failed to resend OTP: ${error.message}`, { duration: 5000 });
     }
   };
 
@@ -73,14 +72,12 @@ export default function VerifyEmail() {
         toast.error("Email verification failed. Please try again.", {
           duration: 5000,
         });
-        console.error("Email verification failed:", result);
       }
     } catch (error) {
       toast.error(
         error.response?.error || "An error occurred during email verification.",
         { duration: 5000 }
       );
-      console.error("An error occurred:", error);
     }
   };
 

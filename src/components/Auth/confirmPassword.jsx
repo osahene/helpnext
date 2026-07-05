@@ -48,11 +48,10 @@ export default function ConfirmPassword() {
         toast.success("Password confirmed successfully. Redirecting...", {
           duration: 5000,
         });
-        router.push("/auth/confirmPasswrod");
+        router.push("/auth/confirmPassword");
       }
     } catch (error) {
-      toast.error("Request failed", { duration: 5000 });
-      console.error("An error occurred:", error);
+      toast.error(`Request failed: ${error.message}`, { duration: 5000 });
     }
   };
   return (

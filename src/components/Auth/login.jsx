@@ -250,7 +250,6 @@ export default function Login() {
         toast.error(result.payload?.message || "Request failed. Please try again.");
       }
     } catch (error) {
-      console.error("Error during OTP request:", error);
       toast.error(error.response?.error || "An error occurred.");
     } finally {
       setIsLoading(false);

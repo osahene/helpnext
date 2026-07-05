@@ -35,7 +35,6 @@ export default function TriggerCard({
   const approvedContacts = contact.filter((c) => c.status === "approved");
 
   const matchingRecipients = approvedContacts.filter((c) => {
-    console.log("Contact situations:", c.situations);
     if (!c.situations || !Array.isArray(c.situations)) return false;
     return c.situations
       .map((sit) => sit.trim().toLowerCase())

@@ -47,7 +47,6 @@ const TakeRefreshToken = async () => {
       }
     }
   } catch (error) {
-    console.error("Error refreshing token:", error);
     return null;
   }
 };

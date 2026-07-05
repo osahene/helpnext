@@ -49,7 +49,6 @@ export default function VerifyPhoneNumber() {
       }
     } catch (error) {
       toast.error(error.response?.error || "Request failed");
-      console.error("An error occurred:", error);
     }
   };
 
