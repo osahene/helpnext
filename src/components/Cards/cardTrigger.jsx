@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Trigger } from "@/redux/userSlice";
 import { motion, AnimatePresence } from "motion/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image from "next/image";
 import Link from "next/link";
 import {
   faUserSlash,
@@ -18,6 +17,7 @@ export default function TriggerCard({
   cardName,
   cardName2,
   cardLogo,
+  iconVariant,
   logoAlt,
   accentColor = "#CC2222",
   onClose,
@@ -26,7 +26,21 @@ export default function TriggerCard({
   const [isPulsing, setIsPulsing] = useState(true);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const contact = useSelector((state) => state.contact.contacts);
+  const contact = useSelector((state) => state.contact.contacts) || [];
+
+  // Construct the targeted emergency string phrase (e.g., "robbery attack")
+  const currentSituationName = `${cardName} ${cardName2}`.trim().toLowerCase();
+
+  // Filter approved contacts who have opted into this exact situation
+  const approvedContacts = contact.filter((c) => c.status === "approved");
+
+  const matchingRecipients = approvedContacts.filter((c) => {
+    console.log("Contact situations:", c.situations);
+    if (!c.situations || !Array.isArray(c.situations)) return false;
+    return c.situations
+      .map((sit) => sit.trim().toLowerCase())
+      .includes(currentSituationName);
+  });
 
   const handleClose = () => {
     setShowModal(false);
@@ -70,30 +84,30 @@ export default function TriggerCard({
   };
 
   const handleTriggerAlert = async () => {
+    if (matchingRecipients.length === 0) return;
     setIsPulsing(false);
+
     try {
       const geolocation = await getGeolocation();
       if (!geolocation.latitude || !geolocation.longitude) {
         toast.error("Geolocation data unavailable.", { duration: 5000 });
         return;
       }
+
       const response = await dispatch(
-        Trigger({ alertType: `${cardName}`, location: geolocation })
+        Trigger({ alertType: `${cardName} ${cardName2}`, location: geolocation })
       );
+
       if (response.meta.requestStatus === "fulfilled") {
-        setShowModal(false);
-        setTimeout(onClose, 300);
+        handleClose();
       }
+
       toast.success(
         response.payload?.message || "Alert triggered successfully.",
         { duration: 5000, icon: <FontAwesomeIcon icon={faMapLocationDot} /> }
       );
     } catch {
-      setShowModal(false);
-      setTimeout(onClose, 300);
-    } finally {
-      setShowModal(false);
-      setTimeout(onClose, 300);
+      handleClose();
     }
   };
 
@@ -200,7 +214,6 @@ export default function TriggerCard({
     }
 
     // ── No approved contacts ───────────────────────────────
-    const approvedContacts = contact.filter((c) => c.status === "approved");
     if (approvedContacts.length < 1) {
       return (
         <div className="flex flex-col items-center text-center px-2 pb-2">
@@ -266,11 +279,13 @@ export default function TriggerCard({
     }
 
     // ── Ready to trigger ──────────────────────────────────
+    const isActionDisabled = matchingRecipients.length === 0;
+
     return (
       <div className="flex flex-col items-center text-center pb-2">
         {/* Pulsing icon */}
         <div style={{ position: "relative", marginBottom: "20px" }}>
-          {isPulsing && (
+          {isPulsing && !isActionDisabled && (
             <div style={{
               position: "absolute", inset: "-12px",
               borderRadius: "50%",
@@ -280,16 +295,25 @@ export default function TriggerCard({
           )}
           <div style={{
             width: "80px", height: "80px", borderRadius: "50%",
-            background: `${accentColor}22`,
-            border: `2px solid ${accentColor}44`,
+            background: isActionDisabled ? "#E2E8F0" : `${accentColor}22`,
+            border: `2px solid ${isActionDisabled ? "#CBD5E1" : `${accentColor}44`}`,
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
             <div style={{
               width: "60px", height: "60px", borderRadius: "50%",
-              background: `${accentColor}33`,
+              background: isActionDisabled ? "#CBD5E1" : `${accentColor}33`,
               display: "flex", alignItems: "center", justifyContent: "center",
             }}>
-              <Image src={cardLogo} alt={logoAlt} width={32} height={32} />
+              <span
+                className={iconVariant}
+                style={{
+                  fontSize: "32px",
+                  color: isActionDisabled ? "#94A3B8" : accentColor,
+                  fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24"
+                }}
+              >
+                {cardLogo}
+              </span>
             </div>
           </div>
         </div>
@@ -301,8 +325,52 @@ export default function TriggerCard({
           {cardName} {cardName2}
         </p>
         <p style={{ color: "#8B94B2", fontSize: "13.5px", lineHeight: 1.6, marginBottom: "16px" }}>
-          All approved contacts on your emergency list will be immediately notified.
+          {isActionDisabled
+            ? "You cannot dispatch this alert because no contacts match this situation profile."
+            : "All approved contacts supporting this specific emergency scenario will be immediately notified."
+          }
         </p>
+
+        {/* Dynamic Recipients Box */}
+        <div style={{ width: "100%", textAlign: "left", marginBottom: "18px" }}>
+          <p style={{ color: "#8B94B2", fontSize: "11px", fontWeight: 700, letterSpacing: "1.4px", marginBottom: "8px" }}>
+            RECIPIENTS ({matchingRecipients.length})
+          </p>
+          {!isActionDisabled ? (
+            <div style={{ maxHeight: "120px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "8px" }}>
+              {matchingRecipients.map((c, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    background: "#F0F4FF",
+                    borderRadius: "12px",
+                    padding: "10px 14px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    border: "1px solid #DDE3F5"
+                  }}
+                >
+                  <span style={{ color: "#0F1B3E", fontSize: "13px", fontWeight: 600 }}>
+                     {c.first_name} {c.last_name}
+                  </span>
+                  <span style={{ background: "#1A9E5C15", color: "#1A9E5C", fontSize: "11px", fontWeight: 700, padding: "2px 8px", borderRadius: "6px" }}>
+                    {c.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ background: "#FFF0F0", border: "1px solid #FFD2D2", borderRadius: "14px", padding: "14px", display: "flex", gap: "10px", alignItems: "flex-start" }}>
+              <span className="material-symbols-rounded" style={{ color: "#CC2222", fontSize: "18px", marginTop: "2px" }}>
+                error
+              </span>
+              <p style={{ color: "#CC2222", fontSize: "12.5px", fontWeight: 500, lineHeight: 1.4 }}>
+                None of your approved contacts cover <strong>{cardName} {cardName2}</strong>. Update your emergency list to proceed.
+              </p>
+            </div>
+          )}
+        </div>
 
         {/* Location info pill */}
         <div style={{
@@ -311,7 +379,7 @@ export default function TriggerCard({
           padding: "8px 16px", marginBottom: "22px",
           border: "1px solid #DDE3F5",
         }}>
-          <svg style={{ width: "14px", height: "14px", color: accentColor, flexShrink: 0 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg style={{ width: "14px", height: "14px", color: isActionDisabled ? "#94A3B8" : accentColor, flexShrink: 0 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
@@ -322,12 +390,18 @@ export default function TriggerCard({
         <div className="flex gap-3 w-full">
           <button
             onClick={handleTriggerAlert}
+            disabled={isActionDisabled}
             style={{
               flex: 2, padding: "14px", borderRadius: "16px",
-              background: `linear-gradient(135deg, ${accentColor}cc, ${accentColor})`,
-              color: "#fff", fontWeight: 700, fontSize: "15px",
-              boxShadow: `0 8px 24px ${accentColor}55`,
+              background: isActionDisabled
+                ? "#E2E8F0"
+                : `linear-gradient(135deg, ${accentColor}cc, ${accentColor})`,
+              color: isActionDisabled ? "#94A3B8" : "#fff",
+              fontWeight: 700, fontSize: "15px",
+              boxShadow: isActionDisabled ? "none" : `0 8px 24px ${accentColor}55`,
               display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+              cursor: isActionDisabled ? "not-allowed" : "pointer",
+              transition: "all 0.2s ease"
             }}
           >
             <svg style={{ width: "18px", height: "18px" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

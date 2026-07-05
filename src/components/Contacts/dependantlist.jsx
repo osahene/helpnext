@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 const statusConfig = {
   approved: { color: "#1A9E5C", bg: "#E8F8F0", label: "Approved" },
   rejected: { color: "#CC2222", bg: "#FFF0F0", label: "Rejected" },
-  pending:  { color: "#E07A1A", bg: "#FFF3E0", label: "Pending" },
+  pending: { color: "#E07A1A", bg: "#FFF3E0", label: "Pending" },
 };
 
 const avatarColors = ["#5B3FE8", "#2C5FD4", "#D4368A", "#1A9E5C", "#E07A1A"];
@@ -20,7 +20,7 @@ export default function Dependents() {
   const [actionModal, setActionModal] = useState({ open: false, dependant: null, type: "" });
 
   useEffect(() => {
-    dispatch(GetDependants()).catch(() => {});
+    dispatch(GetDependants()).catch(() => { });
   }, [dispatch]);
 
   const handleActionConfirm = async () => {
@@ -105,6 +105,8 @@ export default function Dependents() {
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "15px", marginBottom: "4px" }}>{name}</p>
+                      <span style={{ color: "#8B94B2", fontSize: "12.5px" }}>{dep.relation}</span>
+                    
                     <span style={{
                       background: status.bg, color: status.color,
                       fontSize: "11px", fontWeight: 600, padding: "2px 8px", borderRadius: "20px",
@@ -125,14 +127,78 @@ export default function Dependents() {
                   <div style={{ borderTop: "1px solid #F0F4FF", padding: "14px 16px 16px" }}>
                     <div style={{ background: "#F0F4FF", borderRadius: "14px", padding: "14px", marginBottom: "14px" }}>
                       {[
-                        { label: dep.email, icon: "✉", color: "#2C5FD4" },
-                        { label: dep.phone_number, icon: "📞", color: "#1A9E5C" },
+                        {
+                          icon: "📞",
+                          label: `${dep.country_code}${dep.phone_number}`,
+                          color: "#1A9E5C"
+                        },
+                        {
+                          icon: "warning", // Material symbol name 
+                          label: `${dep.situations}`,
+                          color: "#E71414",
+                          isMaterial: true,
+                          isSituations: true
+                        },
                       ].map((row, i) => (
-                        <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: i === 0 ? "10px" : 0 }}>
-                          <div style={{ width: "30px", height: "30px", borderRadius: "9px", background: `${row.color}15`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <span style={{ fontSize: "13px" }}>{row.icon}</span>
+                        <div
+                          key={i}
+                          style={{
+                            display: "flex",
+                            // Aligns icon to top if badges wrap to multiple lines, otherwise centers it
+                            alignItems: row.isSituations ? "flex-start" : "center",
+                            gap: "10px",
+                            marginBottom: i === 0 ? "12px" : 0
+                          }}
+                        >
+                          {/* Icon Wrapper */}
+                          <div style={{
+                            width: "30px",
+                            height: "30px",
+                            borderRadius: "9px",
+                            background: `${row.color}15`,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
+                            marginTop: row.isSituations ? "2px" : 0 // Slight adjustment for top alignment
+                          }}>
+                            <span
+                              className={row.isMaterial ? "material-symbols-rounded" : ""}
+                              style={{
+                                fontSize: row.isMaterial ? "16px" : "13px",
+                                color: row.color
+                              }}
+                            >
+                              {row.icon}
+                            </span>
                           </div>
-                          <span style={{ color: "#0F1B3E", fontSize: "13.5px", fontWeight: 500 }}>{row.label}</span>
+
+                          {/* Content Area: Badges for situations, text for everything else */}
+                          {row.isSituations && typeof row.label === "string" ? (
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                              {row.label.split(",").map((sit, index) => (
+                                <span
+                                  key={index}
+                                  style={{
+                                    background: "#fff",
+                                    color: "#0F1B3E",
+                                    fontSize: "12px",
+                                    fontWeight: 600,
+                                    padding: "3px 8px",
+                                    borderRadius: "6px",
+                                    border: "1px solid #DDE3F5",
+                                    whiteSpace: "nowrap" // Prevents single words inside a badge from breaking
+                                  }}
+                                >
+                                  {sit.trim()}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span style={{ color: "#0F1B3E", fontSize: "13.5px", fontWeight: 500 }}>
+                              {row.label}
+                            </span>
+                          )}
                         </div>
                       ))}
                     </div>

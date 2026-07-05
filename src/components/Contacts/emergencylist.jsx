@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 const statusConfig = {
   approved: { color: "#1A9E5C", bg: "#E8F8F0", icon: "✓", label: "Approved" },
   rejected: { color: "#CC2222", bg: "#FFF0F0", icon: "✕", label: "Rejected" },
-  pending:  { color: "#E07A1A", bg: "#FFF3E0", icon: "⏳", label: "Pending" },
+  pending: { color: "#E07A1A", bg: "#FFF3E0", icon: "⏳", label: "Pending" },
 };
 
 const avatarColors = ["#2C5FD4", "#5B3FE8", "#1A9E5C", "#D4368A", "#E07A1A"];
@@ -23,7 +23,7 @@ export default function Emergency() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(GetContact()).catch(() => {});
+    dispatch(GetContact()).catch(() => { });
   }, [dispatch]);
 
   const handleEditSubmit = async (updated) => {
@@ -137,14 +137,78 @@ export default function Emergency() {
                   <div style={{ borderTop: "1px solid #F0F4FF", padding: "14px 16px 16px" }}>
                     <div style={{ background: "#F0F4FF", borderRadius: "14px", padding: "14px", marginBottom: "14px" }}>
                       {[
-                        { icon: "✉", label: contact.email_address, color: "#2C5FD4" },
-                        { icon: "📞", label: contact.phone_number, color: "#1A9E5C" },
+                        {
+                          icon: "📞",
+                          label: `${contact.country_code}${contact.phone_number}`,
+                          color: "#1A9E5C"
+                        },
+                        {
+                          icon: "warning", // Material symbol name 
+                          label: `${contact.situations}`,
+                          color: "#E71414",
+                          isMaterial: true,
+                          isSituations: true
+                        },
                       ].map((row, i) => (
-                        <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: i === 0 ? "10px" : 0 }}>
-                          <div style={{ width: "30px", height: "30px", borderRadius: "9px", background: `${row.color}15`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                            <span style={{ fontSize: "13px" }}>{row.icon}</span>
+                        <div
+                          key={i}
+                          style={{
+                            display: "flex",
+                            // Aligns icon to top if badges wrap to multiple lines, otherwise centers it
+                            alignItems: row.isSituations ? "flex-start" : "center",
+                            gap: "10px",
+                            marginBottom: i === 0 ? "12px" : 0
+                          }}
+                        >
+                          {/* Icon Wrapper */}
+                          <div style={{
+                            width: "30px",
+                            height: "30px",
+                            borderRadius: "9px",
+                            background: `${row.color}15`,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
+                            marginTop: row.isSituations ? "2px" : 0 // Slight adjustment for top alignment
+                          }}>
+                            <span
+                              className={row.isMaterial ? "material-symbols-rounded" : ""}
+                              style={{
+                                fontSize: row.isMaterial ? "16px" : "13px",
+                                color: row.color
+                              }}
+                            >
+                              {row.icon}
+                            </span>
                           </div>
-                          <span style={{ color: "#0F1B3E", fontSize: "13.5px", fontWeight: 500 }}>{row.label}</span>
+
+                          {/* Content Area: Badges for situations, text for everything else */}
+                          {row.isSituations && typeof row.label === "string" ? (
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                              {row.label.split(",").map((sit, index) => (
+                                <span
+                                  key={index}
+                                  style={{
+                                    background: "#fff",
+                                    color: "#0F1B3E",
+                                    fontSize: "12px",
+                                    fontWeight: 600,
+                                    padding: "3px 8px",
+                                    borderRadius: "6px",
+                                    border: "1px solid #DDE3F5",
+                                    whiteSpace: "nowrap" // Prevents single words inside a badge from breaking
+                                  }}
+                                >
+                                  {sit.trim()}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span style={{ color: "#0F1B3E", fontSize: "13.5px", fontWeight: 500 }}>
+                              {row.label}
+                            </span>
+                          )}
                         </div>
                       ))}
                     </div>

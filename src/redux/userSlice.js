@@ -62,6 +62,7 @@ export const GetContact = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await apiService.getMyContacts();
+      console.log("GetContact response:", response); // Log the response data
       return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
