@@ -311,6 +311,10 @@ export default function Register() {
   const [formData, setFormData] = useState({ first_name: "", last_name: "", country_code: selectedCountry.code });
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  
+  // ── Legal protection acknowledgment state ──────────────────────────────
+  const [acknowledged, setAcknowledged] = useState(false);
+
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -319,7 +323,8 @@ export default function Register() {
   const isFormValid = () =>
     formData.first_name.trim() !== "" &&
     formData.last_name.trim() !== "" &&
-    phone_number.trim().length > 5;
+    phone_number.trim().length > 5 &&
+    acknowledged; // Must be checked to proceed
 
   const formChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -523,7 +528,37 @@ export default function Register() {
               {/* Divider */}
               <div style={{ height: 1, background: C.border, margin: "4px 0" }} />
 
-              {/* Submit */}
+              {/* ── Ironclad Legal Disclaimer Checkbox ──────────────────── */}
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 2 }}>
+                <input
+                  type="checkbox"
+                  id="legal-disclaimer"
+                  checked={acknowledged}
+                  onChange={(e) => setAcknowledged(e.target.checked)}
+                  style={{
+                    width: 18,
+                    height: 18,
+                    marginTop: 2,
+                    accentColor: C.accent,
+                    cursor: "pointer",
+                    flexShrink: 0,
+                  }}
+                />
+                <label
+                  htmlFor="legal-disclaimer"
+                  style={{
+                    fontSize: 13,
+                    color: C.textSecondary,
+                    lineHeight: "1.45",
+                    cursor: "pointer",
+                    userSelect: "none",
+                  }}
+                >
+                  I acknowledge that <strong>Help OO Help</strong> notifies my designated emergency contacts and does <strong>NOT</strong> automatically dispatch state emergency services.
+                </label>
+              </div>
+
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={!isFormValid() || isLoading}
@@ -532,6 +567,7 @@ export default function Register() {
                   background: isFormValid() && !isLoading ? C.accent : C.border,
                   color: isFormValid() && !isLoading ? C.white : C.textSecondary,
                   boxShadow: isFormValid() && !isLoading ? "0 4px 14px rgba(79,142,247,0.35)" : "none",
+                  marginTop: 4,
                 }}
               >
                 {isLoading ? (

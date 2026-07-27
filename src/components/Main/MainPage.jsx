@@ -2,6 +2,7 @@
 import { useSelector } from "react-redux";
 import React from "react";
 import Navbar from "@/components/Navbars/IndexNavbar";
+import Footer from "@/components/Footers/FooterAdmin";
 import MainPage from "@/components/Cards/pageCards";
 import ActionButton from "@/components/CallToAction/calltoaction";
 
@@ -13,6 +14,7 @@ export default function Homepage() {
       <Navbar />
       <MainPage />
       {isAuthenticated ? <ActionButton /> : <></>}
+      <Footer />
     </div>
   );
 }

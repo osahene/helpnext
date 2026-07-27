@@ -162,7 +162,7 @@ export default function HeaderBar() {
               </div>
 
               <div className="p-2">
-                <Link href="/subscribe">
+                {/* <Link href="/subscribe">
                   <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-colors hover:bg-blue-50 group"
                     style={{ color: "#0F1B3E" }}>
                     <span
@@ -179,7 +179,7 @@ export default function HeaderBar() {
                       FREE
                     </span>
                   </button>
-                </Link>
+                </Link> */}
 
                 <div className="my-1.5 h-px" style={{ background: "#F0F4FF" }} />
 

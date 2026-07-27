@@ -23,8 +23,8 @@ const steps = [
     number: "03",
     color: "#1A9E5C",
     bg: "#EDFBF3",
-    title: "Sit Back & Wait",
-    description: "All approved contacts on your emergency list will be notified instantly.",
+    title: "Notify Your Trusted Network",
+    description: "All approved personal contacts will be alerted instantly via call & SMS with your location.",
   },
 ];
 
@@ -52,7 +52,8 @@ export default function IntroModal({ onClose }) {
               borderRadius: "28px",
               width: "100%",
               maxWidth: "460px",
-              overflow: "hidden",
+              maxHeight: "90vh",
+              overflowY: "auto",
               boxShadow: "0 32px 80px rgba(0,0,0,0.35)",
             }}
             initial={{ scale: 0.85, y: 24 }}
@@ -122,7 +123,7 @@ export default function IntroModal({ onClose }) {
               </div>
             </div>
 
-            {/* ── Steps ────────────────────────────────────────── */}
+            {/* ── Steps Section ────────────────────────────────── */}
             <div style={{ padding: "24px 24px 20px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
                 <div style={{ width: "4px", height: "16px", background: "#2C5FD4", borderRadius: "2px" }} />
@@ -131,7 +132,7 @@ export default function IntroModal({ onClose }) {
                 </p>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "24px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "20px" }}>
                 {steps.map((step, i) => (
                   <div
                     key={i}
@@ -161,6 +162,31 @@ export default function IntroModal({ onClose }) {
                     </div>
                   </div>
                 ))}
+              </div>
+
+              {/* ── Legal Disclaimer Callout Box ─────────────────── */}
+              <div
+                style={{
+                  background: "#FFF8F6",
+                  border: "1px solid #FFDBD1",
+                  borderRadius: "14px",
+                  padding: "12px 14px",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "10px",
+                  marginBottom: "20px",
+                }}
+              >
+                <div style={{ color: "#E8500A", flexShrink: 0, marginTop: "2px" }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                  </svg>
+                </div>
+                <p style={{ color: "#7A2E19", fontSize: "11.5px", lineHeight: "1.45", margin: 0 }}>
+                  <strong>Important Notice:</strong> Help OO Help is a peer-to-peer safety network. Alerts are sent to your chosen emergency contacts, <strong>not</strong> public emergency services (Police, Fire, Ambulance).
+                </p>
               </div>
 
               {/* ── Buttons Section ────────────────────────── */}
@@ -220,6 +246,7 @@ export default function IntroModal({ onClose }) {
                   </svg>
                 </button>
               </div>
+
               <p style={{ textAlign: "center", color: "#8B94B2", fontSize: "12px", marginTop: "12px" }}>
                 By proceeding, you agree to share your location during emergencies.
               </p>
