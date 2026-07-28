@@ -143,7 +143,7 @@ Upon termination, your right to use the Service ceases immediately. Sections 9, 
 Company: ${COMPANY}
 App: ${APP}
 Email: ${EMAIL}
-WhatsApp: +233 50 605 3020`,
+WhatsApp: +233 54 053 1370`,
   },
 ];
 

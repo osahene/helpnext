@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const COMPANY = "TeenByte Tech Lab";
 const APP = "Help OO Help";
-const EMAIL = "privacy@helpoohelp.com";
+const EMAIL = "admin@teenbytetechlab.com";
 
 const steps = [
   {
@@ -219,7 +219,7 @@ export default function DataDeletion() {
               </svg>
               Email Us
             </a>
-            <Link href="/privacy"
+            <Link href="/legal/privacy"
               style={{ padding: "11px 20px", borderRadius: "14px", background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff", fontWeight: 600, fontSize: "14px", textDecoration: "none" }}>
               View Privacy Policy
             </Link>

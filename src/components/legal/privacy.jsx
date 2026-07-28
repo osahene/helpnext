@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const COMPANY = "TeenByte Tech Lab";
 const APP = "Help OO Help";
-const EMAIL = "privacy@helpoohelp.com";
+const EMAIL = "admin@teenbytetechlab.com";
 const EFFECTIVE = "1 July 2025";
 
 const sections = [
@@ -98,7 +98,7 @@ We share data only in the following limited circumstances:
     id: "retention",
     title: "6. Data Retention",
     color: "#0A72C4",
-    content: `We retain your personal data for as long as your account is active. If you request account deletion, we will permanently delete your account and associated data within 30 days of receiving a verified deletion request, except where retention is required by law (e.g., for fraud prevention or regulatory compliance).
+    content: `We retain your personal data for as long as your account is active. If you request account deletion, we will permanently delete your account and associated data within 5 working days of receiving a verified deletion request, except where retention is required by law (e.g., for fraud prevention or regulatory compliance).
 
 Alert logs may be retained in anonymised form for statistical and safety research purposes after your account is deleted.`,
   },
@@ -115,7 +115,7 @@ Alert logs may be retained in anonymised form for statistical and safety researc
       "Right to Object — You may object to processing based on our legitimate interests.",
       "Right to Withdraw Consent — Where processing is based on consent, you may withdraw it at any time without affecting prior processing.",
     ],
-    footer: `To exercise any of the above rights, contact us at ${EMAIL}. We will respond within 30 days.`,
+    footer: `To exercise any of the above rights, contact us at ${EMAIL}. We will respond within 5 working days.`,
   },
   {
     id: "security",
@@ -146,7 +146,7 @@ In the event of a data breach that poses a risk to your rights and freedoms, we 
 Company: ${COMPANY}
 App: ${APP}
 Email: ${EMAIL}
-WhatsApp: +233 50 605 3020`,
+WhatsApp: +233 54 053 1370`,
   },
 ];
 
