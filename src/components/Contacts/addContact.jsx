@@ -4,12 +4,17 @@ import { useDispatch } from "react-redux";
 import { createContact } from "@/redux/userSlice";
 import toast from "react-hot-toast";
 import allCountries from "../../app/countries.json";
+import Image from "next/image";
 
-const countryOptions = allCountries.map((c) => ({
-  c_name: c.name,
-  c_code: c.dial_code,
-  c_flag: `https://flagcdn.com/w20/${c.code.toLowerCase()}.png`,
-}));
+const countryOptions = allCountries.map((c) => {
+  const isoCode = (c.iso2 || c.code || "").toLowerCase().replace(/[^a-z]/g, "");
+  return {
+    name: c.name,
+    code: c.dial_code,
+    flag: isoCode ? `https://flagcdn.com/w20/${isoCode}.png` : "",
+    iso: isoCode,
+  };
+});
 
 const situations = ["Health Crisis", "Robbery Attack", "Fire Outbreak", "Flood Alert", "Call Emergency", "Violence Alert"];
 
@@ -155,7 +160,7 @@ export default function AddContacts() {
   };
 
   const filteredCountries = countryOptions.filter(
-    (c) => c.c_name.toLowerCase().includes(countrySearch.toLowerCase()) || c.c_code.includes(countrySearch)
+    (c) => c.name.toLowerCase().includes(countrySearch.toLowerCase()) || c.code.includes(countrySearch)
   );
 
   return (
@@ -213,8 +218,8 @@ export default function AddContacts() {
                     cursor: "pointer", whiteSpace: "nowrap",
                   }}
                 >
-                  <img src={selectedCountry.c_flag} alt={selectedCountry.c_name} style={{ width: "20px", height: "14px", borderRadius: "2px" }} />
-                  <span style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13.5px" }}>{selectedCountry.c_code}</span>
+                  <Image src={selectedCountry.flag} alt={selectedCountry.name} width={20} height={14} style={{ borderRadius: "2px" }} />
+                  <span style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13.5px" }}>{selectedCountry.code}</span>
                   <svg style={{ width: "14px", height: "14px", color: "#8B94B2" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                   </svg>
@@ -351,7 +356,7 @@ export default function AddContacts() {
             </div>
             <div style={{ overflowY: "auto", padding: "8px 16px 24px" }}>
               {filteredCountries.map((c, i) => {
-                const isSel = selectedCountry.c_code === c.c_code && selectedCountry.c_name === c.c_name;
+                const isSel = selectedCountry.code === c.code && selectedCountry.name === c.name;
                 return (
                   <button
                     key={i} type="button"
@@ -363,9 +368,9 @@ export default function AddContacts() {
                       cursor: "pointer", marginBottom: "4px", textAlign: "left",
                     }}
                   >
-                    <img src={c.c_flag} alt={c.c_name} style={{ width: "22px", height: "15px", borderRadius: "2px", flexShrink: 0 }} />
-                    <span style={{ flex: 1, color: isSel ? "#2C5FD4" : "#0F1B3E", fontSize: "14px", fontWeight: isSel ? 700 : 500 }}>{c.c_name}</span>
-                    <span style={{ color: isSel ? "#2C5FD4" : "#8B94B2", fontSize: "13.5px", fontWeight: 600 }}>{c.c_code}</span>
+                    <Image src={c.flag} alt={c.name} width={22} height={15} style={{ borderRadius: "2px", flexShrink: 0 }} />
+                    <span style={{ flex: 1, color: isSel ? "#2C5FD4" : "#0F1B3E", fontSize: "14px", fontWeight: isSel ? 700 : 500 }}>{c.name}</span>
+                    <span style={{ color: isSel ? "#2C5FD4" : "#8B94B2", fontSize: "13.5px", fontWeight: 600 }}>{c.code}</span>
                     {isSel && <svg style={{ width: "16px", height: "16px", color: "#2C5FD4" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
                   </button>
                 );

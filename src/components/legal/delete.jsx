@@ -146,7 +146,7 @@ export default function DataDeletion() {
         <div style={{ background: "#fff", borderRadius: "20px", padding: "28px", marginBottom: "20px", border: "1px solid #DDE3F5", boxShadow: "0 4px 16px rgba(44,95,212,0.06)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
             <div style={{ width: "4px", height: "22px", background: "#2C5FD4", borderRadius: "2px" }} />
-            <h2 style={{ color: "#0F1B3E", fontSize: "17px", fontWeight: 800 }}>Can't Access the App? Submit a Manual Request</h2>
+            <h2 style={{ color: "#0F1B3E", fontSize: "17px", fontWeight: 800 }}>Can{"'"}t Access the App? Submit a Manual Request</h2>
           </div>
           <p style={{ color: "#374151", fontSize: "14px", lineHeight: 1.8, marginBottom: "16px" }}>
             If you are unable to access your account or the in-app deletion option, you may submit a manual data deletion request by emailing us at:
@@ -207,7 +207,7 @@ export default function DataDeletion() {
         {/* ── Contact block ─────────────────────────────── */}
         <div style={{ background: "linear-gradient(135deg, #2C5FD4, #5B3FE8)", borderRadius: "20px", padding: "28px", border: "none", boxShadow: "0 8px 32px rgba(91,63,232,0.25)", marginBottom: "28px" }}>
           <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "11px", fontWeight: 700, letterSpacing: "1.4px", marginBottom: "8px" }}>NEED HELP?</p>
-          <p style={{ color: "#fff", fontWeight: 800, fontSize: "17px", marginBottom: "8px" }}>We're here to assist you.</p>
+          <p style={{ color: "#fff", fontWeight: 800, fontSize: "17px", marginBottom: "8px" }}>We{"'"}re here to assist you.</p>
           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "13.5px", lineHeight: 1.65, marginBottom: "16px" }}>
             If you have questions about your data, the deletion process, or your rights under applicable data protection law, please reach out to us.
           </p>

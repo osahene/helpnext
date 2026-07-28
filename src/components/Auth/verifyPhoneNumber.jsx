@@ -11,12 +11,19 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import toast from "react-hot-toast";
 import allCountries from "../../app/countries.json";
+import Image from "next/image";
 
-const countryOptions = allCountries.map((c) => ({
-  name: c.name,
-  code: c.dial_code,
-  flag: `https://flagcdn.com/w20/${c.code.toLowerCase()}.png`,
-}));
+const countryOptions = allCountries.map((c) => {
+  const isoCode = (c.iso2 || c.code || "").toLowerCase().replace(/[^a-z]/g, "");
+  return {
+    name: c.name,
+    code: c.dial_code,
+    flag: isoCode ? `https://flagcdn.com/w20/${isoCode}.png` : "",
+    iso: isoCode,
+  };
+});
+
+
 
 export default function VerifyPhoneNumber() {
   const [selectedCountry, setSelectedCountry] = useState(countryOptions[79]);
@@ -80,9 +87,11 @@ export default function VerifyPhoneNumber() {
                         type="button"
                         className="flex items-center w-32 px-2 py-2 space-x-2 text-sm text-gray-700 dark:text-gray-200"
                       >
-                        <img
+                        <Image
                           src={selectedCountry.flag}
                           alt={selectedCountry.name}
+                          width={20}
+                          height={14}
                           className="w-5 h-4 rounded-sm"
                         />
                         <span>{selectedCountry.code}</span>
@@ -105,8 +114,11 @@ export default function VerifyPhoneNumber() {
                             value={country.code}
                           >
                             <span>
-                              <img
+                              <Image
                                 src={country.flag}
+                                alt={country.name}
+                                width={20}
+                                height={14}
                                 className="absolute w-5 h-4 rounded-sm"
                               />
                             </span>

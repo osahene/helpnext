@@ -2,6 +2,12 @@
 const nextConfig = {
   images: {
     domains: ["lh3.googleusercontent.com"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'flagcdn.com',
+      },
+    ],
   },
   env: {
     NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,

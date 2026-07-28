@@ -10,12 +10,17 @@ import toast from "react-hot-toast";
 import allCountries from "../../app/countries.json";
 
 // ── Country options ────────────────────────────────────────────────────────────
-export const countryOptions = allCountries.map((c) => ({
-  name: c.name,
-  code: c.dial_code,
-  flag: `https://flagcdn.com/w20/${c.code.toLowerCase()}.png`,
-  iso: c.code.toLowerCase(),
-}));
+const countryOptions = allCountries.map((c) => {
+  // Ensure we extract a valid 2-letter country code (e.g., "gh", "us")
+  const isoCode = (c.iso2 || c.code || "").toLowerCase().replace(/[^a-z]/g, "");
+  
+  return {
+    name: c.name,
+    code: c.dial_code,
+    flag: isoCode ? `https://flagcdn.com/w20/${isoCode}.png` : "",
+    iso: isoCode,
+  };
+});
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
 const C = {
@@ -65,7 +70,7 @@ function CountryDropdown({ selected, onChange }) {
           fontFamily: "inherit",
         }}
       >
-        <img
+        <Image
           src={selected.flag}
           alt={selected.name}
           width={20}
@@ -145,7 +150,7 @@ function CountryDropdown({ selected, onChange }) {
                   onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = C.surface; }}
                   onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = "transparent"; }}
                 >
-                  <img
+                  <Image
                     src={country.flag} alt={country.name}
                     width={20} height={14}
                     style={{ borderRadius: 3, objectFit: "cover", flexShrink: 0 }}
