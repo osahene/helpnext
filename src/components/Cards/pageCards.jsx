@@ -1,16 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Cards from "./card";
 import TriggerCard from "./cardTrigger";
 import IntroModal from "./introMod";
+import StatusBanner from "./statusBanner";
+import { GetContact } from "@/redux/userSlice";
 
 const cardsData = [
   {
     cardName: "Robbery",
     cardName2: "Attack",
-    cardLogo: "security", // Material Symbol Name
-    iconVariant: "material-symbols-outlined", 
+    cardLogo: "security",
+    iconVariant: "material-symbols-outlined",
     logoAlt: "robbery attack",
     accentColor: "#CC2222",
   },
@@ -43,7 +45,7 @@ const cardsData = [
     cardName2: "Alert",
     cardLogo: "car_crash",
     iconVariant: "material-symbols-rounded",
-    logoAlt: "violence alert",
+    logoAlt: "accident alert",
     accentColor: "#8B5C00",
   },
   {
@@ -57,6 +59,7 @@ const cardsData = [
 ];
 
 export default function MainPage() {
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -66,83 +69,39 @@ export default function MainPage() {
     if (!isAuthenticated) setShowIntro(true);
   }, [isAuthenticated]);
 
+  // The banner is only as truthful as the data behind it. Persisted contacts
+  // can be stale (someone may have accepted since the last visit), so refresh
+  // on mount rather than trusting whatever redux-persist rehydrated.
+  useEffect(() => {
+    if (isAuthenticated) dispatch(GetContact());
+  }, [isAuthenticated, dispatch]);
+
   const handleCardClick = (card) => {
     setSelectedCard(card);
     setIsOpen(true);
   };
 
   return (
-    <div
-      style={{ minHeight: "100vh", background: "#FCF0F0" }}
-      className="pt-20"
-    >
-      {/* ── Header Banner ─────────────────────────────────────── */}
-      <div className="px-5 pt-6 pb-2">
-        <div
-          style={{
-            background: "linear-gradient(135deg, #3D0000, #6B0F0F)",
-            borderRadius: "22px",
-            padding: "20px",
-            boxShadow: "0 8px 32px rgba(204,34,34,0.25)",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          {/* Bubble decoration */}
-          <div style={{
-            position: "absolute", top: "-20px", right: "-20px",
-            width: "100px", height: "100px", borderRadius: "50%",
-            background: "rgba(255,255,255,0.05)", pointerEvents: "none"
-          }} />
-          <div style={{
-            position: "absolute", bottom: "-15px", left: "-15px",
-            width: "70px", height: "70px", borderRadius: "50%",
-            background: "rgba(255,255,255,0.04)", pointerEvents: "none"
-          }} />
-          <div className="flex items-center justify-between">
-            <div>
-              <p style={{ color: "#fff", fontWeight: 800, fontSize: "18px", letterSpacing: "-0.02em", marginBottom: "4px" }}>
-                What{"'"}s your emergency?
-              </p>
-              <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "13px", lineHeight: 1.5 }}>
-                Tap a situation below to instantly<br />alert your emergency contacts.
-              </p>
-            </div>
-            <div
-              style={{
-                width: "52px", height: "52px", borderRadius: "50%",
-                background: "rgba(255,255,255,0.12)",
-                border: "1.5px solid rgba(255,255,255,0.2)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              <svg style={{ color: "#fff", width: "26px", height: "26px" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Section label ─────────────────────────────────────── */}
-      <div className="px-5 flex items-center gap-2">
-        <div style={{ width: "4px", height: "18px",  borderRadius: "2px" }} />
-        <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "11px", fontWeight: 700, letterSpacing: "1.6px" }}>
-          {/* SELECT EMERGENCY TYPE */}
-        </p>
-      </div>
+    <div style={{ minHeight: "100vh", background: "#FCF0F0" }} className="pt-20">
+      <StatusBanner />
 
       {/* ── Grid ──────────────────────────────────────────────── */}
-      <div className="px-5 pb-24 grid grid-cols-2 gap-4 md:grid-cols-3">
+      <div className="px-5 pt-4 pb-24 grid grid-cols-2 gap-4 md:grid-cols-3">
         {cardsData.map((card, index) => (
           <div
-            key={index}
+            key={card.cardLogo}
             onClick={() => handleCardClick(card)}
-            style={{
-              animation: `fadeSlideUp 0.4s ease both`,
-              animationDelay: `${index * 0.07}s`,
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleCardClick(card);
+              }
             }}
+            role="button"
+            tabIndex={0}
+            aria-label={`Send a ${card.cardName} ${card.cardName2} alert`}
+            className="hoh-card-slot"
+            style={{ animationDelay: `${index * 0.07}s` }}
           >
             <Cards
               cardName={card.cardName}
@@ -157,11 +116,15 @@ export default function MainPage() {
 
       {/* ── Footer note ───────────────────────────────────────── */}
       <div className="px-5 pb-8 flex items-center justify-center gap-2">
-        <svg style={{ color: "rgba(255,255,255,0.2)", width: "14px", height: "14px" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <p style={{ color: "rgba(7, 7, 7, 0.64)", fontSize: "18px" }}>
-          Alerts include your live location.
+        <span
+          className="material-symbols-rounded"
+          style={{ color: "rgba(7,7,7,0.4)", fontSize: "18px" }}
+          aria-hidden="true"
+        >
+          my_location
+        </span>
+        <p style={{ color: "rgba(7,7,7,0.64)", fontSize: "15px" }}>
+          Every alert includes your live location.
         </p>
       </div>
 
@@ -170,11 +133,26 @@ export default function MainPage() {
       )}
       {showIntro && <IntroModal onClose={() => setShowIntro(false)} />}
 
-      {/* Stagger animation keyframes */}
       <style jsx global>{`
+        .hoh-card-slot:focus-visible {
+          outline: 2px solid #6b0f0f;
+          outline-offset: 4px;
+          border-radius: 18px;
+        }
+        @media (prefers-reduced-motion: no-preference) {
+          .hoh-card-slot {
+            animation: fadeSlideUp 0.4s ease both;
+          }
+        }
         @keyframes fadeSlideUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to   { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(16px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
       `}</style>
     </div>

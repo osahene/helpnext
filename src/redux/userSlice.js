@@ -51,7 +51,7 @@ export const DeleteContact = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       await apiService.deleteContact(data);
-      return data;
+      return typeof data === "object" ? data.pk : data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
