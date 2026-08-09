@@ -18,9 +18,9 @@ const menuItems = [
     shadow: "rgba(26,158,92,0.4)",
   },
   {
-    href: "/contact/more",
-    icon: faUserCog,
-    label: "Settings",
+    href: "/emergencylines",
+    icon: faExclamationCircle,
+    label: "Emergency Lines",
     gradient: "linear-gradient(135deg, #2C5FD4, #5B3FE8)",
     shadow: "rgba(44,95,212,0.4)",
   },
