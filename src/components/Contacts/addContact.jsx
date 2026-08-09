@@ -3,18 +3,9 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createContact } from "@/redux/userSlice";
 import toast from "react-hot-toast";
-import allCountries from "../../app/countries.json";
-import Image from "next/image";
+import CountryDropdown from "@/utils/countryDropdown";
+import { DEFAULT_COUNTRY, sanitizePhoneInput } from "@/utils/phone";
 
-const countryOptions = allCountries.map((c) => {
-  const isoCode = (c.iso2 || c.code || "").toLowerCase().replace(/[^a-z]/g, "");
-  return {
-    name: c.name,
-    code: c.dial_code,
-    flag: isoCode ? `https://flagcdn.com/w20/${isoCode}.png` : "",
-    iso: isoCode,
-  };
-});
 
 const situations = ["Health Crisis", "Robbery Attack", "Fire Outbreak", "Flood Alert", "Call Emergency", "Violence Alert"];
 
@@ -69,9 +60,7 @@ const InputField = ({ label, icon, error, ...props }) => (
 );
 
 export default function AddContacts() {
-  const [selectedCountry, setSelectedCountry] = useState(countryOptions[79]);
-  const [showCountryPicker, setShowCountryPicker] = useState(false);
-  const [countrySearch, setCountrySearch] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState(DEFAULT_COUNTRY);
   const [selectedSituations, setSelectedSituations] = useState([]);
   const [formData, setFormData] = useState({
     first_name: "", last_name: "", email_address: "", phone_number: "", relation: "",
@@ -79,12 +68,12 @@ export default function AddContacts() {
   const dispatch = useDispatch();
 
   const validateEmail = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
-  const validatePhone = (p) => /^\+?[0-9\s\-\(\)]{6,}$/.test(p);
+  const validatePhone = (p) => /^[1-9]\d{5,14}$/.test(p || "");
 
   const errors = {
     first_name: formData.first_name && formData.first_name.trim() === "" ? "Required" : null,
     last_name: formData.last_name && formData.last_name.trim() === "" ? "Required" : null,
-    // email_address: formData.email_address && !validateEmail(formData.email_address) ? "Invalid email" : null,
+    email_address: formData.email_address && !validateEmail(formData.email_address) ? "Invalid email" : null,
     phone_number: formData.phone_number && !validatePhone(formData.phone_number) ? "Invalid phone" : null,
     relation: formData.relation && formData.relation.trim() === "" ? "Required" : null,
   };
@@ -98,20 +87,6 @@ export default function AddContacts() {
   const toggleSituation = (s) =>
     setSelectedSituations((prev) => prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]);
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const result = await dispatch(createContact({ ...formData, country_code: selectedCountry.c_code, situations: selectedSituations }));
-  //     if (result.meta.requestStatus === "fulfilled") {
-  //       setFormData({ first_name: "", last_name: "", email_address: "", phone_number: "", relation: "" });
-  //       setSelectedSituations([]);
-  //     }
-  //     toast.success(result.payload?.message || "Contact created successfully.", { duration: 5000 });
-  //   } catch (err) {
-  //     toast.error("An error occurred. Please try again.", { duration: 5000 });
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -119,12 +94,12 @@ export default function AddContacts() {
       const result = await dispatch(
         createContact({
           ...formData,
-          country_code: selectedCountry.c_code,
-          situations: selectedSituations
+          phone_number: sanitizePhoneInput(formData.phone_number, selectedCountry.code),
+          country_code: selectedCountry.code,
+          situations: selectedSituations,
         })
       );
 
-      // 1. Check if the slice request successfully completed
       if (createContact.fulfilled.match(result)) {
         // Clear fields on success
         setFormData({
@@ -159,9 +134,6 @@ export default function AddContacts() {
     }
   };
 
-  const filteredCountries = countryOptions.filter(
-    (c) => c.name.toLowerCase().includes(countrySearch.toLowerCase()) || c.code.includes(countrySearch)
-  );
 
   return (
     <form onSubmit={handleSubmit}>
@@ -207,28 +179,30 @@ export default function AddContacts() {
             </label>
             <div style={{ display: "flex", gap: "10px" }}>
               {/* Country selector */}
-              <div style={{ position: "relative" }}>
-                <button
-                  type="button"
-                  onClick={() => setShowCountryPicker(true)}
-                  style={{
-                    height: "48px", padding: "0 12px",
-                    borderRadius: "14px", border: "1px solid #DDE3F5",
-                    background: "#fff", display: "flex", alignItems: "center", gap: "6px",
-                    cursor: "pointer", whiteSpace: "nowrap",
-                  }}
-                >
-                  <Image src={selectedCountry.flag} alt={selectedCountry.name} width={20} height={14} style={{ borderRadius: "2px" }} />
-                  <span style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13.5px" }}>{selectedCountry.code}</span>
-                  <svg style={{ width: "14px", height: "14px", color: "#8B94B2" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-              </div>
+              <CountryDropdown
+                height={48}
+                selected={selectedCountry}
+                onChange={(c) => {
+                  setSelectedCountry(c);
+                  setFormData((f) => ({
+                    ...f,
+                    phone_number: sanitizePhoneInput(f.phone_number, c.code),
+                  }));
+                }}
+              />
+
               {/* Number input */}
               <input
-                name="phone_number" type="tel" placeholder="241123456"
-                value={formData.phone_number} onChange={formChange} required
+                name="phone_number"
+                type="tel"
+                placeholder="241123456"
+                value={formData.phone_number} onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    phone_number: sanitizePhoneInput(e.target.value, selectedCountry.code),
+                  })
+                }
+                required
                 style={{
                   flex: 1, padding: "13px 14px", borderRadius: "14px",
                   border: `1px solid ${errors.phone_number ? "#f87171" : "#DDE3F5"}`,
@@ -239,7 +213,15 @@ export default function AddContacts() {
                 onBlur={(e) => (e.target.style.borderColor = errors.phone_number ? "#f87171" : "#DDE3F5")}
               />
             </div>
-            {errors.phone_number && <p style={{ color: "#ef4444", fontSize: "11.5px", marginTop: "4px" }}>{errors.phone_number}</p>}
+            {errors.phone_number ? (
+              <p style={{ color: "#ef4444", fontSize: "11.5px", marginTop: "4px" }}>
+                {errors.phone_number}
+              </p>
+            ) : (
+              <p style={{ color: "#8B94B2", fontSize: "12px", marginTop: "6px" }}>
+                Enter the number without the leading 0.
+              </p>
+            )}
           </div>
 
           <InputField
@@ -292,7 +274,10 @@ export default function AddContacts() {
         <div style={{ display: "flex", gap: "12px" }}>
           <button
             type="button"
-            onClick={() => setFormData({ first_name: "", last_name: "", email_address: "", phone_number: "", relation: "" })}
+            onClick={() => {
+              setFormData({ first_name: "", last_name: "", email_address: "", phone_number: "", relation: "" });
+              setSelectedSituations([]);
+            }}
             style={{
               flex: 1, padding: "14px", borderRadius: "16px",
               background: "#F0F4FF", color: "#8B94B2",
@@ -325,60 +310,6 @@ export default function AddContacts() {
           </button>
         </div>
       </div>
-
-      {/* ── Country Picker Modal ──────────────────────── */}
-      {showCountryPicker && (
-        <div
-          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)", zIndex: 100, display: "flex", alignItems: "flex-end", justifyContent: "center" }}
-          onClick={() => setShowCountryPicker(false)}
-        >
-          <div
-            style={{ background: "#fff", borderRadius: "28px 28px 0 0", width: "100%", maxWidth: "480px", maxHeight: "72vh", display: "flex", flexDirection: "column", overflow: "hidden" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div style={{ width: "40px", height: "4px", background: "#DDE3F5", borderRadius: "2px", margin: "12px auto 8px" }} />
-            <div style={{ padding: "0 20px 12px", borderBottom: "1px solid #F0F4FF" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-                <div style={{ width: "4px", height: "16px", background: "#2C5FD4", borderRadius: "2px" }} />
-                <p style={{ color: "#2C5FD4", fontSize: "11px", fontWeight: 700, letterSpacing: "1.4px" }}>SELECT COUNTRY CODE</p>
-              </div>
-              <input
-                placeholder="Search country…"
-                value={countrySearch}
-                onChange={(e) => setCountrySearch(e.target.value)}
-                style={{
-                  width: "100%", padding: "11px 14px 11px 38px",
-                  borderRadius: "14px", border: "1px solid #DDE3F5",
-                  background: "#F0F4FF", color: "#0F1B3E", fontSize: "14px", outline: "none",
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
-            <div style={{ overflowY: "auto", padding: "8px 16px 24px" }}>
-              {filteredCountries.map((c, i) => {
-                const isSel = selectedCountry.code === c.code && selectedCountry.name === c.name;
-                return (
-                  <button
-                    key={i} type="button"
-                    onClick={() => { setSelectedCountry(c); setShowCountryPicker(false); setCountrySearch(""); }}
-                    style={{
-                      width: "100%", display: "flex", alignItems: "center", gap: "12px",
-                      padding: "11px 12px", borderRadius: "12px", border: "none",
-                      background: isSel ? "#EEF4FF" : "transparent",
-                      cursor: "pointer", marginBottom: "4px", textAlign: "left",
-                    }}
-                  >
-                    <Image src={c.flag} alt={c.name} width={22} height={15} style={{ borderRadius: "2px", flexShrink: 0 }} />
-                    <span style={{ flex: 1, color: isSel ? "#2C5FD4" : "#0F1B3E", fontSize: "14px", fontWeight: isSel ? 700 : 500 }}>{c.name}</span>
-                    <span style={{ color: isSel ? "#2C5FD4" : "#8B94B2", fontSize: "13.5px", fontWeight: 600 }}>{c.code}</span>
-                    {isSel && <svg style={{ width: "16px", height: "16px", color: "#2C5FD4" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
     </form>
   );
 }
