@@ -267,7 +267,6 @@ export default function Register() {
       )}
 
       <div className="auth-root">
-        {/* <div className="brand-panel"><BrandPanel /></div> */}
 
         <div className="form-panel">
           <div className="form-inner">

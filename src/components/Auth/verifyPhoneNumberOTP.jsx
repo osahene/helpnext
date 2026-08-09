@@ -56,68 +56,6 @@ function DigitBox({ value, isFocused, inputRef, onChange, onKeyDown, onPaste, in
   );
 }
 
-// ── Left brand panel ──────────────────────────────────────────────────────────
-function BrandPanel({ phone }) {
-  return (
-    <div style={{
-      flex: "0 0 420px",
-      background: "linear-gradient(145deg, #0F172A 0%, #1E3A5F 60%, #1A1A2E 100%)",
-      display: "flex", flexDirection: "column", justifyContent: "space-between",
-      padding: "48px 44px", position: "relative", overflow: "hidden",
-    }}>
-      <div style={{ position: "absolute", top: -80, right: -80, width: 300, height: 300, borderRadius: "50%", background: "rgba(79,142,247,0.08)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: -60, left: -60, width: 240, height: 240, borderRadius: "50%", background: "rgba(79,142,247,0.06)", pointerEvents: "none" }} />
-
-      {/* Logo */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12, zIndex: 1 }}>
-        <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(79,142,247,0.15)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(79,142,247,0.3)" }}>
-          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#4F8EF7" strokeWidth={1.8}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-          </svg>
-        </div>
-        <span style={{ fontFamily: "Georgia, serif", fontSize: 18, fontWeight: 700, color: "#FFFFFF", letterSpacing: "-0.3px" }}>Help OO Help</span>
-      </div>
-
-      {/* Middle */}
-      <div style={{ zIndex: 1 }}>
-        <div style={{ width: 52, height: 52, borderRadius: 16, background: "rgba(79,142,247,0.15)", border: "1px solid rgba(79,142,247,0.3)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24 }}>
-          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#4F8EF7" strokeWidth={1.8}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 8.25h3m-3 3h3m-3 3h.008v.008H10.5v-.008z" />
-          </svg>
-        </div>
-        <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, fontWeight: 700, color: "#FFFFFF", letterSpacing: "-0.5px", lineHeight: 1.15, margin: "0 0 14px" }}>
-          Phone<br />Verification
-        </h2>
-        <p style={{ fontSize: 15, color: "rgba(255,255,255,0.55)", lineHeight: 1.6, margin: 0 }}>
-          We sent a 6-digit code to{" "}
-          <span style={{ color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>{maskPhone(phone)}</span>.
-          Enter it below to verify your identity.
-        </p>
-
-        {/* Steps */}
-        <div style={{ marginTop: 36, display: "flex", flexDirection: "column", gap: 16 }}>
-          {[
-            { step: "1", text: "Check your phone for the SMS" },
-            { step: "2", text: "Enter the 6-digit code" },
-            { step: "3", text: "You'll be redirected automatically" },
-          ].map(({ step, text }) => (
-            <div key={step} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(79,142,247,0.15)", border: "1px solid rgba(79,142,247,0.3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <span style={{ fontSize: 12, fontWeight: 700, color: "#4F8EF7" }}>{step}</span>
-              </div>
-              <span style={{ fontSize: 13, color: "rgba(255,255,255,0.6)" }}>{text}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <p style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", margin: 0, zIndex: 1 }}>
-        © {new Date().getFullYear()} Help OO Help. All rights reserved.
-      </p>
-    </div>
-  );
-}
-
 // ── Main component ────────────────────────────────────────────────────────────
 export default function VerifyPhoneNumberOTP() {
   const [digits, setDigits] = useState(["", "", "", "", "", ""]);
@@ -259,10 +197,6 @@ export default function VerifyPhoneNumberOTP() {
       `}</style>
 
       <div className="auth-root">
-        <div className="brand-panel">
-          <BrandPanel phone={phone_number} />
-        </div>
-
         <div className="form-panel">
           <div className="form-inner">
 
