@@ -193,6 +193,7 @@ export default function Register() {
           ...formData,
           country_code: selectedCountry.code,
           phone_number: cleanPhone,
+          agree_to_terms: acknowledged,
         })
       );
       if (result.meta.requestStatus === "fulfilled") {

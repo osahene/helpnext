@@ -7,8 +7,8 @@ import { useSelector } from "react-redux";
 /* ── Adjust these to match your actual routes ───────────────────────────── */
 const ROUTES = {
   login: "/auth/login",
-  contacts: "/contacts",
-  addContact: "/contacts",
+  contacts: "/contact",
+  addContact: "/contact",
 };
 
 /* Mirrors the backend's subscription_limits in CreateRelation */

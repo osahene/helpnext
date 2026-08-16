@@ -10,33 +10,34 @@ export default function Accept() {
   const dispatch = useDispatch();
   const router = useRouter();
   const search = useSearchParams();
-  const contactId = search.get("contact_id");
-  const token = search.get("token");
+  const code = search.get("code");
 
   useEffect(() => {
+    if (!code) { toast.error("This link is missing its invitation code."); return; }
     const fetchContactData = async () => {
       try {
-        await dispatch(ContactInfo(contactId)).unwrap();
+        await dispatch(ContactInfo(code)).unwrap();
       } catch {
         toast.error("Failed to fetch contact information.");
       }
     };
     fetchContactData();
-  }, [contactId, dispatch]);
+  }, [code, dispatch]);
 
   const handleStatusChange = async (status) => {
     try {
-      const response = await dispatch(Invite({ contact_id: contactId, action: status, token }));
+      const response = await dispatch(Invite({ code, action: status }));
       if (response.meta.requestStatus === "fulfilled") {
-        toast.success(response.payload?.message || "Status updated successfully.", { duration: 5000 });
+        toast.success(response.payload?.message || "Status updated successfully.",
+                      { duration: 5000 });
         router.push("/guestInvite/invite");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to update status.", { duration: 5000 });
+      toast.error(error.response?.data?.error || "Failed to update status.",
+                  { duration: 5000 });
     }
   };
 
-  const isAccept = true; // used to derive a neutral layout — both actions available
 
   return (
     <div style={{ width: "100%", maxWidth: "480px", padding: "20px" }}>

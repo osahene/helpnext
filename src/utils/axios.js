@@ -17,7 +17,7 @@ const apiService = {
   generateRegister: (data) =>
     $axios.post("/account/send-otp/", data),
   // Invitation accept / reject
-  contactInfo: (contactId) => $axios.get(`/account/contacts/${contactId}/`),
+  contactInfo: (code) => $axios.get(`/account/contacts/${code}/`),
   inviteStatus: (data) => $axios.post("/account/update-status/", data),
   // Create Relation
   createRelation: (data) => $axios.post("/account/create-relation/", data),
@@ -30,11 +30,10 @@ const apiService = {
   updateContact: (data) => $axios.post("/account/update-contact/", data),
   // trigger Alert
   triggerAlert: (data) => $axios.post("/account/trigger-alert/", data),
+  alertStatus: (id) => $axios.get(`/account/alert-status/${id}/`),
   // verify emergency
-  verifyEmergency: (token) =>
-    $axios.get(`/account/verify-alert/${encodeURIComponent(token)}/`),
-  decodeEmrgencyToken: (token) =>
-    $axios.get(`/account/decode-alert-token/${encodeURIComponent(token)}/`),
+  verifyEmergency: (code) => $axios.get(`/account/verify-alert/${code}/`),
+  decodeEmrgencyToken: (code) => $axios.get(`/account/decode-alert-token/${code}/`),
 };
 
 export default apiService;

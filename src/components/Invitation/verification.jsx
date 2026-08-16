@@ -11,12 +11,12 @@ export default function Verification() {
   const [verificationStatus, setVerificationStatus] = useState(null);
   const router = useRouter();
   const search = useSearchParams();
-  const token = search.get("token");
+  const code = search.get("code");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await apiService.decodeEmrgencyToken(token);
+        const res = await apiService.decodeEmrgencyToken(code);
         if (res.data.verification_status) setVerificationStatus("verified");
         setNames(res.data);
       } catch (err) {
@@ -25,13 +25,13 @@ export default function Verification() {
         setLoading(false);
       }
     };
-    if (token) fetchData();
-    else { setError("No verification token provided."); setLoading(false); }
-  }, [token]);
+    if (code) fetchData();
+    else { setError("No verification code provided."); setLoading(false); }
+  }, [code]);
 
   const handleVerification = async () => {
     try {
-      const res = await apiService.verifyEmergency(token);
+      const res = await apiService.verifyEmergency(code);
       if (res.status === 200) {
         toast.success("Verified successfully.", { duration: 5000 });
         setVerificationStatus("verified");
