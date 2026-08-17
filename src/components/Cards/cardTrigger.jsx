@@ -94,7 +94,7 @@ export default function TriggerCard({
       }
 
       const response = await dispatch(
-        Trigger({ alertType: `${cardName} ${cardName2}`, location: geolocation })
+        Trigger({ alertType: `${cardName}`, location: geolocation })
       );
 
       if (response.meta.requestStatus === "fulfilled") {
