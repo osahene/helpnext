@@ -47,7 +47,6 @@ export default function Login() {
         toast.success(result.payload?.message || "OTP sent. Redirecting...");
         router.push("/auth/verifyPhoneNumberOTP");
       } else {
-        console.error("Request failed:", result);
         toast.error(result.payload?.error || "Request failed. Please try again.");
       }
     } catch (error) {
