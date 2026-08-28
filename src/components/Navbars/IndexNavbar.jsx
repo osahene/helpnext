@@ -10,6 +10,7 @@ import Link from "next/link";
 import userImg from "../../../public/img/user.svg";
 import mainLogo from "../../../public/svg/Help Logo.svg";
 import toast from "react-hot-toast";
+import NotificationBell from "@/components/Notifications/NotificationBell";
 
 export default function HeaderBar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -94,6 +95,7 @@ export default function HeaderBar() {
       <div className="flex items-center gap-3 relative">
         {isAuthenticated ? (
           <>
+            <NotificationBell />
             {/* Avatar button */}
             <button
               ref={buttonRef}

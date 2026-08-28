@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import mainLogo from "../../../public/svg/Help Logo.svg";
+import NotificationBell from "@/components/Notifications/NotificationBell";
 
 export function ContactNavbar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -80,9 +81,10 @@ export function ContactNavbar() {
       </Link>
 
       {/* User menu */}
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", display: "flex", alignItems: "center", gap: "10px" }}>
         {isAuthenticated ? (
           <>
+            <NotificationBell />
             <button
               ref={buttonRef}
               onClick={() => setDropdownOpen(!isDropdownOpen)}

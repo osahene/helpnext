@@ -6,6 +6,7 @@ import ReduxProvider from "./reduxProvider";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { Toaster } from "react-hot-toast";
+import EnableNotificationsPrompt from "@/components/Notifications/EnableNotificationsPrompt";
 config.autoAddCss = false;
 
 const geistSans = localFont({
@@ -34,6 +35,7 @@ export default function RootLayout({ children }) {
         <ReduxProvider>
           <Toaster position="bottom-center" />
           <GlobalLoading />
+          <EnableNotificationsPrompt />
           {children}
         </ReduxProvider>
       </body>

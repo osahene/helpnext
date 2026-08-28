@@ -34,6 +34,13 @@ const apiService = {
   // verify emergency
   verifyEmergency: (code) => $axios.get(`/account/verify-alert/${code}/`),
   decodeEmrgencyToken: (code) => $axios.get(`/account/decode-alert-token/${code}/`),
+  // Titbit notifications (in-app inbox + web push)
+  getNotifications: (params) => $axios.get("/notifications/", { params }),
+  getUnreadNotificationCount: () => $axios.get("/notifications/unread-count/"),
+  markNotificationRead: (id) => $axios.patch(`/notifications/${id}/read/`),
+  registerPushDevice: (data) => $axios.post("/notifications/register-device/", data),
+  unregisterPushDevice: (token) =>
+    $axios.delete("/notifications/register-device/", { data: { token } }),
 };
 
 export default apiService;
