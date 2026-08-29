@@ -7,12 +7,22 @@
 // process.env — it loads the Firebase "compat" SDK from Firebase's own CDN
 // instead, which is the standard pattern for this file.
 //
-// ⚠️  PLACEHOLDER CREDENTIALS — see FIREBASE_SETUP.md at the project root.
-// This config MUST exactly match the config in src/utils/push.js. Until
-// real values are filled in, calls below will simply fail (Firebase will
-// reject the fake API key) and no background notifications will show —
-// this file does not run during normal page loads, so a failure here
-// cannot break the rest of the site.
+// ⚠️  INTENTIONAL EXCEPTION — hardcoded, not env-var-driven.
+// Every other Firebase value in this app now comes from NEXT_PUBLIC_
+// Firebase env vars (see src/utils/push.js + FIREBASE_SETUP.md). This file
+// is the one place that CANNOT do that: it's a raw service worker served
+// as-is from /public, with no bundler pass and no process.env — so this
+// config has to stay hardcoded here. This is the standard, expected
+// pattern for Firebase web push (most real-world Next.js + Firebase setups
+// do exactly this), not an oversight.
+//
+// This config MUST exactly match the NEXT_PUBLIC_FIREBASE_* values used in
+// src/utils/push.js — see FIREBASE_SETUP.md for the manual-edit steps this
+// file needs whenever those env vars change. Until real values are filled
+// in here, calls below will simply fail (Firebase will reject the fake API
+// key) and no background notifications will show — this file does not run
+// during normal page loads, so a failure here cannot break the rest of the
+// site.
 // ─────────────────────────────────────────────────────────────────────────
 
 importScripts(
@@ -25,12 +35,13 @@ importScripts(
 try {
   // PLACEHOLDER — must match firebaseConfig in src/utils/push.js
   firebase.initializeApp({
-    apiKey: "PLACEHOLDER_FIREBASE_API_KEY",
-    authDomain: "PLACEHOLDER_PROJECT_ID.firebaseapp.com",
-    projectId: "PLACEHOLDER_PROJECT_ID",
-    storageBucket: "PLACEHOLDER_PROJECT_ID.appspot.com",
-    messagingSenderId: "000000000000",
-    appId: "1:000000000000:web:0000000000000000000000",
+  apiKey: "AIzaSyDxaw6iQnBUXAzbnuIKRXK9IonTVRxqPqM",
+  authDomain: "helpoohelp-notification.firebaseapp.com",
+  projectId: "helpoohelp-notification",
+  storageBucket: "helpoohelp-notification.firebasestorage.app",
+  messagingSenderId: "1005334547839",
+  appId: "1:1005334547839:web:1752cb50697539c943de4a",
+  measurementId: "G-8LPYSERZZG"
   });
 
   const messaging = firebase.messaging();

@@ -2,29 +2,34 @@
 // ─────────────────────────────────────────────────────────────────────────
 // Web Push (Firebase Cloud Messaging) helper for Titbit notifications.
 //
-// ⚠️  PLACEHOLDER CREDENTIALS — see FIREBASE_SETUP.md at the project root.
-// Every value below is a syntactically valid but fake placeholder. Until the
-// real Firebase web config + VAPID key are dropped in, every function here
-// will fail quietly (caught, logged as a warning, never thrown) and push
-// notifications will simply stay unavailable — this must never break page
-// render or any other part of the app.
+// Config comes from NEXT_PUBLIC_FIREBASE_* env vars (see FIREBASE_SETUP.md
+// at the project root) the same way NEXT_PUBLIC_BASE_URL is read in
+// src/utils/axiosInstance.js — Firebase's web config isn't a secret (it
+// ships in every browser bundle regardless), env vars just make it
+// per-environment instead of hardcoded.
+//
+// ⚠️  PLACEHOLDER DEFAULTS — every `|| "..."` fallback below is a
+// syntactically valid but fake placeholder, used only when the env var
+// isn't set. Until the real values are provided (via env vars), every
+// function here will fail quietly (caught, logged as a warning, never
+// thrown) and push notifications will simply stay unavailable — this must
+// never break page render or any other part of the app.
 // ─────────────────────────────────────────────────────────────────────────
 import apiService from "./axios";
 
-// PLACEHOLDER — replace with the real Firebase web config from
-// Firebase Console > Project settings > General > Your apps > Web app.
 const firebaseConfig = {
-  apiKey: "PLACEHOLDER_FIREBASE_API_KEY",
-  authDomain: "PLACEHOLDER_PROJECT_ID.firebaseapp.com",
-  projectId: "PLACEHOLDER_PROJECT_ID",
-  storageBucket: "PLACEHOLDER_PROJECT_ID.appspot.com",
-  messagingSenderId: "000000000000",
-  appId: "1:000000000000:web:0000000000000000000000",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDxaw6iQnBUXAzbnuIKRXK9IonTVRxqPqM",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "helpoohelp-notification.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "helpoohelp-notification",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "helpoohelp-notification.firebasestorage.app",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "1005334547839",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:1005334547839:web:1752cb50697539c943de4a",
+  measurementId: "G-8LPYSERZZG"
 };
 
-// PLACEHOLDER — replace with the real "Web Push certificates" VAPID key
-// from Firebase Console > Project settings > Cloud Messaging.
-const VAPID_KEY = "PLACEHOLDER_VAPID_KEY_REPLACE_ME";
+// From Firebase Console > Project settings > Cloud Messaging > Web Push
+// certificates.
+const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || "BCjiDM_XxZt-lSx8FdqQ25n9BPuv_X7f2Sn2BVGCvH4k24xStRF7e6Mko2m7e_1uGhX20YmE61T7xMdKSJ3RBCI";
 
 let firebaseAppPromise = null;
 let messagingInstance = null;

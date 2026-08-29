@@ -5,31 +5,36 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import { logout } from "@/redux/authSlice";
+import { getAccessToken, getRefreshToken } from "@/utils/authCookies";
 
 function isTokenValid(token) {
   if (!token) return false;
   try {
-    const clean =
-      token.startsWith('"') && token.endsWith('"') ? token.slice(1, -1) : token;
-    const { exp } = jwtDecode(clean);
+    const { exp } = jwtDecode(token);
     return exp * 1000 > Date.now();
   } catch {
     return false;
   }
 }
 
-// Client-side gate for private routes. Auth lives only in redux-persist
-// (localStorage), so this can't be done in Next.js middleware — there's
-// no cookie/session for the server to check.
+// Client-side gate for private routes. The tokens themselves now live in
+// cookies (see src/utils/authCookies.js), read directly here rather than
+// via Redux — Redux's copy is only kept as convenient in-memory state and
+// isn't guaranteed to be populated yet on first render after a hard
+// refresh, while the cookie is available synchronously. src/middleware.js
+// checks the same cookies server-side before a protected page is even
+// sent to the browser; this component is the client-side backstop that
+// additionally verifies the token hasn't expired and keeps Redux's
+// `isAuthenticated` flag in sync.
 export default function RouteGuard({ children }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const accessToken = useSelector((state) => state.auth.accessToken);
-  const refreshToken = useSelector((state) => state.auth.refreshToken);
   const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
+    const accessToken = getAccessToken();
+    const refreshToken = getRefreshToken();
     const hasValidSession =
       isAuthenticated &&
       (isTokenValid(accessToken) || isTokenValid(refreshToken));
@@ -42,7 +47,7 @@ export default function RouteGuard({ children }) {
     }
 
     setAuthorized(true);
-  }, [isAuthenticated, accessToken, refreshToken, dispatch, router]);
+  }, [isAuthenticated, dispatch, router]);
 
   if (!authorized) {
     return (

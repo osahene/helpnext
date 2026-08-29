@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { store } from "../redux/store"; // Redux store
 import { logout, refreshToken } from "../redux/authSlice"; // Redux actions
 import { setGlobalLoading } from "../redux/globalSlice";
+import { getAccessToken, getRefreshToken } from "./authCookies";
 
 const $axios = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL
@@ -17,8 +18,7 @@ const $axios = axios.create({
 });
 
 const TakeRefreshToken = async () => {
-  const state = store.getState();
-  let refresh_token = state.auth.refreshToken;
+  let refresh_token = getRefreshToken();
   if (!refresh_token) return null;
 
   try {
@@ -55,11 +55,10 @@ const scheduleTokenRefresh = () => {
   if (typeof window === "undefined") return; // Don't run on server
 
   setInterval(async () => {
-    const state = store.getState();
-    const accessToken = state.auth.accessToken;
-    const refreshToken = state.auth.refreshToken;
+    const accessToken = getAccessToken();
+    const refresh_token = getRefreshToken();
 
-    if (accessToken && refreshToken) {
+    if (accessToken && refresh_token) {
       try {
         const user = jwtDecode(accessToken);
         const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 60; // 1 minute buffer
@@ -80,13 +79,8 @@ scheduleTokenRefresh();
 $axios.interceptors.request.use(
   async (req) => {
     store.dispatch(setGlobalLoading(true));
-    const state = store.getState();
-    let accessToken = state.auth.accessToken;
+    let accessToken = getAccessToken();
     if (accessToken) {
-      if (accessToken.startsWith('"') && accessToken.endsWith('"')) {
-        accessToken = accessToken.slice(1, -1);
-      }
-
       try {
         const user = jwtDecode(accessToken);
         const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
@@ -123,22 +117,30 @@ $axios.interceptors.response.use(
   (error) => {
     store.dispatch(setGlobalLoading(false));
 
+    // error.response is undefined when the request never reached the
+    // server (timeout, offline, DNS failure, CORS, etc) — every access
+    // below must be optional-chained so a plain network failure can't
+    // itself throw inside this interceptor.
+    const message =
+      error.message ||
+      error.response?.detail ||
+      error.response?.data ||
+      error.response?.data?.detail ||
+      error.response?.data?.data ||
+      error.response?.data?.error ||
+      error.response?.data?.message ||
+      error.response?.data?.data?.message ||
+      error.response?.data?.data?.detail ||
+      error.response?.data?.data?.error ||
+      (error.response
+        ? "Request failed"
+        : "Network error. Please check your connection and try again.");
+
     store.dispatch({
       type: "notifications/addNotification",
       payload: {
         title: "Error",
-        message:
-          error.message ||
-          error.response.detail ||
-          error.response.data ||
-          error.response.data.detail ||
-          error.response.data.data ||
-          error.response.data.error ||
-          error.response.data.message ||
-          error.response.data.data.message ||
-          error.response.data.data.detail ||
-          error.response.data.data.error ||
-          "Request failed",
+        message,
         type: "danger",
       },
     });
