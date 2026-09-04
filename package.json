@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "packageManager": "npm@10.5.1",
   "overrides": {
@@ -22,16 +24,15 @@
     "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^2.4.0",
     "@tailwindcss/forms": "^0.5.9",
-    "axios": "^1.7.8",
+    "axios": "^1.20.0",
     "dayjs": "^1.11.13",
     "firebase": "^11.2.0",
     "js-cookie": "^3.0.8",
-    "jwt-cookie": "^1.0.1",
     "jwt-decode": "^4.0.0",
     "motion": "^12.0.0-alpha.2",
-    "next": "15.0.7",
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "next": "15.5.25",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "react-hot-toast": "^2.5.2",
     "react-redux": "^9.1.2",
     "redux": "^5.0.1",
@@ -39,10 +40,15 @@
     "redux-thunk": "^3.1.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@vitejs/plugin-react": "^4.3.4",
     "babel-loader": "^10.0.0",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
+    "jsdom": "^25.0.1",
     "postcss": "^8",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "vitest": "^2.1.8"
   }
 }

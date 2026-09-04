@@ -1,30 +1,3 @@
-// ─────────────────────────────────────────────────────────────────────────
-// Firebase Cloud Messaging background service worker.
-//
-// This file is required by the Firebase Web SDK to display notifications
-// when the site is NOT in the foreground (tab closed/backgrounded). It runs
-// outside the Next.js bundle, so it can't use ES module imports or read
-// process.env — it loads the Firebase "compat" SDK from Firebase's own CDN
-// instead, which is the standard pattern for this file.
-//
-// ⚠️  INTENTIONAL EXCEPTION — hardcoded, not env-var-driven.
-// Every other Firebase value in this app now comes from NEXT_PUBLIC_
-// Firebase env vars (see src/utils/push.js + FIREBASE_SETUP.md). This file
-// is the one place that CANNOT do that: it's a raw service worker served
-// as-is from /public, with no bundler pass and no process.env — so this
-// config has to stay hardcoded here. This is the standard, expected
-// pattern for Firebase web push (most real-world Next.js + Firebase setups
-// do exactly this), not an oversight.
-//
-// This config MUST exactly match the NEXT_PUBLIC_FIREBASE_* values used in
-// src/utils/push.js — see FIREBASE_SETUP.md for the manual-edit steps this
-// file needs whenever those env vars change. Until real values are filled
-// in here, calls below will simply fail (Firebase will reject the fake API
-// key) and no background notifications will show — this file does not run
-// during normal page loads, so a failure here cannot break the rest of the
-// site.
-// ─────────────────────────────────────────────────────────────────────────
-
 importScripts(
   "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"
 );
@@ -33,7 +6,6 @@ importScripts(
 );
 
 try {
-  // PLACEHOLDER — must match firebaseConfig in src/utils/push.js
   firebase.initializeApp({
   apiKey: "AIzaSyDxaw6iQnBUXAzbnuIKRXK9IonTVRxqPqM",
   authDomain: "helpoohelp-notification.firebaseapp.com",
@@ -63,13 +35,9 @@ try {
     }
   });
 } catch (error) {
-  // Fake/placeholder credentials, or any other init failure — the service
-  // worker simply won't deliver background notifications. It stays
-  // installed and harmless otherwise.
   console.warn("[firebase-messaging-sw] Firebase init failed:", error);
 }
 
-// Clicking a background notification focuses/opens the site.
 self.addEventListener("notificationclick", (event) => {
   try {
     event.notification.close();

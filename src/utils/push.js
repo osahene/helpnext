@@ -3,8 +3,8 @@
 // Web Push (Firebase Cloud Messaging) helper for Titbit notifications.
 //
 // Config comes from NEXT_PUBLIC_FIREBASE_* env vars (see FIREBASE_SETUP.md
-// at the project root) the same way NEXT_PUBLIC_BASE_URL is read in
-// src/utils/axiosInstance.js — Firebase's web config isn't a secret (it
+// at the project root) the same way NEXT_PUBLIC_GOOGLE_CLIENT_ID is read in
+// src/app/reduxProvider.js — Firebase's web config isn't a secret (it
 // ships in every browser bundle regardless), env vars just make it
 // per-environment instead of hardcoded.
 //
@@ -18,18 +18,18 @@
 import apiService from "./axios";
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDxaw6iQnBUXAzbnuIKRXK9IonTVRxqPqM",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "helpoohelp-notification.firebaseapp.com",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "helpoohelp-notification",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "helpoohelp-notification.firebasestorage.app",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "1005334547839",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:1005334547839:web:1752cb50697539c943de4a",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "",
   measurementId: "G-8LPYSERZZG"
 };
 
 // From Firebase Console > Project settings > Cloud Messaging > Web Push
 // certificates.
-const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || "BCjiDM_XxZt-lSx8FdqQ25n9BPuv_X7f2Sn2BVGCvH4k24xStRF7e6Mko2m7e_1uGhX20YmE61T7xMdKSJ3RBCI";
+const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || "";
 
 let firebaseAppPromise = null;
 let messagingInstance = null;

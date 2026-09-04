@@ -6,14 +6,15 @@ import { logout, refreshToken } from "../redux/authSlice"; // Redux actions
 import { setGlobalLoading } from "../redux/globalSlice";
 import { getAccessToken, getRefreshToken } from "./authCookies";
 
+// Same-origin: the browser never talks to the Django backend directly.
+// Requests go to this Next.js app's own /api/proxy route (see
+// src/app/api/proxy/[...path]/route.js), which forwards them to the real
+// backend server-side and attaches the X-API-KEY there — a plain env var
+// that never ships in the client bundle, unlike before.
 const $axios = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL
-    ? process.env.NEXT_PUBLIC_BASE_URL
-    : "http://127.0.0.1:8000",
-  withCredentials: true,
+  baseURL: "/api/proxy",
   headers: {
     "Content-type": "application/json",
-    "X-API-KEY": process.env.FRONTEND_API_KEY,
   },
 });
 
@@ -33,7 +34,7 @@ const TakeRefreshToken = async (retriesLeft = 1) => {
 
   try {
     const response = await axios.post(
-      `${$axios.defaults.baseURL}/account/token/refresh/`,
+      "/api/proxy/account/token/refresh/",
       {
         refresh: refresh_token,
       }

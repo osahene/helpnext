@@ -38,8 +38,11 @@ NEXT_PUBLIC_FIREBASE_VAPID_KEY=
 This Firebase web config is not actually secret — it ships in every
 browser bundle regardless of how it's stored, the same way the API key for
 any other web SDK does — so `NEXT_PUBLIC_` (client-exposed) env vars are
-the right fit here, matching how `NEXT_PUBLIC_BASE_URL` is already used
-elsewhere in this codebase.
+the right fit here, matching how `NEXT_PUBLIC_GOOGLE_CLIENT_ID` is already
+used elsewhere in this codebase. Contrast this with `FRONTEND_API_KEY` and
+`BACKEND_API_URL` (see src/app/api/proxy/[...path]/route.js), which are
+deliberately *not* `NEXT_PUBLIC_`-prefixed because they must stay
+server-only.
 
 ## 2. `public/firebase-messaging-sw.js` — manual edit (the one exception)
 
