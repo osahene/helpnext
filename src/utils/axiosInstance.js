@@ -140,13 +140,64 @@ $axios.interceptors.request.use(
   }
 );
 
+// Requests whose own 401 must never trigger a refresh-and-retry (the
+// refresh endpoint itself failing IS the definitive "session is over"
+// signal; login/OTP/registration 401s are normal validation feedback for
+// bad credentials, not an expired session).
+const SKIP_REACTIVE_REFRESH = [
+  "/account/token/refresh/",
+  "/account/user-login/",
+  "/account/send-otp/",
+  "/account/verify-otp/",
+  "/account/verify-email/",
+];
+
 $axios.interceptors.response.use(
   (response) => {
     store.dispatch(setGlobalLoading(false));
     return response;
   },
-  (error) => {
+  async (error) => {
     store.dispatch(setGlobalLoading(false));
+
+    // Previously, a 401 here (e.g. the request-time proactive refresh check
+    // above hit a transient network error and let the request go out
+    // without a fresh token, or the access-token cookie was simply stale by
+    // the time the server saw it) just showed a red toast and left the user
+    // exactly where they were — including on user-logout/, which made
+    // logging out of an already-expired session silently fail closed
+    // instead of landing them on the login page. This retries once after a
+    // real refresh attempt, and only forces a logout+redirect once that
+    // attempt comes back definitively invalid (not on a network blip).
+    const originalRequest = error.config;
+    const isUnauthorized = error.response?.status === 401;
+    const alreadyRetried = originalRequest?._retriedAfterRefresh;
+    const skipReactiveRefresh = SKIP_REACTIVE_REFRESH.some((path) =>
+      originalRequest?.url?.includes(path)
+    );
+
+    if (isUnauthorized && !alreadyRetried && !skipReactiveRefresh) {
+      originalRequest._retriedAfterRefresh = true;
+      const tokens = await TakeRefreshToken();
+
+      if (tokens?.access_token) {
+        originalRequest.headers.Authorization = `Bearer ${tokens.access_token}`;
+        return $axios(originalRequest);
+      }
+
+      if (tokens !== "network-error") {
+        // A definitive answer that the refresh token is dead — this
+        // session really is over, so send the user to log in again rather
+        // than leaving them stranded on a page every action now 401s on.
+        store.dispatch(logout());
+        if (typeof window !== "undefined" && !window.location.pathname.startsWith("/auth/")) {
+          window.location.href = "/auth/login";
+        }
+      }
+      // tokens === "network-error": inconclusive, not proof the session is
+      // actually dead — fall through to the error toast below rather than
+      // force a logout over what might just be a dropped request.
+    }
 
     // error.response is undefined when the request never reached the
     // server (timeout, offline, DNS failure, CORS, etc) — every access

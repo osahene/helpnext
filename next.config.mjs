@@ -7,12 +7,20 @@ const GOOGLE_OAUTH_ORIGIN = "https://accounts.google.com";
 const FIREBASE_CONNECT_ORIGINS =
   "https://firebaseinstallations.googleapis.com https://fcmregistrations.googleapis.com";
 
+// src/app/globals.css and a few Auth components (login/register/OTP)
+// @import Google Fonts stylesheets directly (Material Symbols icon fonts,
+// Lora) — the CSP has to allow fetching that stylesheet from
+// fonts.googleapis.com *and* the actual font files it references, which
+// Google always serves from the separate fonts.gstatic.com domain.
+const GOOGLE_FONTS_STYLESHEET_ORIGIN = "https://fonts.googleapis.com";
+const GOOGLE_FONTS_FILE_ORIGIN = "https://fonts.gstatic.com";
+
 const CSP = [
   `default-src 'self'`,
   `script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ""} ${GOOGLE_OAUTH_ORIGIN}`,
-  `style-src 'self' 'unsafe-inline'`,
+  `style-src 'self' 'unsafe-inline' ${GOOGLE_FONTS_STYLESHEET_ORIGIN}`,
   `img-src 'self' data: blob: https://lh3.googleusercontent.com https://flagcdn.com`,
-  `font-src 'self' data:`,
+  `font-src 'self' data: ${GOOGLE_FONTS_FILE_ORIGIN}`,
   `connect-src 'self' ${FIREBASE_CONNECT_ORIGINS} ${GOOGLE_OAUTH_ORIGIN}`,
   `frame-src ${GOOGLE_OAUTH_ORIGIN}`,
   `object-src 'none'`,
