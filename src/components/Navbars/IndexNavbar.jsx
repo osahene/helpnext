@@ -44,17 +44,20 @@ export default function HeaderBar() {
   }, []);
 
   const handleLogout = async () => {
+    // dispatch(logoutUser()) never rejects (createAsyncThunk always
+    // resolves, even when the API call itself failed) — the try/catch this
+    // replaced could never actually run its catch block, so an already-dead
+    // token (the common case: expired while the tab was closed) silently
+    // left the user stuck with no cleanup and no redirect.
     const result = await dispatch(logoutUser());
-    try {
-      if (result.meta.requestStatus === "fulfilled") {
-        dispatch(resetAllSlices());
-        dispatch(setGlobalLoading(false));
-        dispatch(logout());
-        toast.success("Logout successful. Redirecting...", { duration: 5000 });
-        router.push("/");
-      }
-    } catch (error) {
-      toast.error("Logout failed. Please try again.", { duration: 5000 });
+    dispatch(resetAllSlices());
+    dispatch(setGlobalLoading(false));
+    dispatch(logout());
+    if (result.meta.requestStatus === "fulfilled") {
+      toast.success("Logout successful. Redirecting...", { duration: 5000 });
+      router.push("/");
+    } else {
+      router.push("/auth/login");
     }
   };
 

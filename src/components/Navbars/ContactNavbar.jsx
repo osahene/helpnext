@@ -39,10 +39,12 @@ export function ContactNavbar() {
 
   const handleLogout = async () => {
     const result = await dispatch(logoutUser());
-    if (result.meta.requestStatus === "fulfilled") {
-      dispatch(logout());
-      router.push("/");
-    }
+    // Always clear the local session, even if the API call failed — the
+    // most common reason it fails is that the token was already dead
+    // (expired while the tab was closed), which is exactly the case where
+    // getting stuck without a redirect was the original complaint here.
+    dispatch(logout());
+    router.push(result.meta.requestStatus === "fulfilled" ? "/" : "/auth/login");
   };
 
   const initials = `${first_name?.[0] ?? ""}${last_name?.[0] ?? ""}`.toUpperCase();

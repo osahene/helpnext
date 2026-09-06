@@ -124,8 +124,15 @@ $axios.interceptors.request.use(
             // (it'll likely 401 once) rather than tearing down a session
             // that's still valid; the next request gets another chance.
           } else {
-            store.dispatch(logout()); // Clear Redux state
-            window.location.href = "/auth/login";
+            // The refresh token is definitively dead. Clear the session and
+            // stop here — don't force a hard navigation from inside an axios
+            // interceptor for every single request that happens to run into
+            // this (background polling included). src/components/Auth/RouteGuard.jsx
+            // is already watching `isAuthenticated` on every protected route
+            // and will redirect to /auth/login on its own the moment this
+            // dispatch lands; a page with no RouteGuard doesn't need a
+            // forced redirect at all.
+            store.dispatch(logout());
           }
         }
       } catch (error) {
@@ -140,64 +147,23 @@ $axios.interceptors.request.use(
   }
 );
 
-// Requests whose own 401 must never trigger a refresh-and-retry (the
-// refresh endpoint itself failing IS the definitive "session is over"
-// signal; login/OTP/registration 401s are normal validation feedback for
-// bad credentials, not an expired session).
-const SKIP_REACTIVE_REFRESH = [
-  "/account/token/refresh/",
-  "/account/user-login/",
-  "/account/send-otp/",
-  "/account/verify-otp/",
-  "/account/verify-email/",
-];
-
 $axios.interceptors.response.use(
   (response) => {
     store.dispatch(setGlobalLoading(false));
     return response;
   },
-  async (error) => {
+  (error) => {
     store.dispatch(setGlobalLoading(false));
 
-    // Previously, a 401 here (e.g. the request-time proactive refresh check
-    // above hit a transient network error and let the request go out
-    // without a fresh token, or the access-token cookie was simply stale by
-    // the time the server saw it) just showed a red toast and left the user
-    // exactly where they were — including on user-logout/, which made
-    // logging out of an already-expired session silently fail closed
-    // instead of landing them on the login page. This retries once after a
-    // real refresh attempt, and only forces a logout+redirect once that
-    // attempt comes back definitively invalid (not on a network blip).
-    const originalRequest = error.config;
-    const isUnauthorized = error.response?.status === 401;
-    const alreadyRetried = originalRequest?._retriedAfterRefresh;
-    const skipReactiveRefresh = SKIP_REACTIVE_REFRESH.some((path) =>
-      originalRequest?.url?.includes(path)
-    );
-
-    if (isUnauthorized && !alreadyRetried && !skipReactiveRefresh) {
-      originalRequest._retriedAfterRefresh = true;
-      const tokens = await TakeRefreshToken();
-
-      if (tokens?.access_token) {
-        originalRequest.headers.Authorization = `Bearer ${tokens.access_token}`;
-        return $axios(originalRequest);
-      }
-
-      if (tokens !== "network-error") {
-        // A definitive answer that the refresh token is dead — this
-        // session really is over, so send the user to log in again rather
-        // than leaving them stranded on a page every action now 401s on.
-        store.dispatch(logout());
-        if (typeof window !== "undefined" && !window.location.pathname.startsWith("/auth/")) {
-          window.location.href = "/auth/login";
-        }
-      }
-      // tokens === "network-error": inconclusive, not proof the session is
-      // actually dead — fall through to the error toast below rather than
-      // force a logout over what might just be a dropped request.
-    }
+    // Deliberately no reactive "401 -> refresh -> logout" logic here. That
+    // was tried and caused its own regression: it fired for *any* 401 on
+    // *any* request, with no way to tell "your session is actually dead"
+    // apart from "this one background call raced with something and 401'd
+    // once" — which made a plain page refresh look like a forced logout.
+    // Session validity is judged from the token itself (the request
+    // interceptor above, proactively, from the JWT's own exp claim) and
+    // acted on by src/components/Auth/RouteGuard.jsx, not reactively from
+    // whatever status code a given response happens to carry.
 
     // error.response is undefined when the request never reached the
     // server (timeout, offline, DNS failure, CORS, etc) — every access
