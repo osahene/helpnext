@@ -24,6 +24,7 @@
 // src/middleware.js — actual server-checkable route protection.
 // ─────────────────────────────────────────────────────────────────────────
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from "./authCookieNames";
 
 const cookieOptions = {
@@ -32,8 +33,29 @@ const cookieOptions = {
   // Local dev runs over plain http; only require the Secure flag once
   // the app is actually served over https.
   secure: process.env.NODE_ENV === "production",
-  expires: 30, // days
 };
+
+// These cookies used to carry a blanket `expires: 30` (30 days) regardless
+// of the JWT's own lifetime — so even after an access token expired server-
+// side, the (non-httpOnly, script-readable) cookie holding it kept sitting
+// in the browser for up to a month. That's the single biggest exposure
+// window here: anything that can read document.cookie (e.g. an XSS) had a
+// month, not minutes, to grab a still-fresh-looking token. This decodes
+// each token's own `exp` claim and expires the cookie at that exact moment
+// instead, so the cookie's lifetime can never outlive the token it holds.
+// FALLBACK_DAYS only applies if a token can't be decoded (malformed) —
+// short on purpose, since that should never happen with a real JWT.
+const FALLBACK_DAYS = 1;
+
+function expiryDateFor(token) {
+  try {
+    const { exp } = jwtDecode(token);
+    if (typeof exp === "number") return new Date(exp * 1000);
+  } catch {
+    // fall through to the fallback below
+  }
+  return new Date(Date.now() + FALLBACK_DAYS * 24 * 60 * 60 * 1000);
+}
 
 export function getAccessToken() {
   if (typeof document === "undefined") return null;
@@ -51,13 +73,19 @@ export function setAuthCookies({ accessToken, refreshToken } = {}) {
   if (typeof document === "undefined") return;
 
   if (accessToken) {
-    Cookies.set(ACCESS_TOKEN_COOKIE, accessToken, cookieOptions);
+    Cookies.set(ACCESS_TOKEN_COOKIE, accessToken, {
+      ...cookieOptions,
+      expires: expiryDateFor(accessToken),
+    });
   } else {
     Cookies.remove(ACCESS_TOKEN_COOKIE, { path: "/" });
   }
 
   if (refreshToken) {
-    Cookies.set(REFRESH_TOKEN_COOKIE, refreshToken, cookieOptions);
+    Cookies.set(REFRESH_TOKEN_COOKIE, refreshToken, {
+      ...cookieOptions,
+      expires: expiryDateFor(refreshToken),
+    });
   } else {
     Cookies.remove(REFRESH_TOKEN_COOKIE, { path: "/" });
   }
