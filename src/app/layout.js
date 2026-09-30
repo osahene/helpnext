@@ -7,6 +7,7 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { Toaster } from "react-hot-toast";
 import EnableNotificationsPrompt from "@/components/Notifications/EnableNotificationsPrompt";
+import LiveLocationBanner from "@/components/LiveLocation/LiveLocationBanner";
 config.autoAddCss = false;
 
 const geistSans = localFont({
@@ -36,6 +37,7 @@ export default function RootLayout({ children }) {
           <Toaster position="bottom-center" />
           <GlobalLoading />
           <EnableNotificationsPrompt />
+          <LiveLocationBanner />
           {children}
         </ReduxProvider>
       </body>

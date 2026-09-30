@@ -38,6 +38,15 @@ const apiService = {
   // trigger Alert
   triggerAlert: (data) => $axios.post("/account/trigger-alert/", data),
   alertStatus: (id) => $axios.get(`/account/alert-status/${id}/`),
+  // Live location — opt-in continuous sharing for up to 1 hour after a
+  // trigger (off by default; see account.models.Emergency.start_live_location
+  // on the backend). "stop" never deletes the alert, just the live window.
+  startLiveLocation: (alertId) =>
+    $axios.post(`/account/alert-live-location/${alertId}/`),
+  updateLiveLocation: (alertId, data) =>
+    $axios.patch(`/account/alert-live-location/${alertId}/`, data),
+  stopLiveLocation: (alertId) =>
+    $axios.delete(`/account/alert-live-location/${alertId}/`),
   // verify emergency
   verifyEmergency: (code) => $axios.get(`/account/verify-alert/${code}/`),
   decodeEmrgencyToken: (code) => $axios.get(`/account/decode-alert-token/${code}/`),

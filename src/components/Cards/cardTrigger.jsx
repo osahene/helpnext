@@ -12,6 +12,7 @@ import {
   faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
+import { startLiveLocation, stopLiveLocation } from "@/utils/liveLocation";
 
 export default function TriggerCard({
   cardName,
@@ -24,6 +25,9 @@ export default function TriggerCard({
 }) {
   const [showModal, setShowModal] = useState(true);
   const [isPulsing, setIsPulsing] = useState(true);
+  const [sentAlertId, setSentAlertId] = useState(null);
+  const [sharingLive, setSharingLive] = useState(false);
+  const [toggleBusy, setToggleBusy] = useState(false);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const contact = useSelector((state) => state.contact.contacts) || [];
@@ -98,6 +102,12 @@ export default function TriggerCard({
       );
 
       if (response.meta.requestStatus === "fulfilled") {
+        // Stay open on the success+live-location view instead of closing
+        // immediately — same reasoning as the Flutter app's "Alert Sent"
+        // dialog: this is the one moment the reporter is looking at the
+        // screen to offer the opt-in switch at all.
+        setSentAlertId(response.payload?.id ?? null);
+      } else {
         handleClose();
       }
 
@@ -110,7 +120,88 @@ export default function TriggerCard({
     }
   };
 
+  const handleToggleLiveLocation = async () => {
+    if (!sentAlertId) return;
+    setToggleBusy(true);
+    if (sharingLive) {
+      await stopLiveLocation();
+      setSharingLive(false);
+    } else {
+      const started = await startLiveLocation(sentAlertId);
+      setSharingLive(started);
+    }
+    setToggleBusy(false);
+  };
+
   const renderContent = () => {
+    // ── Alert sent — offer live location, then let them close ──────
+    if (sentAlertId) {
+      return (
+        <div className="flex flex-col items-center text-center px-2 pb-2">
+          <div style={{
+            width: "72px", height: "72px", borderRadius: "50%",
+            background: "rgba(26,158,92,0.1)", border: "2px solid rgba(26,158,92,0.2)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            marginBottom: "16px",
+          }}>
+            <svg style={{ width: "32px", height: "32px", color: "#1A9E5C" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <p style={{ color: "#0F1B3E", fontSize: "18px", fontWeight: 800, marginBottom: "8px" }}>
+            Alert Sent
+          </p>
+          <p style={{ color: "#8B94B2", fontSize: "14px", lineHeight: 1.6, marginBottom: "20px" }}>
+            Your emergency alert has been sent to your contacts.
+          </p>
+
+          <div style={{
+            width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
+            background: "#F8FAFF", border: "1px solid #DDE3F5", borderRadius: "14px",
+            padding: "14px 16px", marginBottom: "20px", textAlign: "left", gap: "12px",
+          }}>
+            <div>
+              <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13.5px", marginBottom: "3px" }}>
+                Share Live Location
+              </p>
+              <p style={{ color: "#8B94B2", fontSize: "12px", lineHeight: 1.5 }}>
+                {sharingLive
+                  ? "Updating every 20s while this tab is open, for up to 1 hour."
+                  : "Keeps your location updating for contacts, for up to 1 hour."}
+              </p>
+            </div>
+            <button
+              onClick={handleToggleLiveLocation}
+              disabled={toggleBusy}
+              style={{
+                flexShrink: 0, width: "48px", height: "28px", borderRadius: "999px",
+                background: sharingLive ? "#1A9E5C" : "#DDE3F5", position: "relative",
+                border: "none", cursor: toggleBusy ? "wait" : "pointer", transition: "background 0.2s",
+              }}
+            >
+              <span style={{
+                position: "absolute", top: "3px", left: sharingLive ? "23px" : "3px",
+                width: "22px", height: "22px", borderRadius: "50%", background: "#fff",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.2)", transition: "left 0.2s",
+              }} />
+            </button>
+          </div>
+
+          <button
+            onClick={handleClose}
+            style={{
+              width: "100%", padding: "12px", borderRadius: "14px",
+              background: "linear-gradient(135deg, #2C5FD4, #5B3FE8)",
+              color: "#fff", fontWeight: 700, fontSize: "14px",
+              boxShadow: "0 6px 18px rgba(91,63,232,0.35)",
+            }}
+          >
+            Done
+          </button>
+        </div>
+      );
+    }
+
     // ── Not authenticated ─────────────────────────────────
     if (!isAuthenticated) {
       return (

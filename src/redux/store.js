@@ -4,6 +4,7 @@ import { persistStore, persistReducer, createTransform } from "redux-persist";
 import authReducer from "./authSlice";
 import globalReducer from "./globalSlice";
 import contactReducer from "./userSlice";
+import liveLocationReducer from "./liveLocationSlice";
 import { setAuthCookies, clearAuthCookies } from "../utils/authCookies";
 
 // Auth tokens used to live in this persisted blob (-> localStorage), the
@@ -40,6 +41,11 @@ const rootReducer = combineReducers({
   auth: authReducer,
   global: globalReducer,
   contact: contactReducer,
+  // Not in rootPersistConfig's whitelist on purpose — this reflects a live
+  // setInterval (see utils/liveLocation.js) that a page reload always kills,
+  // so persisting "active: true" across a reload would show a banner for a
+  // session that's actually no longer running anything.
+  liveLocation: liveLocationReducer,
 });
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 
