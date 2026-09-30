@@ -10,6 +10,13 @@ const apiService = {
     $axios.post("/account/verify-otp/", data),
   login: (data) => $axios.post("/account/user-login/", data),
   logout: () => $axios.post("/account/user-logout/"),
+  // "delete" never deletes on the spot — it deactivates immediately and
+  // schedules a hard delete 30 days out (account.tasks.purge_users_pending_deletion).
+  // No way to self-undo via this endpoint on purpose: is_active=False blocks
+  // authentication on every subsequent request, so there's no session left
+  // to call it again with — see account.views.AccountStatusView.
+  updateAccountStatus: (action, refreshToken) =>
+    $axios.patch("/account/account-status/", { action, refresh: refreshToken }),
   // Reset Password
   forgottenEmail: (data) => $axios.post("/account/request-reset-email/", data),
   confirmPassword: (data) => $axios.post("/account/password-reset/", data),

@@ -186,6 +186,21 @@ export default function HeaderBar() {
                   </button>
                 </Link> */}
 
+                <Link href="/profile">
+                  <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-colors hover:bg-blue-50"
+                    style={{ color: "#0F1B3E" }}>
+                    <span
+                      className="w-7 h-7 rounded-lg flex items-center justify-center"
+                      style={{ background: "#F0F4FF", color: "#2C5FD4" }}
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </span>
+                    Profile &amp; Account
+                  </button>
+                </Link>
+
                 <div className="my-1.5 h-px" style={{ background: "#F0F4FF" }} />
 
                 <button

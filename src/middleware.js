@@ -13,8 +13,9 @@ import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from "./utils/authCookieNam
 // RouteGuard still runs client-side to catch token expiry (this check is
 // deliberately kept simple/fast) and to keep Redux's `isAuthenticated`
 // flag in sync. Route prefixes here should match whatever RouteGuard wraps
-// (currently src/app/contact/layout.jsx and src/app/notifications/layout.jsx).
-const PROTECTED_PATH_PREFIXES = ["/contact", "/notifications"];
+// (currently src/app/contact/layout.jsx, src/app/notifications/layout.jsx,
+// and src/app/profile/layout.jsx).
+const PROTECTED_PATH_PREFIXES = ["/contact", "/notifications", "/profile"];
 
 function isTokenValid(token) {
   if (!token) return false;
@@ -45,5 +46,5 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/contact/:path*", "/notifications/:path*"],
+  matcher: ["/contact/:path*", "/notifications/:path*", "/profile/:path*"],
 };

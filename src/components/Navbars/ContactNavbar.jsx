@@ -120,6 +120,16 @@ export function ContactNavbar() {
                 <p style={{ color: "#fff", fontWeight: 700, fontSize: "13.5px" }}>{first_name} {last_name}</p>
               </div>
               <div style={{ padding: "8px" }}>
+                <Link href="/profile" style={{ textDecoration: "none" }}>
+                  <button style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", background: "transparent", color: "#0F1B3E", fontWeight: 600, fontSize: "13.5px", border: "none", cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: "8px" }}>
+                    <span style={{ width: "28px", height: "28px", borderRadius: "8px", background: "#F0F4FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <svg style={{ width: "13px", height: "13px", color: "#2C5FD4" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </span>
+                    Profile &amp; Account
+                  </button>
+                </Link>
                 <button onClick={handleLogout} style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", background: "transparent", color: "#CC2222", fontWeight: 600, fontSize: "13.5px", border: "none", cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: "8px" }}>
                   <span style={{ width: "28px", height: "28px", borderRadius: "8px", background: "#FFF0F0", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <svg style={{ width: "13px", height: "13px", color: "#CC2222" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
