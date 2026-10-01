@@ -36,15 +36,11 @@ const cookieOptions = {
 };
 
 // These cookies used to carry a blanket `expires: 30` (30 days) regardless
-// of the JWT's own lifetime — so even after an access token expired server-
-// side, the (non-httpOnly, script-readable) cookie holding it kept sitting
-// in the browser for up to a month. That's the single biggest exposure
-// window here: anything that can read document.cookie (e.g. an XSS) had a
-// month, not minutes, to grab a still-fresh-looking token. This decodes
-// each token's own `exp` claim and expires the cookie at that exact moment
-// instead, so the cookie's lifetime can never outlive the token it holds.
-// FALLBACK_DAYS only applies if a token can't be decoded (malformed) —
-// short on purpose, since that should never happen with a real JWT.
+// of either JWT's own lifetime — so even long after a session was really
+// over, the (non-httpOnly, script-readable) cookies kept sitting in the
+// browser for up to a month. FALLBACK_DAYS only applies if a token can't be
+// decoded (malformed) — short on purpose, since that should never happen
+// with a real JWT.
 const FALLBACK_DAYS = 1;
 
 function expiryDateFor(token) {
@@ -69,23 +65,42 @@ export function getRefreshToken() {
 
 // Writes whichever of accessToken/refreshToken are provided; clears the
 // corresponding cookie for any that are missing/falsy.
+//
+// Both cookies share ONE browser-side expiry, derived from the refresh
+// token's own exp — never from the access token's. The access token's much
+// shorter exp (15 minutes server-side) is a purely logical thing the axios
+// request interceptor checks at call time via jwtDecode; it must not also
+// bound the cookie's physical lifetime in the browser.
+//
+// This used to key the access-token cookie's expiry off the access token's
+// own exp, so the cookie — and the token string inside it — physically
+// vanished from the browser ~15 minutes after every login/refresh. Once
+// that happened, getAccessToken() started returning null, which skips the
+// request interceptor's entire refresh-check branch (`if (accessToken)`)
+// and the scheduleTokenRefresh interval's own `if (accessToken &&
+// refresh_token)` gate — both require a *truthy* (if stale) access token
+// to even look at the still-perfectly-valid refresh token. The visible
+// symptom was every session silently becoming unrecoverable ~15 minutes
+// in, surfacing on the next page load/refresh as a forced logout. The
+// access token's cookie needs to physically outlive its own exp so there's
+// still something there for the interceptor to notice is stale and act on.
 export function setAuthCookies({ accessToken, refreshToken } = {}) {
   if (typeof document === "undefined") return;
 
+  const expires = refreshToken
+    ? expiryDateFor(refreshToken)
+    : accessToken
+      ? expiryDateFor(accessToken)
+      : undefined;
+
   if (accessToken) {
-    Cookies.set(ACCESS_TOKEN_COOKIE, accessToken, {
-      ...cookieOptions,
-      expires: expiryDateFor(accessToken),
-    });
+    Cookies.set(ACCESS_TOKEN_COOKIE, accessToken, { ...cookieOptions, expires });
   } else {
     Cookies.remove(ACCESS_TOKEN_COOKIE, { path: "/" });
   }
 
   if (refreshToken) {
-    Cookies.set(REFRESH_TOKEN_COOKIE, refreshToken, {
-      ...cookieOptions,
-      expires: expiryDateFor(refreshToken),
-    });
+    Cookies.set(REFRESH_TOKEN_COOKIE, refreshToken, { ...cookieOptions, expires });
   } else {
     Cookies.remove(REFRESH_TOKEN_COOKIE, { path: "/" });
   }

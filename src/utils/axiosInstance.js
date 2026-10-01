@@ -54,16 +54,26 @@ const TakeRefreshToken = async (retriesLeft = 1) => {
     };
   } catch (error) {
     const status = error?.response?.status;
-    if (status === 401 || status === 403) {
-      // The server explicitly rejected this refresh token — it's genuinely
-      // dead (expired/blacklisted/revoked). No amount of retrying helps.
+    // SimpleJWT's own rejection of a dead refresh token carries
+    // {"detail": "...", "code": "token_not_valid"} — that specific shape is
+    // the only thing that means "this token is genuinely dead." A 401 can
+    // also come from EmergencyBackend/frontend_api_key_middleware.py (a
+    // misconfigured/mismatched FRONTEND_API_KEY), which returns a 401 with
+    // no "code" field at all — a completely different failure that a
+    // mismatched key on this app's own deployment, not an expired session,
+    // would cause on *every* request. Treating that as "session dead" would
+    // force-logout every single session the moment the key ever drifts out
+    // of sync, which is a much worse failure mode than just failing the one
+    // call.
+    if ((status === 401 || status === 403) && error?.response?.data?.code === "token_not_valid") {
       return null;
     }
 
-    // Everything else (network blip, timeout, 502/503 during a cold start)
-    // is not proof the refresh token is bad. Retry once before giving up —
-    // logging out a session that was still perfectly valid, just because
-    // one HTTP call happened to fail, is worse than a brief extra delay.
+    // Everything else (network blip, timeout, 502/503 during a cold start,
+    // or the API-key mismatch above) is not proof the refresh token is bad.
+    // Retry once before giving up — logging out a session that was still
+    // perfectly valid, just because one HTTP call happened to fail, is
+    // worse than a brief extra delay.
     if (retriesLeft > 0) {
       await new Promise((resolve) => setTimeout(resolve, 1500));
       return TakeRefreshToken(retriesLeft - 1);
