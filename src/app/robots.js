@@ -10,8 +10,8 @@ export default function robots() {
         disallow: [
           // Protected user portal — gated behind login by RouteGuard +
           // src/middleware.js, nothing useful for a crawler to index.
-          "/contact",
-          "/notifications",
+          //"/contact",
+         // "/notifications",
           // Token-based one-time links, not search-landing content.
           "/guestInvite",
           "/verifyEmerg",
