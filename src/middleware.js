@@ -47,5 +47,8 @@ export function middleware(request) {
 }
 
 export const config = {
+  matcher: [],
+};
+//export const config = {
   matcher: ["/contact/:path*", "/notifications/:path*", "/profile/:path*"],
 };
