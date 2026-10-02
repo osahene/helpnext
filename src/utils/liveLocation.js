@@ -29,7 +29,18 @@ function pushUpdate(alertId) {
         console.error("Live location update failed:", error);
       }
     },
-    (error) => console.error("Live location geolocation error:", error),
+    (error) => {
+      console.error("Live location geolocation error:", error);
+      // PERMISSION_DENIED here means the browser/OS permission was revoked
+      // (or device location turned off) *after* sharing already started —
+      // every subsequent tick would just fail the same way forever
+      // otherwise. stopLiveLocation() re-reads alertId from the store
+      // itself, so this plain function reference is already the right
+      // shape to call directly.
+      if (error.code === error.PERMISSION_DENIED) {
+        stopLiveLocation();
+      }
+    },
     { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
   );
 }

@@ -35,7 +35,15 @@ const BASE_HEADERS = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+  // geolocation=(self) — NOT geolocation=() — this app's core feature is
+  // asking the browser's own permission prompt for location (emergency
+  // alerts, live location sharing). An empty allowlist disables the
+  // Geolocation API at the browser-policy level for every context on this
+  // origin, which made every getCurrentPosition()/watchPosition() call
+  // reject with a PERMISSION_DENIED-shaped error unconditionally — looking
+  // exactly like a user/OS permission problem no matter what was actually
+  // set on the device, because the browser never even got to ask.
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(self)" },
   {
     key: "Strict-Transport-Security",
     value: "max-age=63072000; includeSubDomains; preload",

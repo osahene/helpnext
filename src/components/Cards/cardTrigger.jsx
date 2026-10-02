@@ -12,7 +12,8 @@ import {
   faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
-import { startLiveLocation, stopLiveLocation } from "@/utils/liveLocation";
+import { startLiveLocation } from "@/utils/liveLocation";
+import AuthRequiredPrompt from "@/components/Auth/AuthRequiredPrompt";
 
 export default function TriggerCard({
   cardName,
@@ -26,8 +27,13 @@ export default function TriggerCard({
   const [showModal, setShowModal] = useState(true);
   const [isPulsing, setIsPulsing] = useState(true);
   const [sentAlertId, setSentAlertId] = useState(null);
-  const [sharingLive, setSharingLive] = useState(false);
-  const [toggleBusy, setToggleBusy] = useState(false);
+  // Decided up front, before sending — not as an afterthought once the
+  // alert's already out. Defaults to a one-time location (off); flipping
+  // it on is what makes handleTriggerAlert start live tracking right after
+  // a successful send. Once it's running, src/components/LiveLocation/
+  // LiveLocationBanner.jsx is the single place that shows it's active and
+  // offers to stop it — this modal doesn't need its own toggle for that.
+  const [liveLocationEnabled, setLiveLocationEnabled] = useState(false);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const contact = useSelector((state) => state.contact.contacts) || [];
@@ -102,11 +108,16 @@ export default function TriggerCard({
       );
 
       if (response.meta.requestStatus === "fulfilled") {
-        // Stay open on the success+live-location view instead of closing
-        // immediately — same reasoning as the Flutter app's "Alert Sent"
-        // dialog: this is the one moment the reporter is looking at the
-        // screen to offer the opt-in switch at all.
-        setSentAlertId(response.payload?.id ?? null);
+        const alertId = response.payload?.id ?? null;
+        // Stay open on the success view instead of closing immediately —
+        // same reasoning as the Flutter app's "Alert Sent" dialog: this is
+        // the one moment the reporter is still looking at the screen.
+        setSentAlertId(alertId);
+        // The choice was already made before sending (the toggle above) —
+        // act on it now rather than asking again post-send.
+        if (liveLocationEnabled && alertId) {
+          startLiveLocation(alertId);
+        }
       } else {
         handleClose();
       }
@@ -118,19 +129,6 @@ export default function TriggerCard({
     } catch {
       handleClose();
     }
-  };
-
-  const handleToggleLiveLocation = async () => {
-    if (!sentAlertId) return;
-    setToggleBusy(true);
-    if (sharingLive) {
-      await stopLiveLocation();
-      setSharingLive(false);
-    } else {
-      const started = await startLiveLocation(sentAlertId);
-      setSharingLive(started);
-    }
-    setToggleBusy(false);
   };
 
   const renderContent = () => {
@@ -151,41 +149,22 @@ export default function TriggerCard({
           <p style={{ color: "#0F1B3E", fontSize: "18px", fontWeight: 800, marginBottom: "8px" }}>
             Alert Sent
           </p>
-          <p style={{ color: "#8B94B2", fontSize: "14px", lineHeight: 1.6, marginBottom: "20px" }}>
+          <p style={{ color: "#8B94B2", fontSize: "14px", lineHeight: 1.6, marginBottom: liveLocationEnabled ? "12px" : "20px" }}>
             Your emergency alert has been sent to your contacts.
           </p>
 
-          <div style={{
-            width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
-            background: "#F8FAFF", border: "1px solid #DDE3F5", borderRadius: "14px",
-            padding: "14px 16px", marginBottom: "20px", textAlign: "left", gap: "12px",
-          }}>
-            <div>
-              <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13.5px", marginBottom: "3px" }}>
-                Share Live Location
-              </p>
-              <p style={{ color: "#8B94B2", fontSize: "12px", lineHeight: 1.5 }}>
-                {sharingLive
-                  ? "Updating every 20s while this tab is open, for up to 1 hour."
-                  : "Keeps your location updating for contacts, for up to 1 hour."}
+          {liveLocationEnabled && (
+            <div style={{
+              width: "100%", display: "flex", alignItems: "center", gap: "10px",
+              background: "#F8FAFF", border: "1px solid #DDE3F5", borderRadius: "14px",
+              padding: "12px 16px", marginBottom: "20px", textAlign: "left",
+            }}>
+              <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#1A9E5C", flexShrink: 0 }} />
+              <p style={{ color: "#0F1B3E", fontSize: "12.5px", lineHeight: 1.5 }}>
+                Sharing your live location with contacts for up to 1 hour. You can stop it anytime from the banner at the top of the screen.
               </p>
             </div>
-            <button
-              onClick={handleToggleLiveLocation}
-              disabled={toggleBusy}
-              style={{
-                flexShrink: 0, width: "48px", height: "28px", borderRadius: "999px",
-                background: sharingLive ? "#1A9E5C" : "#DDE3F5", position: "relative",
-                border: "none", cursor: toggleBusy ? "wait" : "pointer", transition: "background 0.2s",
-              }}
-            >
-              <span style={{
-                position: "absolute", top: "3px", left: sharingLive ? "23px" : "3px",
-                width: "22px", height: "22px", borderRadius: "50%", background: "#fff",
-                boxShadow: "0 2px 4px rgba(0,0,0,0.2)", transition: "left 0.2s",
-              }} />
-            </button>
-          </div>
+          )}
 
           <button
             onClick={handleClose}
@@ -204,55 +183,7 @@ export default function TriggerCard({
 
     // ── Not authenticated ─────────────────────────────────
     if (!isAuthenticated) {
-      return (
-        <div className="flex flex-col items-center text-center px-2 pb-2">
-          <div
-            style={{
-              width: "72px", height: "72px", borderRadius: "50%",
-              background: "linear-gradient(135deg, #2C5FD4, #5B3FE8)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              marginBottom: "16px",
-              boxShadow: "0 8px 24px rgba(44,95,212,0.35)",
-            }}
-          >
-            <svg style={{ width: "32px", height: "32px", color: "#fff" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-          </div>
-          <p style={{ color: "#0F1B3E", fontSize: "18px", fontWeight: 800, marginBottom: "8px" }}>
-            Authentication Required
-          </p>
-          <p style={{ color: "#8B94B2", fontSize: "14px", lineHeight: 1.6, marginBottom: "20px" }}>
-            This service is only available to authenticated users. Please register or log in.
-          </p>
-          <div className="flex gap-3 w-full">
-            <Link href="/auth/register" className="flex-1">
-              <button
-                style={{
-                  width: "100%", padding: "11px", borderRadius: "14px",
-                  background: "linear-gradient(135deg, #2C5FD4, #5B3FE8)",
-                  color: "#fff", fontWeight: 700, fontSize: "14px",
-                  boxShadow: "0 6px 18px rgba(91,63,232,0.35)",
-                }}
-              >
-                Register
-              </button>
-            </Link>
-            <Link href="/auth/login" className="flex-1">
-              <button
-                style={{
-                  width: "100%", padding: "11px", borderRadius: "14px",
-                  background: "#F0F4FF", color: "#2C5FD4",
-                  fontWeight: 700, fontSize: "14px",
-                  border: "1px solid #DDE3F5",
-                }}
-              >
-                Login
-              </button>
-            </Link>
-          </div>
-        </div>
-      );
+      return <AuthRequiredPrompt />;
     }
 
     // ── No contacts ───────────────────────────────────────
@@ -462,18 +393,48 @@ export default function TriggerCard({
           )}
         </div>
 
-        {/* Location info pill */}
+        {/* Live location choice — decided now, before sending, not as an
+            afterthought once the alert's already out. Off (default) sends
+            just a one-time location fix with the alert; on keeps sharing
+            for up to 1 hour once the alert goes out. */}
         <div style={{
-          display: "flex", alignItems: "center", gap: "8px",
-          background: "#F0F4FF", borderRadius: "20px",
-          padding: "8px 16px", marginBottom: "22px",
-          border: "1px solid #DDE3F5",
+          width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
+          background: "#F0F4FF", border: "1px solid #DDE3F5", borderRadius: "14px",
+          padding: "12px 16px", marginBottom: "22px", textAlign: "left", gap: "12px",
         }}>
-          <svg style={{ width: "14px", height: "14px", color: isActionDisabled ? "#94A3B8" : accentColor, flexShrink: 0 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          <p style={{ color: "#8B94B2", fontSize: "12.5px" }}>Your live location will be shared</p>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <svg style={{ width: "14px", height: "14px", color: isActionDisabled ? "#94A3B8" : accentColor, flexShrink: 0 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <div>
+              <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13px" }}>
+                Share Live Location
+              </p>
+              <p style={{ color: "#8B94B2", fontSize: "11.5px", lineHeight: 1.4 }}>
+                {liveLocationEnabled
+                  ? "Keeps updating for contacts, for up to 1 hour."
+                  : "Off — a one-time location goes with this alert."}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setLiveLocationEnabled((v) => !v)}
+            disabled={isActionDisabled}
+            aria-pressed={liveLocationEnabled}
+            style={{
+              flexShrink: 0, width: "44px", height: "26px", borderRadius: "999px",
+              background: liveLocationEnabled ? "#1A9E5C" : "#DDE3F5", position: "relative",
+              border: "none", cursor: isActionDisabled ? "not-allowed" : "pointer", transition: "background 0.2s",
+            }}
+          >
+            <span style={{
+              position: "absolute", top: "3px", left: liveLocationEnabled ? "21px" : "3px",
+              width: "20px", height: "20px", borderRadius: "50%", background: "#fff",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.2)", transition: "left 0.2s",
+            }} />
+          </button>
         </div>
 
         {/* Action buttons */}

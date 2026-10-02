@@ -15,8 +15,7 @@ import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from "./utils/authCookieNam
 // flag in sync. Route prefixes here should match whatever RouteGuard wraps
 // (currently src/app/contact/layout.jsx, src/app/notifications/layout.jsx,
 // and src/app/profile/layout.jsx).
-//const PROTECTED_PATH_PREFIXES = ["/contact", "/notifications", "profile"];
-const PROTECTED_PATH_PREFIXES = [];
+const PROTECTED_PATH_PREFIXES = ["/contact", "/notifications", "/profile"];
 
 function isTokenValid(token) {
   if (!token) return false;
@@ -47,5 +46,5 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: [],
+  matcher: ["/contact/:path*", "/notifications/:path*", "/profile/:path*"],
 };
