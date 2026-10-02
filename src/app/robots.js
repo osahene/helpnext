@@ -8,10 +8,11 @@ export default function robots() {
         userAgent: "*",
         allow: "/",
         disallow: [
-          // Protected user portal — gated behind login by RouteGuard +
-          // src/middleware.js, nothing useful for a crawler to index.
-          //"/contact",
-         // "/notifications",
+          // Protected user portals — gated behind login by
+          // src/app/AuthGate.jsx, nothing useful for a crawler to index.
+          "/contact",
+          "/notifications",
+          "/profile",
           // Token-based one-time links, not search-landing content.
           "/guestInvite",
           "/verifyEmerg",

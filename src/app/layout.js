@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import "./globals.css";
 import GlobalLoading from "./GlobalLoading";
 import ReduxProvider from "./reduxProvider";
+import AuthGate from "./AuthGate";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { Toaster } from "react-hot-toast";
@@ -38,7 +39,7 @@ export default function RootLayout({ children }) {
           <GlobalLoading />
           <EnableNotificationsPrompt />
           <LiveLocationBanner />
-          {children}
+          <AuthGate>{children}</AuthGate>
         </ReduxProvider>
       </body>
     </html>

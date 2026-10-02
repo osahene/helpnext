@@ -1,11 +1,11 @@
 "use client";
 import Link from "next/link";
 
-// Shared "you need to be logged in" content — originally only existed
-// inline inside components/Cards/cardTrigger.jsx's modal. RouteGuard now
-// renders this same prompt instead of hard-redirecting to /auth/login, so
-// both call sites render the exact same thing instead of two near-
-// identical copies drifting apart over time.
+// Shared "you need to be logged in" content, used inline inside
+// components/Cards/cardTrigger.jsx's modal when triggering an alert while
+// signed out. Route-level auth (see src/app/AuthGate.jsx) redirects to
+// /auth/login instead of rendering this — this component is only for the
+// in-place case, not page-level gating.
 export default function AuthRequiredPrompt({
   title = "Authentication Required",
   message = "This service is only available to authenticated users. Please register or log in.",
