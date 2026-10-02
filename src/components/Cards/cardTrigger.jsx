@@ -27,6 +27,14 @@ export default function TriggerCard({
   const [showModal, setShowModal] = useState(true);
   const [isPulsing, setIsPulsing] = useState(true);
   const [sentAlertId, setSentAlertId] = useState(null);
+  // Guards against double/triple-tap: the backend used to do a
+  // synchronous third-party geocoding call inside the trigger request
+  // (now fixed to run in the background), but even with that fixed, any
+  // request still takes a moment — nothing here disabled the button while
+  // it was in flight, so a user unsure whether their tap registered would
+  // tap again, firing a second (or third) alert. Mirrors helpflutter's
+  // AlertConfirmationScreen, which already guards this with _isSending.
+  const [isSending, setIsSending] = useState(false);
   // Decided up front, before sending — not as an afterthought once the
   // alert's already out. Defaults to a one-time location (off); flipping
   // it on is what makes handleTriggerAlert start live tracking right after
@@ -93,8 +101,9 @@ export default function TriggerCard({
   };
 
   const handleTriggerAlert = async () => {
-    if (matchingRecipients.length === 0) return;
+    if (isSending || matchingRecipients.length === 0) return;
     setIsPulsing(false);
+    setIsSending(true);
 
     try {
       const geolocation = await getGeolocation();
@@ -128,6 +137,8 @@ export default function TriggerCard({
       );
     } catch {
       handleClose();
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -421,12 +432,12 @@ export default function TriggerCard({
           <button
             type="button"
             onClick={() => setLiveLocationEnabled((v) => !v)}
-            disabled={isActionDisabled}
+            disabled={isActionDisabled || isSending}
             aria-pressed={liveLocationEnabled}
             style={{
               flexShrink: 0, width: "44px", height: "26px", borderRadius: "999px",
               background: liveLocationEnabled ? "#1A9E5C" : "#DDE3F5", position: "relative",
-              border: "none", cursor: isActionDisabled ? "not-allowed" : "pointer", transition: "background 0.2s",
+              border: "none", cursor: isActionDisabled || isSending ? "not-allowed" : "pointer", transition: "background 0.2s",
             }}
           >
             <span style={{
@@ -441,32 +452,50 @@ export default function TriggerCard({
         <div className="flex gap-3 w-full">
           <button
             onClick={handleTriggerAlert}
-            disabled={isActionDisabled}
+            disabled={isActionDisabled || isSending}
             style={{
               flex: 2, padding: "14px", borderRadius: "16px",
-              background: isActionDisabled
+              background: isActionDisabled || isSending
                 ? "#E2E8F0"
                 : `linear-gradient(135deg, ${accentColor}cc, ${accentColor})`,
-              color: isActionDisabled ? "#94A3B8" : "#fff",
+              color: isActionDisabled || isSending ? "#94A3B8" : "#fff",
               fontWeight: 700, fontSize: "15px",
-              boxShadow: isActionDisabled ? "none" : `0 8px 24px ${accentColor}55`,
+              boxShadow: isActionDisabled || isSending ? "none" : `0 8px 24px ${accentColor}55`,
               display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-              cursor: isActionDisabled ? "not-allowed" : "pointer",
+              cursor: isActionDisabled ? "not-allowed" : isSending ? "wait" : "pointer",
               transition: "all 0.2s ease"
             }}
           >
-            <svg style={{ width: "18px", height: "18px" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-            </svg>
-            Send Alert Now
+            {isSending ? (
+              <>
+                <span
+                  style={{
+                    width: "16px", height: "16px", borderRadius: "50%",
+                    border: "2.5px solid #94A3B8", borderTopColor: "transparent",
+                    animation: "spin 0.8s linear infinite",
+                  }}
+                />
+                Sending…
+              </>
+            ) : (
+              <>
+                <svg style={{ width: "18px", height: "18px" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+                Send Alert Now
+              </>
+            )}
           </button>
           <button
             onClick={handleClose}
+            disabled={isSending}
             style={{
               flex: 1, padding: "14px", borderRadius: "16px",
               background: "#F0F4FF", color: "#8B94B2",
               fontWeight: 600, fontSize: "14px",
               border: "1px solid #DDE3F5",
+              cursor: isSending ? "not-allowed" : "pointer",
+              opacity: isSending ? 0.6 : 1,
             }}
           >
             Cancel
@@ -483,6 +512,9 @@ export default function TriggerCard({
           0%   { transform: scale(1); opacity: 0.7; }
           50%  { transform: scale(1.3); opacity: 0.2; }
           100% { transform: scale(1); opacity: 0.7; }
+        }
+        @keyframes spin {
+          to { transform: rotate(360deg); }
         }
       `}</style>
 
