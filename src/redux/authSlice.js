@@ -95,6 +95,7 @@ export const verifyPhoneNumberOTP = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       const response = await apiService.VerifyPhoneNumberOTP(userData);
+      console.log("verifyPhoneNumberOTP response:", response);
       return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data);
