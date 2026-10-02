@@ -54,7 +54,24 @@ const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 // matter which action changed them (login, google login, email/OTP
 // verification, token refresh, logout, ...) — so none of those call sites
 // need to know about cookies directly.
-const authCookieSyncMiddleware = (storeAPI) => (next) => (action) => {
+//
+// MUST ignore persist/REHYDRATE. That action replaces `state.auth` wholesale
+// with whatever was in localStorage (authTransform's outbound strip means
+// accessToken/refreshToken are never even keys on that object, not merely
+// null) — so immediately after it, `nextAuth.accessToken` is `undefined`
+// while the reducer's own initialState had it as `null`. `undefined !== null`
+// reads as "the token changed", and since both are falsy, the branch below
+// used to call clearAuthCookies() — wiping out perfectly real, just-set
+// cookies the instant redux-persist finished rehydrating on every single
+// page load. That is the exact mechanism behind every "logged out on
+// refresh" symptom this app has had: login worked, cookies were written
+// correctly, and then the very next rehydrate deleted them again before any
+// page got a chance to use them.
+export const authCookieSyncMiddleware = (storeAPI) => (next) => (action) => {
+  if (action.type === "persist/REHYDRATE" || action.type === "persist/PERSIST") {
+    return next(action);
+  }
+
   const prevAuth = storeAPI.getState().auth;
   const result = next(action);
   const nextAuth = storeAPI.getState().auth;
