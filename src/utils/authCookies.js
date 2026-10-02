@@ -33,7 +33,11 @@
 import Cookies from "js-cookie";
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from "./authCookieNames";
 
-const COOKIE_EXPIRY_DAYS = 1;
+// Matches the backend's USER_REFRESH_TOKEN_LIFETIME (EmergencyBackend
+// settings). Every token refresh rewrites these cookies, so like the
+// token itself this is a sliding window — a user only has to sign in again
+// after this long with no visits at all, or after logging out themselves.
+const COOKIE_EXPIRY_DAYS = 90;
 
 const cookieOptions = {
   path: "/",

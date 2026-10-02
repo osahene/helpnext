@@ -34,6 +34,18 @@ const refreshClient = axios.create({
 
 let refreshRequest = null;
 
+// Only a refresh token the backend explicitly rejects (SimpleJWT's
+// {"code": "token_not_valid"} — expired, blacklisted by a logout, or
+// tampered with) ends the session. Everything else — no connection, a
+// timeout, a cold-started backend, a 5xx — just fails this one attempt and
+// the next request tries again. Mirrors helpFlutter's AuthInterceptor:
+// users stay signed in until they log out themselves.
+const isDeadRefreshToken = (error) => {
+  const status = error?.response?.status;
+  const code = error?.response?.data?.code;
+  return (status === 401 || status === 403) && code === "token_not_valid";
+};
+
 const takeRefreshToken = async () => {
   let refresh_token = getRefreshToken();
   if (!refresh_token) return null;
@@ -62,6 +74,11 @@ const takeRefreshToken = async () => {
       return null;
     } catch (error) {
       console.error("Token refresh failed:", error);
+      if (isDeadRefreshToken(error)) {
+        // No navigation from here — src/app/AuthGate.jsx watches
+        // `isAuthenticated` and redirects on its own once this lands.
+        store.dispatch(logout());
+      }
       return null;
     }
   })();
@@ -73,76 +90,31 @@ const takeRefreshToken = async () => {
   }
 };
 
-// ----------------------------------------------------------------
-// Activity tracking (client-only)
-// ----------------------------------------------------------------
-const LAST_ACTIVE_KEY = "hoh_last_active";
-let userIsActive = true;
-
-const setUserActive = () => {
-  userIsActive = true;
-  if (typeof window !== "undefined") {
-    try {
-      localStorage.setItem(LAST_ACTIVE_KEY, new Date().toISOString());
-    } catch {
-      // Private browsing / storage disabled — activity tracking just
-      // degrades to "always active", which is the safer direction to fail.
-    }
+const isExpiringWithin = (token, minutes) => {
+  try {
+    return dayjs.unix(jwtDecode(token).exp).diff(dayjs(), "minute") < minutes;
+  } catch {
+    // Undecodable/malformed — treat as expired so it goes through the
+    // refresh path instead of being sent as-is.
+    return true;
   }
 };
 
-if (typeof window !== "undefined") {
-  window.addEventListener("mousemove", setUserActive);
-  window.addEventListener("keydown", setUserActive);
-  window.addEventListener("scroll", setUserActive);
-}
-
 // ----------------------------------------------------------------
-// Token refresh scheduler
+// Token refresh scheduler — keeps the access token fresh in the
+// background. Never logs anyone out: there is deliberately no inactivity
+// timeout (someone opening the site mid-emergency must not meet a login
+// form), and a refresh token the server rejects is handled in
+// takeRefreshToken() above.
 // ----------------------------------------------------------------
 const scheduleTokenRefresh = () => {
   if (typeof window === "undefined") return; // Don't run on server
 
   setInterval(async () => {
+    if (!getRefreshToken()) return;
     const accessToken = getAccessToken();
-    const refresh_token = getRefreshToken();
-
-    if (!accessToken || !refresh_token) return;
-
-    try {
-      const decodedAccess = jwtDecode(accessToken);
-      const decodedRefresh = jwtDecode(refresh_token);
-      const now = dayjs();
-      const accessExp = dayjs.unix(decodedAccess.exp);
-      const refreshExp = dayjs.unix(decodedRefresh.exp);
-
-      if (accessExp.diff(now, "minute") <= 1 && userIsActive) {
-        await takeRefreshToken();
-      }
-
-      if (refreshExp.diff(now, "minute") <= 1 && userIsActive) {
-        await takeRefreshToken();
-      }
-
-      // Auto logout if the refresh token is about to expire while the user
-      // has been inactive — an active user who's mid-refresh-window still
-      // gets a fresh token above; this only catches someone who genuinely
-      // walked away.
-      let lastActiveDate = now;
-      try {
-        const stored = localStorage.getItem(LAST_ACTIVE_KEY);
-        if (stored) lastActiveDate = dayjs(stored);
-      } catch {
-        // Can't read it back — treat as active rather than force a logout
-        // off a storage failure.
-      }
-
-      if (now.diff(lastActiveDate, "minute") >= 10 && refreshExp.diff(now, "minute") <= 1) {
-        store.dispatch(logout());
-        userIsActive = false;
-      }
-    } catch (error) {
-      console.error("Token refresh scheduler error:", error);
+    if (!accessToken || isExpiringWithin(accessToken, 2)) {
+      await takeRefreshToken();
     }
   }, 30000); // Check every 30 seconds
 };
@@ -156,33 +128,19 @@ scheduleTokenRefresh();
 $axios.interceptors.request.use(
   async (req) => {
     store.dispatch(setGlobalLoading(true));
-    const accessToken = getAccessToken();
+    let accessToken = getAccessToken();
+
+    // A missing access cookie with a refresh cookie still present is just
+    // an access token that needs renewing, not a signed-out user.
+    if ((!accessToken && getRefreshToken()) || (accessToken && isExpiringWithin(accessToken, 0))) {
+      const tokens = await takeRefreshToken();
+      accessToken = tokens?.accessToken ?? null;
+      // If that refresh failed transiently the request goes out
+      // unauthenticated and fails on its own; the next one retries.
+    }
 
     if (accessToken) {
-      try {
-        const decoded = jwtDecode(accessToken);
-        const isExpired = dayjs.unix(decoded.exp).diff(dayjs()) < 1;
-
-        if (!isExpired) {
-          req.headers.Authorization = `Bearer ${accessToken}`;
-        } else {
-          const tokens = await takeRefreshToken();
-          if (tokens?.accessToken) {
-            req.headers.Authorization = `Bearer ${tokens.accessToken}`;
-          } else {
-            // Don't force a navigation here — this interceptor fires for
-            // every request, including background polling, and a hard
-            // redirect from inside it was the exact source of a past
-            // regression (any unrelated 401 looked like "the whole session
-            // is dead"). Clearing the session is enough: src/app/AuthGate.jsx
-            // is already watching `isAuthenticated` on every route and
-            // redirects on its own the moment this dispatch lands.
-            store.dispatch(logout());
-          }
-        }
-      } catch (error) {
-        store.dispatch(logout());
-      }
+      req.headers.Authorization = `Bearer ${accessToken}`;
     }
     return req;
   },

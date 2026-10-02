@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import apiService from "@/utils/axios";
 import { getRefreshToken } from "@/utils/authCookies";
 import { logout } from "@/redux/authSlice";
+import RequestHistory from "./RequestHistory";
 
 // "Deactivate" and "Delete" both end the session immediately — is_active is
 // checked on every authenticated request (see account.authentication /
@@ -92,6 +93,9 @@ export default function AccountSettings() {
             </div>
           </div>
         </div>
+
+        {/* ── Alert stats + request history ─────────────── */}
+        <RequestHistory />
 
         {/* ── Danger zone ────────────────────────────────── */}
         <div style={{ background: "#fff", borderRadius: "20px", padding: "22px", border: "1.5px solid #FFCCCC", boxShadow: "0 4px 16px rgba(204,34,34,0.06)" }}>

@@ -1,4 +1,5 @@
 import $axios from "./axiosInstance";
+import { getRefreshToken } from "./authCookies";
 
 const apiService = {
   googleLog: (data) => $axios.post("/social/google/", data),
@@ -9,7 +10,10 @@ const apiService = {
   VerifyPhoneNumberOTP: (data) =>
     $axios.post("/account/verify-otp/", data),
   login: (data) => $axios.post("/account/user-login/", data),
-  logout: () => $axios.post("/account/user-logout/"),
+  // Sends the refresh token so the backend blacklists it — sessions are
+  // long-lived, so a logout must actually revoke it server-side.
+  logout: () =>
+    $axios.post("/account/user-logout/", { refresh: getRefreshToken() }),
   // "delete" never deletes on the spot — it deactivates immediately and
   // schedules a hard delete 30 days out (account.tasks.purge_users_pending_deletion).
   // No way to self-undo via this endpoint on purpose: is_active=False blocks
@@ -17,6 +21,7 @@ const apiService = {
   // to call it again with — see account.views.AccountStatusView.
   updateAccountStatus: (action, refreshToken) =>
     $axios.patch("/account/account-status/", { action, refresh: refreshToken }),
+  getRequestHistory: () => $axios.get("/account/user-history/"),
   // Reset Password
   forgottenEmail: (data) => $axios.post("/account/request-reset-email/", data),
   confirmPassword: (data) => $axios.post("/account/password-reset/", data),
