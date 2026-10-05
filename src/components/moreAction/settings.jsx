@@ -9,6 +9,7 @@ import elec from "../../../public/emerg/ecg.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebookF, faTwitter, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
+import { EMERGENCY_SERVICES } from "@/utils/emergencyServices";
 
 const SectionHeader = ({ icon, label, color }) => (
   <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
@@ -36,6 +37,14 @@ const serviceIcons = {
   "Electricity Company of Ghana":  "⚡",
 };
 
+const serviceImages = {
+  "Ghana Police Service":          police,
+  "Ghana Fire Service":            fire,
+  "National Ambulance Service":    amb,
+  "NADMO":                         nadmo,
+  "Electricity Company of Ghana":  elec,
+};
+
 const contactColors = {
   WhatsApp: "#25D366",
   Facebook: "#1877F2",
@@ -44,13 +53,10 @@ const contactColors = {
 };
 
 export default function MoreAction() {
-  const emergencyServices = [
-    { name: "Ghana Police Service",         image: police, contacts: ["191", "18555", "+233302773906"] },
-    { name: "Ghana Fire Service",           image: fire,   contacts: ["192", "+233302772446", "+233299340383"] },
-    { name: "National Ambulance Service",   image: amb,    contacts: ["+2330501614877", "+2330505982870"] },
-    { name: "NADMO",                        image: nadmo,  contacts: ["112", "+233299350030", "+233302964884"] },
-    { name: "Electricity Company of Ghana", image: elec,   contacts: ["+233302676727", "+233302611611", "+233302676728"] },
-  ];
+  const emergencyServices = EMERGENCY_SERVICES.map((service) => ({
+    ...service,
+    image: serviceImages[service.name],
+  }));
 
   const contactUs = [
     { name: "WhatsApp", icon: faWhatsapp, actions: ["+233506053020"], link: "https://wa.me/233506053020" },

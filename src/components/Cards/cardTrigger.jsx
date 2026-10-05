@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Trigger } from "@/redux/userSlice";
 import { motion, AnimatePresence } from "motion/react";
@@ -14,6 +14,7 @@ import {
 import toast from "react-hot-toast";
 import { startLiveLocation } from "@/utils/liveLocation";
 import AuthRequiredPrompt from "@/components/Auth/AuthRequiredPrompt";
+import AlertFailedView from "./AlertFailedView";
 
 export default function TriggerCard({
   cardName,
@@ -42,6 +43,9 @@ export default function TriggerCard({
   // LiveLocationBanner.jsx is the single place that shows it's active and
   // offers to stop it — this modal doesn't need its own toggle for that.
   const [liveLocationEnabled, setLiveLocationEnabled] = useState(false);
+  // Set when an alert failed outright — renders AlertFailedView.
+  const [failure, setFailure] = useState(null);
+  const clientAlertIdRef = useRef(null);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const contact = useSelector((state) => state.contact.contacts) || [];
@@ -90,53 +94,68 @@ export default function TriggerCard({
       }
     });
 
+  // Rejects with a plain-language reason — shown as-is in AlertFailedView.
   const handleGeolocationError = (error, reject) => {
     const messages = {
-      [error.PERMISSION_DENIED]: "Please allow location access to send alerts.",
-      [error.POSITION_UNAVAILABLE]: "Location unavailable. Check device settings.",
-      [error.TIMEOUT]: "Location request timed out. Please try again.",
+      [error.PERMISSION_DENIED]:
+        "Location access is blocked, so your contacts can't be told where you are. Allow location for this site and try again.",
+      [error.POSITION_UNAVAILABLE]:
+        "Your location is unavailable. Turn on location on your device and try again.",
+      [error.TIMEOUT]:
+        "Finding your location took too long. Move to an open area and try again.",
     };
-    toast.error(messages[error.code] || "An unknown error occurred.", { duration: 5000 });
-    reject(error);
+    reject(new Error(messages[error.code] || "We couldn't find your location. Please try again."));
   };
 
   const handleTriggerAlert = async () => {
     if (isSending || matchingRecipients.length === 0) return;
     setIsPulsing(false);
     setIsSending(true);
+    // One id per alert, reused by every retry until it succeeds, so a retry
+    // after a lost response can't page contacts twice.
+    clientAlertIdRef.current ??= crypto.randomUUID();
 
     try {
       const geolocation = await getGeolocation();
       if (!geolocation.latitude || !geolocation.longitude) {
-        toast.error("Geolocation data unavailable.", { duration: 5000 });
-        return;
+        throw new Error("We couldn't find your location. Please try again.");
       }
 
       const response = await dispatch(
-        Trigger({ alertType: `${cardName}`, location: geolocation })
+        Trigger({
+          alertType: `${cardName}`,
+          location: geolocation,
+          clientAlertId: clientAlertIdRef.current,
+        })
       );
 
-      if (response.meta.requestStatus === "fulfilled") {
-        const alertId = response.payload?.id ?? null;
-        // Stay open on the success view instead of closing immediately —
-        // same reasoning as the Flutter app's "Alert Sent" dialog: this is
-        // the one moment the reporter is still looking at the screen.
-        setSentAlertId(alertId);
-        // The choice was already made before sending (the toggle above) —
-        // act on it now rather than asking again post-send.
-        if (liveLocationEnabled && alertId) {
-          startLiveLocation(alertId);
-        }
-      } else {
-        handleClose();
+      if (response.meta.requestStatus !== "fulfilled") {
+        throw new Error(
+          response.payload?.error ||
+            response.payload?.detail ||
+            "Your alert could not be sent because of a problem on our side."
+        );
       }
 
+      const alertId = response.payload?.id ?? null;
+      clientAlertIdRef.current = null;
+      setFailure(null);
+      // Stay open on the success view instead of closing immediately —
+      // same reasoning as the Flutter app's "Alert Sent" dialog: this is
+      // the one moment the reporter is still looking at the screen.
+      setSentAlertId(alertId);
+      // The choice was already made before sending (the toggle above) —
+      // act on it now rather than asking again post-send.
+      if (liveLocationEnabled && alertId) {
+        startLiveLocation(alertId);
+      }
       toast.success(
         response.payload?.message || "Alert triggered successfully.",
         { duration: 5000, icon: <FontAwesomeIcon icon={faMapLocationDot} /> }
       );
-    } catch {
-      handleClose();
+    } catch (error) {
+      // Nothing was sent — keep the modal open on a retry + direct-call view.
+      setFailure(error?.message || "Your alert could not be sent.");
     } finally {
       setIsSending(false);
     }
@@ -189,6 +208,19 @@ export default function TriggerCard({
             Done
           </button>
         </div>
+      );
+    }
+
+    // ── Alert failed outright — retry, or call the right service ──
+    if (failure) {
+      return (
+        <AlertFailedView
+          situation={cardName}
+          message={failure}
+          onRetry={handleTriggerAlert}
+          onClose={handleClose}
+          retrying={isSending}
+        />
       );
     }
 

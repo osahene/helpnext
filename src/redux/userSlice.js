@@ -108,7 +108,12 @@ export const Trigger = createAsyncThunk(
       const response = await apiService.triggerAlert(data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      // No response at all means the request never reached the server.
+      return rejectWithValue(
+        error.response?.data ?? {
+          error: "No internet connection, so your alert could not be sent.",
+        }
+      );
     }
   }
 );
