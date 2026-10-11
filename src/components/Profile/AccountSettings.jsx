@@ -31,11 +31,11 @@ export default function AccountSettings() {
     router.push("/");
   };
 
-  const runAccountAction = async (action, confirmMessage) => {
-    if (!window.confirm(confirmMessage)) return;
+  // Runs after the user picked a reason and approved the goodbye modal.
+  const runAccountAction = async (action, reason, reasonDetails) => {
     setBusyAction(action);
     try {
-      await apiService.updateAccountStatus(action, getRefreshToken());
+      await apiService.updateAccountStatus(action, getRefreshToken(), reason, reasonDetails);
       toast.success(
         action === "deactivate"
           ? "Your account has been deactivated."
@@ -97,56 +97,179 @@ export default function AccountSettings() {
         {/* ── Alert stats + request history ─────────────── */}
         <RequestHistory />
 
-        {/* ── Danger zone ────────────────────────────────── */}
+        {/* ── Account actions ────────────────────────────── */}
         <div style={{ background: "#fff", borderRadius: "20px", padding: "22px", border: "1.5px solid #FFCCCC", boxShadow: "0 4px 16px rgba(204,34,34,0.06)" }}>
           <p style={{ color: "#CC2222", fontSize: "11px", fontWeight: 700, letterSpacing: "1.2px", marginBottom: "14px" }}>ACCOUNT ACTIONS</p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            <div style={{ background: "#F8FAFF", borderRadius: "16px", padding: "16px", border: "1px solid #DDE3F5" }}>
-              <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14.5px", marginBottom: "4px" }}>Deactivate Account</p>
-              <p style={{ color: "#8B94B2", fontSize: "13px", lineHeight: 1.6, marginBottom: "12px" }}>
-                Logs you out immediately and stops all alerts/notifications. Nothing is deleted — contact support to reactivate.
-              </p>
-              <button
-                disabled={busyAction !== null}
-                onClick={() => runAccountAction(
-                  "deactivate",
-                  "Deactivate your account? You'll be logged out immediately and won't be able to log back in yourself — contact support to reactivate."
-                )}
-                style={{
-                  padding: "9px 16px", borderRadius: "12px", border: "1px solid #DDE3F5",
-                  background: "#fff", color: "#0F1B3E", fontWeight: 700, fontSize: "13.5px",
-                  cursor: busyAction !== null ? "not-allowed" : "pointer",
-                  opacity: busyAction !== null ? 0.6 : 1,
-                }}
-              >
-                {busyAction === "deactivate" ? "Deactivating…" : "Deactivate Account"}
-              </button>
-            </div>
-
-            <div style={{ background: "#FFF8F8", borderRadius: "16px", padding: "16px", border: "1px solid #FFE0E0" }}>
-              <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14.5px", marginBottom: "4px" }}>Delete Account</p>
-              <p style={{ color: "#8B94B2", fontSize: "13px", lineHeight: 1.6, marginBottom: "12px" }}>
-                Logs you out immediately. Your account and all data — emergency contacts, alert history, everything — is permanently deleted after 30 days. See our{" "}
-                <Link href="/legal/delete" style={{ color: "#2C5FD4" }}>data deletion policy</Link>.
-              </p>
-              <button
-                disabled={busyAction !== null}
-                onClick={() => runAccountAction(
-                  "delete",
-                  "Delete your account? You'll be logged out immediately, and everything — your profile, emergency contacts, and alert history — will be permanently deleted in 30 days. This cannot be undone by you once it starts; contact support within 30 days if you change your mind."
-                )}
-                style={{
-                  padding: "9px 16px", borderRadius: "12px", border: "none",
-                  background: "#CC2222", color: "#fff", fontWeight: 700, fontSize: "13.5px",
-                  cursor: busyAction !== null ? "not-allowed" : "pointer",
-                  opacity: busyAction !== null ? 0.6 : 1,
-                }}
-              >
-                {busyAction === "delete" ? "Submitting…" : "Delete Account"}
-              </button>
-            </div>
+            <AccountActionCard
+              action="deactivate"
+              title="Deactivate Account"
+              description="You'll be logged out straight away and your contacts will stop receiving your alerts. Nothing is deleted, but you can't reactivate it yourself — contact support to come back."
+              reasons={DEACTIVATE_REASONS}
+              buttonLabel="Deactivate Account"
+              buttonColor="#0F1B3E"
+              busy={busyAction}
+              onConfirmed={runAccountAction}
+            />
+            <AccountActionCard
+              action="delete"
+              title="Delete Account"
+              description={
+                <>
+                  You&apos;ll be logged out straight away. After 30 days your account and everything in it — emergency contacts and alert history — is permanently deleted and can&apos;t be recovered. Contact support within 30 days if you change your mind. See our{" "}
+                  <Link href="/legal/delete" style={{ color: "#2C5FD4" }}>data deletion policy</Link>.
+                </>
+              }
+              reasons={DELETE_REASONS}
+              buttonLabel="Delete Account"
+              buttonColor="#CC2222"
+              danger
+              busy={busyAction}
+              onConfirmed={runAccountAction}
+            />
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Reason keys must match helpflutter's profile_screen.dart and
+// HelpAdminNuxt's users/[id].vue (which shows them to admins).
+const DEACTIVATE_REASONS = [
+  { key: "break", label: "I need a break and will come back later" },
+  { key: "notifications", label: "I'm getting too many notifications" },
+  { key: "new_phone", label: "I'm changing my phone or phone number" },
+  { key: "privacy_location", label: "I'm not comfortable sharing my location right now" },
+  { key: "not_working", label: "The app isn't working properly for me" },
+];
+
+const DELETE_REASONS = [
+  { key: "no_longer_needed", label: "I no longer need an emergency alert app" },
+  { key: "data_privacy", label: "I'm worried about how my personal data is used" },
+  { key: "found_alternative", label: "I've found another app that works better for me" },
+  { key: "contacts_unresponsive", label: "My emergency contacts don't use it or respond to it" },
+  { key: "delivery_problems", label: "Alerts or login codes didn't reach me or my contacts" },
+];
+
+// One action: what happens (description), why they're leaving (one listed
+// reason or "Other" in their own words — required), then a goodbye modal
+// they must approve before anything happens.
+function AccountActionCard({ action, title, description, reasons, buttonLabel, buttonColor, danger = false, busy, onConfirmed }) {
+  const [reason, setReason] = useState(null);
+  const [other, setOther] = useState("");
+  const [confirming, setConfirming] = useState(false);
+
+  const options = [...reasons, { key: "other", label: "Other" }];
+  const canSubmit = Boolean(reason && (reason !== "other" || other.trim()) && busy === null);
+
+  return (
+    <div style={{
+      background: danger ? "#FFF8F8" : "#F8FAFF", borderRadius: "16px", padding: "16px",
+      border: `1px solid ${danger ? "#FFE0E0" : "#DDE3F5"}`,
+    }}>
+      <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14.5px", marginBottom: "4px" }}>{title}</p>
+      <p style={{ color: "#5B6481", fontSize: "13px", lineHeight: 1.6, marginBottom: "12px" }}>{description}</p>
+
+      <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13px", marginBottom: "6px" }}>Please tell us why</p>
+      <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "10px" }}>
+        {options.map((option) => (
+          <label key={option.key} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "13.5px", color: "#0F1B3E", cursor: "pointer" }}>
+            <input
+              type="radio"
+              name={`${action}-reason`}
+              value={option.key}
+              checked={reason === option.key}
+              onChange={() => setReason(option.key)}
+              style={{ accentColor: buttonColor, width: "16px", height: "16px" }}
+            />
+            {option.label}
+          </label>
+        ))}
+      </div>
+      {reason === "other" && (
+        <textarea
+          value={other}
+          onChange={(e) => setOther(e.target.value)}
+          maxLength={500}
+          rows={3}
+          placeholder="Tell us in your own words"
+          style={{
+            width: "100%", padding: "10px 12px", borderRadius: "12px", border: "1px solid #DDE3F5",
+            fontSize: "13.5px", marginBottom: "10px", background: "#fff", resize: "vertical",
+          }}
+        />
+      )}
+
+      <button
+        disabled={!canSubmit}
+        onClick={() => setConfirming(true)}
+        style={{
+          width: "100%", padding: "11px 16px", borderRadius: "12px", border: "none",
+          background: buttonColor, color: "#fff", fontWeight: 700, fontSize: "13.5px",
+          cursor: canSubmit ? "pointer" : "not-allowed", opacity: canSubmit ? 1 : 0.4,
+        }}
+      >
+        {busy === action ? "Please wait…" : buttonLabel}
+      </button>
+
+      {confirming && (
+        <GoodbyeModal
+          color={buttonColor}
+          onCancel={() => setConfirming(false)}
+          onApprove={() => {
+            setConfirming(false);
+            onConfirmed(action, reason, reason === "other" ? other.trim() : "");
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function GoodbyeModal({ color, onCancel, onApprove }) {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={onCancel}
+      style={{
+        position: "fixed", inset: 0, zIndex: 60, background: "rgba(15,27,62,0.55)",
+        display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: "#fff", borderRadius: "22px", padding: "28px 24px 20px",
+          maxWidth: "380px", width: "100%", textAlign: "center",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.25)",
+        }}
+      >
+        <div style={{ fontSize: "44px", marginBottom: "10px" }} aria-hidden="true">😔</div>
+        <p style={{ color: "#0F1B3E", fontWeight: 800, fontSize: "17px", lineHeight: 1.45, marginBottom: "20px" }}>
+          We are sad to see you leave. Hoping you get back soon.
+        </p>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button
+            onClick={onCancel}
+            style={{
+              flex: 1, padding: "12px", borderRadius: "14px", border: "1px solid #DDE3F5",
+              background: "#fff", color: "#5B6481", fontWeight: 700, fontSize: "14px", cursor: "pointer",
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onApprove}
+            style={{
+              flex: 1, padding: "12px", borderRadius: "14px", border: "none",
+              background: color, color: "#fff", fontWeight: 700, fontSize: "14px", cursor: "pointer",
+            }}
+          >
+            Approve
+          </button>
         </div>
       </div>
     </div>

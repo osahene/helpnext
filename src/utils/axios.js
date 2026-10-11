@@ -19,8 +19,13 @@ const apiService = {
   // No way to self-undo via this endpoint on purpose: is_active=False blocks
   // authentication on every subsequent request, so there's no session left
   // to call it again with — see account.views.AccountStatusView.
-  updateAccountStatus: (action, refreshToken) =>
-    $axios.patch("/account/account-status/", { action, refresh: refreshToken }),
+  updateAccountStatus: (action, refreshToken, reason, reasonDetails) =>
+    $axios.patch("/account/account-status/", {
+      action,
+      refresh: refreshToken,
+      reason,
+      reason_details: reasonDetails,
+    }),
   getRequestHistory: () => $axios.get("/account/user-history/"),
   // Reset Password
   forgottenEmail: (data) => $axios.post("/account/request-reset-email/", data),
@@ -48,16 +53,19 @@ const apiService = {
   // on the backend). "stop" never deletes the alert, just the live window.
   startLiveLocation: (alertId) =>
     $axios.post(`/account/alert-live-location/${alertId}/`),
+  // Background calls pass { silent: true } so they don't flash the
+  // full-screen loader (see axiosInstance.js) every time they run.
   updateLiveLocation: (alertId, data) =>
-    $axios.patch(`/account/alert-live-location/${alertId}/`, data),
+    $axios.patch(`/account/alert-live-location/${alertId}/`, data, { silent: true }),
   stopLiveLocation: (alertId) =>
     $axios.delete(`/account/alert-live-location/${alertId}/`),
   // verify emergency
-  verifyEmergency: (code) => $axios.get(`/account/verify-alert/${code}/`),
+  verifyEmergency: (code, { silent = false } = {}) =>
+    $axios.get(`/account/verify-alert/${code}/`, { silent }),
   decodeEmrgencyToken: (code) => $axios.get(`/account/decode-alert-token/${code}/`),
   // Titbit notifications (in-app inbox + web push)
   getNotifications: (params) => $axios.get("/notifications/", { params }),
-  getUnreadNotificationCount: () => $axios.get("/notifications/unread-count/"),
+  getUnreadNotificationCount: () => $axios.get("/notifications/unread-count/", { silent: true }),
   markNotificationRead: (id) => $axios.patch(`/notifications/${id}/read/`),
   registerPushDevice: (data) => $axios.post("/notifications/register-device/", data),
   unregisterPushDevice: (token) =>

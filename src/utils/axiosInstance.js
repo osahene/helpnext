@@ -123,11 +123,32 @@ const scheduleTokenRefresh = () => {
 scheduleTokenRefresh();
 
 // ----------------------------------------------------------------
+// Global loader: only for requests the user is waiting on. Background
+// requests (polling, live-location pings) pass { silent: true } and never
+// show it — they used to flash the full-screen loader every ~20s on an idle
+// page. A counter, so overlapping requests don't hide it while one is still
+// running.
+// ----------------------------------------------------------------
+let visibleRequests = 0;
+
+const startLoading = (config) => {
+  if (config?.silent) return;
+  visibleRequests += 1;
+  store.dispatch(setGlobalLoading(true));
+};
+
+const stopLoading = (config) => {
+  if (config?.silent) return;
+  visibleRequests = Math.max(0, visibleRequests - 1);
+  if (visibleRequests === 0) store.dispatch(setGlobalLoading(false));
+};
+
+// ----------------------------------------------------------------
 // Request interceptor: add auth header
 // ----------------------------------------------------------------
 $axios.interceptors.request.use(
   async (req) => {
-    store.dispatch(setGlobalLoading(true));
+    startLoading(req);
     let accessToken = getAccessToken();
 
     // A missing access cookie with a refresh cookie still present is just
@@ -145,7 +166,7 @@ $axios.interceptors.request.use(
     return req;
   },
   (error) => {
-    store.dispatch(setGlobalLoading(false));
+    stopLoading(error?.config);
     return Promise.reject(error);
   }
 );
@@ -155,11 +176,11 @@ $axios.interceptors.request.use(
 // ----------------------------------------------------------------
 $axios.interceptors.response.use(
   (response) => {
-    store.dispatch(setGlobalLoading(false));
+    stopLoading(response.config);
     return response;
   },
   (error) => {
-    store.dispatch(setGlobalLoading(false));
+    stopLoading(error?.config);
 
     // Only a generic toast here for failures no page/form is in a position
     // to explain: the network being down (no response at all) or an

@@ -27,10 +27,13 @@ const SITUATIONS = {
   violence: { label: "Violence Alert", color: "#8B5C00", icon: faHandFist },
 };
 
+// Same labels as the app (helpflutter RequestHistory.statusLabels). Only an
+// alert that failed for every contact is "Failed"; "pending" means it went
+// out and no delivery report has come back yet, so it reads as "Sent".
 const STATUS = {
-  success: { label: "Sent", color: "#1A9E5C", bg: "#E8F7EF" },
-  partial: { label: "Partial", color: "#B7791F", bg: "#FFF6E0" },
-  pending: { label: "Pending", color: "#8B94B2", bg: "#F0F2F8" },
+  success: { label: "Delivered", color: "#1A9E5C", bg: "#E8F7EF" },
+  partial: { label: "Partly delivered", color: "#B7791F", bg: "#FFF6E0" },
+  pending: { label: "Sent", color: "#1A9E5C", bg: "#E8F7EF" },
   failed: { label: "Failed", color: "#CC2222", bg: "#FFECEC" },
 };
 
@@ -127,7 +130,7 @@ export default function RequestHistory() {
     };
   }, []);
 
-  const sent = history.filter((h) => h.mission_status === "success").length;
+  const sent = history.filter((h) => h.mission_status !== "failed").length;
   const failed = history.filter((h) => h.mission_status === "failed").length;
 
   return (
@@ -162,7 +165,13 @@ export default function RequestHistory() {
           <p style={{ color: "#8B94B2", fontSize: "13px" }}>Alerts you send will appear here.</p>
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        // Its own scrolling box (like the app), so Account Actions stays
+        // right below it however many alerts there are.
+        <div style={{
+          display: "flex", flexDirection: "column", gap: "10px",
+          maxHeight: "420px", overflowY: "auto", padding: "10px",
+          background: "#F8FAFF", border: "1px solid #DDE3F5", borderRadius: "20px",
+        }}>
           {history.map((item) => (
             <HistoryItem key={item.id} item={item} />
           ))}

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import apiService from "@/utils/axios";
 import toast from "react-hot-toast";
@@ -9,6 +9,11 @@ export default function Verification() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [verificationStatus, setVerificationStatus] = useState(null);
+  // Where the sender is — from the verify endpoint, which is idempotent and
+  // returns the current position. Re-fetched every 15s while they're sharing
+  // live location, so this page follows them until sharing stops.
+  const [alertInfo, setAlertInfo] = useState(null);
+  const [updatedAt, setUpdatedAt] = useState(null);
   const router = useRouter();
   const search = useSearchParams();
   const code = search.get("code");
@@ -29,12 +34,36 @@ export default function Verification() {
     else { setError("No verification code provided."); setLoading(false); }
   }, [code]);
 
+  const loadLocation = useCallback(async () => {
+    try {
+      const res = await apiService.verifyEmergency(code, { silent: true });
+      setAlertInfo(res.data);
+      setUpdatedAt(new Date());
+    } catch {
+      // Keep the last known position; the next refresh tries again.
+    }
+  }, [code]);
+
+  // Opened again after verifying: still show where they are.
+  useEffect(() => {
+    if (verificationStatus === "verified" && !alertInfo) loadLocation();
+  }, [verificationStatus, alertInfo, loadLocation]);
+
+  const isLive = isLiveSharing(alertInfo);
+  useEffect(() => {
+    if (!isLive) return undefined;
+    const timer = setInterval(loadLocation, 15000);
+    return () => clearInterval(timer);
+  }, [isLive, loadLocation]);
+
   const handleVerification = async () => {
     try {
       const res = await apiService.verifyEmergency(code);
       if (res.status === 200) {
         toast.success("Verified successfully.", { duration: 5000 });
         setVerificationStatus("verified");
+        setAlertInfo(res.data);
+        setUpdatedAt(new Date());
       }
     } catch (err) {
       toast.error(err.response?.data?.error || "Verification failed.", { duration: 5000 });
@@ -113,7 +142,7 @@ export default function Verification() {
   // ── Already verified ─────────────────────────────────────
   if (verificationStatus === "verified") {
     return (
-      <div style={{ width: "100%", maxWidth: "420px", padding: "20px" }}>
+      <div style={{ width: "100%", maxWidth: "480px", padding: "20px" }}>
         <div style={{
           background: "#fff", borderRadius: "28px",
           overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.15)",
@@ -137,6 +166,7 @@ export default function Verification() {
                 Thank you for confirming this emergency alert. The sender has been notified of your response.
               </p>
             </div>
+            {alertInfo && <SenderLocation info={alertInfo} isLive={isLive} updatedAt={updatedAt} />}
             <button
               onClick={() => router.push("/")}
               style={{
@@ -281,6 +311,80 @@ export default function Verification() {
           </p>
         </div>
       </div>
+    </div>
+  );
+}
+
+function isLiveSharing(info) {
+  if (!info?.live_location_enabled) return false;
+  const expires = info.live_location_expires_at ? new Date(info.live_location_expires_at) : null;
+  return !expires || expires > new Date();
+}
+
+// Map of where the sender is. While they share live location it shows a LIVE
+// badge and follows them (the parent re-fetches every 15s); the embedded map
+// only reloads when the position actually changes, so it doesn't flicker.
+function SenderLocation({ info, isLive, updatedAt }) {
+  const coords = info.coordinates;
+  const lat = coords ? Number(coords.latitude).toFixed(5) : null;
+  const lng = coords ? Number(coords.longitude).toFixed(5) : null;
+
+  return (
+    <div style={{ marginBottom: "20px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
+        <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14px", flex: 1 }}>
+          {info.user_name ? `${info.user_name}'s location` : "Sender's location"}
+        </p>
+        {isLive && (
+          <span style={{
+            display: "inline-flex", alignItems: "center", gap: "6px",
+            background: "#CC2222", color: "#fff", borderRadius: "999px",
+            padding: "4px 10px", fontSize: "11px", fontWeight: 800, letterSpacing: "1px",
+          }}>
+            <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#fff", animation: "livePulse 1.2s ease-in-out infinite" }} />
+            LIVE
+          </span>
+        )}
+      </div>
+      {info.location && (
+        <p style={{ color: "#8B94B2", fontSize: "13px", marginBottom: "10px" }}>{info.location}</p>
+      )}
+      {coords ? (
+        <>
+          <div style={{ borderRadius: "16px", overflow: "hidden", border: "1px solid #DDE3F5", height: "240px" }}>
+            <iframe
+              key={`${lat},${lng}`}
+              title="Sender location"
+              src={`https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed`}
+              style={{ width: "100%", height: "100%", border: 0 }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+          <p style={{ color: isLive ? "#CC2222" : "#8B94B2", fontSize: "12px", marginTop: "8px", fontWeight: 600 }}>
+            {isLive
+              ? `Sharing live location — this map follows them${updatedAt ? ` · updated ${updatedAt.toLocaleTimeString()}` : ""}`
+              : info.live_location_enabled
+                ? "Live location sharing has ended. Showing the last position."
+                : "Location when the alert was sent."}
+          </p>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "block", textAlign: "center", marginTop: "10px", padding: "12px",
+              borderRadius: "14px", border: "1px solid #DDE3F5", color: "#2C5FD4",
+              fontWeight: 700, fontSize: "14px", textDecoration: "none",
+            }}
+          >
+            Open in Google Maps
+          </a>
+        </>
+      ) : (
+        <p style={{ color: "#8B94B2", fontSize: "13px" }}>Location not available for this alert.</p>
+      )}
+      <style jsx global>{`@keyframes livePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }`}</style>
     </div>
   );
 }
