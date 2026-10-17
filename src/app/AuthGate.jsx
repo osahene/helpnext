@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
+import { hasPendingEnrollment } from "@/utils/enrollment";
 
 // Mirrors HelpAdminNuxt/app/middleware/auth.global.ts — ONE global check
 // instead of src/middleware.js (a separate server-side gate) plus a
@@ -22,6 +23,7 @@ const PUBLIC_ROUTES = [
   "/",
   "/auth/login",
   "/auth/register",
+  "/auth/passkey",
   "/auth/confirmPassword",
   "/auth/forgottenPassword",
   "/auth/successConfirm",
@@ -41,6 +43,10 @@ const PUBLIC_ROUTES = [
 // registration form.
 const AUTH_ONLY_ROUTES = ["/auth/login", "/auth/register"];
 
+// Passed the OTP but left before step 3 (passkey): coming back to sign in,
+// register, or any protected page resumes at the passkey step instead.
+const PASSKEY_STEP = "/auth/passkey";
+
 function matches(pathname, routes) {
   return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
 }
@@ -49,19 +55,27 @@ export default function AuthGate({ children }) {
   const pathname = usePathname();
   const router = useRouter();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const enrollmentPending = useSelector(
+    (state) => !state.auth.isAuthenticated && hasPendingEnrollment(state.auth)
+  );
 
   const isPublicRoute = matches(pathname, PUBLIC_ROUTES);
   const isAuthOnlyRoute = matches(pathname, AUTH_ONLY_ROUTES);
+  const resumePasskeyStep = enrollmentPending && (isAuthOnlyRoute || !isPublicRoute);
   const shouldRedirectAway =
-    (isAuthenticated && isAuthOnlyRoute) || (!isAuthenticated && !isPublicRoute);
+    resumePasskeyStep ||
+    (isAuthenticated && isAuthOnlyRoute) ||
+    (!isAuthenticated && !isPublicRoute);
 
   useEffect(() => {
-    if (isAuthenticated && isAuthOnlyRoute) {
+    if (resumePasskeyStep) {
+      router.replace(PASSKEY_STEP);
+    } else if (isAuthenticated && isAuthOnlyRoute) {
       router.replace("/contact");
     } else if (!isAuthenticated && !isPublicRoute) {
       router.replace(`/auth/login?redirect=${encodeURIComponent(pathname)}`);
     }
-  }, [pathname, isAuthenticated, isAuthOnlyRoute, isPublicRoute, router]);
+  }, [pathname, isAuthenticated, isAuthOnlyRoute, isPublicRoute, resumePasskeyStep, router]);
 
   // Renders nothing of the actual page while a redirect is about to fire —
   // without this, the protected page's real content (or the login form, for

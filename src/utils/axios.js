@@ -7,8 +7,18 @@ const apiService = {
   verifyEmail: (data) => $axios.post("/account/verify-email/", data),
   VerifyPhoneNumber: (data) =>
     $axios.post("/account/verify-phone-number/", data),
+  // `client: "web"` — the backend then asks for a passkey as step 3.
   VerifyPhoneNumberOTP: (data) =>
-    $axios.post("/account/verify-otp/", data),
+    $axios.post("/account/verify-otp/", { ...data, client: "web" }),
+  // Passkeys (see src/utils/webauthn.js). enrollment_token is the step-3
+  // pass verify-otp hands back before a passkey exists.
+  passkeyRegisterOptions: (data) =>
+    $axios.post("/account/passkey/register/options/", data),
+  passkeyRegisterVerify: (data) =>
+    $axios.post("/account/passkey/register/verify/", data),
+  passkeyLoginOptions: () => $axios.post("/account/passkey/login/options/", {}),
+  passkeyLoginVerify: (data) =>
+    $axios.post("/account/passkey/login/verify/", data),
   login: (data) => $axios.post("/account/user-login/", data),
   // Sends the refresh token so the backend blacklists it — sessions are
   // long-lived, so a logout must actually revoke it server-side.
@@ -63,6 +73,9 @@ const apiService = {
   verifyEmergency: (code, { silent = false } = {}) =>
     $axios.get(`/account/verify-alert/${code}/`, { silent }),
   decodeEmrgencyToken: (code) => $axios.get(`/account/decode-alert-token/${code}/`),
+  // "on_my_way" / "cant_help" — see EmergencySystem/account/alert_responses.py
+  respondToAlert: (code, response) =>
+    $axios.post(`/account/verify-alert/${code}/respond/`, { response }),
   // Titbit notifications (in-app inbox + web push)
   getNotifications: (params) => $axios.get("/notifications/", { params }),
   getUnreadNotificationCount: () => $axios.get("/notifications/unread-count/", { silent: true }),

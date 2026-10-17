@@ -4,7 +4,6 @@ import { verifyPhoneNumberOTP, requestOTP } from "@/redux/authSlice";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { counter } from "@fortawesome/fontawesome-svg-core";
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
 const C = {
@@ -126,10 +125,16 @@ export default function VerifyPhoneNumberOTP() {
     try {
       const result = await dispatch(verifyPhoneNumberOTP({ otp: code, country_code: country_code, phone_number: phone_number }));
       if (result.meta.requestStatus === "fulfilled") {
-        toast.success(result.payload?.message || "Phone number verified successfully. Redirecting...", { duration: 5000 });
-        router.push("/");
+        // Step 3 still owed on this browser -> passkey; otherwise signed in.
+        if (result.payload?.data?.next_step === "biometric_enrollment") {
+          toast.success("Phone number verified. One last step.", { duration: 4000 });
+          router.push("/auth/passkey");
+        } else {
+          toast.success("Signed in. Redirecting...", { duration: 4000 });
+          router.push("/");
+        }
       } else {
-        toast.error("Verification failed. Please try again.", { duration: 5000 });
+        toast.error(result.payload?.error || "Verification failed. Please try again.", { duration: 5000 });
         setDigits(["", "", "", "", "", ""]);
         setTimeout(() => focusBox(0), 100);
       }
@@ -314,7 +319,7 @@ export default function VerifyPhoneNumberOTP() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
                 </svg>
                 <p style={{ fontSize: 13, color: C.textSecondary, margin: 0, lineHeight: 1.5 }}>
-                  The OTP expires in 2 minutes. Never share it with anyone.
+                  The OTP expires in 5 minutes. Never share it with anyone.
                 </p>
               </div>
 

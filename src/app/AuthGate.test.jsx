@@ -5,6 +5,7 @@ import AuthGate from "./AuthGate";
 const replace = vi.fn();
 let mockPathname = "/";
 let mockIsAuthenticated = false;
+let mockEnrollment = {};
 
 vi.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
@@ -12,7 +13,8 @@ vi.mock("next/navigation", () => ({
 }));
 
 vi.mock("react-redux", () => ({
-  useSelector: (selector) => selector({ auth: { isAuthenticated: mockIsAuthenticated } }),
+  useSelector: (selector) =>
+    selector({ auth: { isAuthenticated: mockIsAuthenticated, ...mockEnrollment } }),
 }));
 
 describe("AuthGate", () => {
@@ -20,6 +22,7 @@ describe("AuthGate", () => {
     replace.mockClear();
     mockPathname = "/";
     mockIsAuthenticated = false;
+    mockEnrollment = {};
   });
 
   it("renders a public route for an unauthenticated visitor, no redirect", () => {
@@ -109,6 +112,48 @@ describe("AuthGate", () => {
     );
 
     expect(screen.getByText("register form")).toBeInTheDocument();
+    expect(replace).not.toHaveBeenCalled();
+  });
+
+  it("resumes at the passkey step when the OTP was passed but step 3 wasn't", async () => {
+    mockEnrollment = { enrollmentToken: "tok", enrollmentIssuedAt: Date.now() };
+    mockPathname = "/auth/login";
+    render(
+      <AuthGate>
+        <div>login form</div>
+      </AuthGate>
+    );
+
+    expect(screen.queryByText("login form")).not.toBeInTheDocument();
+    await waitFor(() => expect(replace).toHaveBeenCalledWith("/auth/passkey"));
+  });
+
+  it("shows the passkey step itself while enrollment is pending", () => {
+    mockEnrollment = { enrollmentToken: "tok", enrollmentIssuedAt: Date.now() };
+    mockPathname = "/auth/passkey";
+    render(
+      <AuthGate>
+        <div>passkey step</div>
+      </AuthGate>
+    );
+
+    expect(screen.getByText("passkey step")).toBeInTheDocument();
+    expect(replace).not.toHaveBeenCalled();
+  });
+
+  it("ignores an enrollment token older than 24 hours", () => {
+    mockEnrollment = {
+      enrollmentToken: "tok",
+      enrollmentIssuedAt: Date.now() - 25 * 60 * 60 * 1000,
+    };
+    mockPathname = "/auth/login";
+    render(
+      <AuthGate>
+        <div>login form</div>
+      </AuthGate>
+    );
+
+    expect(screen.getByText("login form")).toBeInTheDocument();
     expect(replace).not.toHaveBeenCalled();
   });
 });

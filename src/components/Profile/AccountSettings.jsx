@@ -102,32 +102,8 @@ export default function AccountSettings() {
           <p style={{ color: "#CC2222", fontSize: "11px", fontWeight: 700, letterSpacing: "1.2px", marginBottom: "14px" }}>ACCOUNT ACTIONS</p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            <AccountActionCard
-              action="deactivate"
-              title="Deactivate Account"
-              description="You'll be logged out straight away and your contacts will stop receiving your alerts. Nothing is deleted, but you can't reactivate it yourself — contact support to come back."
-              reasons={DEACTIVATE_REASONS}
-              buttonLabel="Deactivate Account"
-              buttonColor="#0F1B3E"
-              busy={busyAction}
-              onConfirmed={runAccountAction}
-            />
-            <AccountActionCard
-              action="delete"
-              title="Delete Account"
-              description={
-                <>
-                  You&apos;ll be logged out straight away. After 30 days your account and everything in it — emergency contacts and alert history — is permanently deleted and can&apos;t be recovered. Contact support within 30 days if you change your mind. See our{" "}
-                  <Link href="/legal/delete" style={{ color: "#2C5FD4" }}>data deletion policy</Link>.
-                </>
-              }
-              reasons={DELETE_REASONS}
-              buttonLabel="Delete Account"
-              buttonColor="#CC2222"
-              danger
-              busy={busyAction}
-              onConfirmed={runAccountAction}
-            />
+            <AccountActionButton action={DEACTIVATE} busy={busyAction} onConfirmed={runAccountAction} />
+            <AccountActionButton action={DELETE} busy={busyAction} onConfirmed={runAccountAction} />
           </div>
         </div>
       </div>
@@ -153,82 +129,82 @@ const DELETE_REASONS = [
   { key: "delivery_problems", label: "Alerts or login codes didn't reach me or my contacts" },
 ];
 
-// One action: what happens (description), why they're leaving (one listed
-// reason or "Other" in their own words — required), then a goodbye modal
-// they must approve before anything happens.
-function AccountActionCard({ action, title, description, reasons, buttonLabel, buttonColor, danger = false, busy, onConfirmed }) {
-  const [reason, setReason] = useState(null);
-  const [other, setOther] = useState("");
-  const [confirming, setConfirming] = useState(false);
+const DEACTIVATE = {
+  key: "deactivate",
+  title: "Deactivate Account",
+  description:
+    "You'll be logged out straight away and your contacts will stop receiving your alerts. Nothing is deleted, but you can't reactivate it yourself — contact support to come back.",
+  reasons: DEACTIVATE_REASONS,
+  color: "#0F1B3E",
+  goodbye: "Your account will be deactivated now. We hope you come back soon.",
+};
 
-  const options = [...reasons, { key: "other", label: "Other" }];
-  const canSubmit = Boolean(reason && (reason !== "other" || other.trim()) && busy === null);
+const DELETE = {
+  key: "delete",
+  title: "Delete Account",
+  description: (
+    <>
+      You&apos;ll be logged out straight away. After 30 days your account and everything in it — emergency contacts and alert history — is permanently deleted and can&apos;t be recovered. Contact support within 30 days if you change your mind. See our{" "}
+      <Link href="/legal/delete" style={{ color: "#2C5FD4" }}>data deletion policy</Link>.
+    </>
+  ),
+  reasons: DELETE_REASONS,
+  color: "#CC2222",
+  goodbye: "Your account will be deactivated now and permanently deleted after 30 days. We hope to see you again.",
+};
+
+// The flow: button -> modal asking why (one listed reason, or "Other" in
+// their own words) -> "We are sorry to see you leave" -> Confirm starts it.
+// Cancel at either step stops everything; nothing is sent until then.
+function AccountActionButton({ action, busy, onConfirmed }) {
+  const [step, setStep] = useState(null); // null | "reason" | "goodbye"
+  const [choice, setChoice] = useState(null);
+
+  const cancel = () => {
+    setStep(null);
+    setChoice(null);
+  };
 
   return (
-    <div style={{
-      background: danger ? "#FFF8F8" : "#F8FAFF", borderRadius: "16px", padding: "16px",
-      border: `1px solid ${danger ? "#FFE0E0" : "#DDE3F5"}`,
-    }}>
-      <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14.5px", marginBottom: "4px" }}>{title}</p>
-      <p style={{ color: "#5B6481", fontSize: "13px", lineHeight: 1.6, marginBottom: "12px" }}>{description}</p>
-
-      <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13px", marginBottom: "6px" }}>Please tell us why</p>
-      <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "10px" }}>
-        {options.map((option) => (
-          <label key={option.key} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "13.5px", color: "#0F1B3E", cursor: "pointer" }}>
-            <input
-              type="radio"
-              name={`${action}-reason`}
-              value={option.key}
-              checked={reason === option.key}
-              onChange={() => setReason(option.key)}
-              style={{ accentColor: buttonColor, width: "16px", height: "16px" }}
-            />
-            {option.label}
-          </label>
-        ))}
-      </div>
-      {reason === "other" && (
-        <textarea
-          value={other}
-          onChange={(e) => setOther(e.target.value)}
-          maxLength={500}
-          rows={3}
-          placeholder="Tell us in your own words"
-          style={{
-            width: "100%", padding: "10px 12px", borderRadius: "12px", border: "1px solid #DDE3F5",
-            fontSize: "13.5px", marginBottom: "10px", background: "#fff", resize: "vertical",
-          }}
-        />
-      )}
-
+    <>
       <button
-        disabled={!canSubmit}
-        onClick={() => setConfirming(true)}
+        disabled={busy !== null}
+        onClick={() => setStep("reason")}
         style={{
-          width: "100%", padding: "11px 16px", borderRadius: "12px", border: "none",
-          background: buttonColor, color: "#fff", fontWeight: 700, fontSize: "13.5px",
-          cursor: canSubmit ? "pointer" : "not-allowed", opacity: canSubmit ? 1 : 0.4,
+          width: "100%", padding: "13px 16px", borderRadius: "12px", border: "none",
+          background: action.color, color: "#fff", fontWeight: 700, fontSize: "14px",
+          cursor: busy === null ? "pointer" : "not-allowed", opacity: busy === null ? 1 : 0.4,
         }}
       >
-        {busy === action ? "Please wait…" : buttonLabel}
+        {busy === action.key ? "Please wait…" : action.title}
       </button>
 
-      {confirming && (
-        <GoodbyeModal
-          color={buttonColor}
-          onCancel={() => setConfirming(false)}
-          onApprove={() => {
-            setConfirming(false);
-            onConfirmed(action, reason, reason === "other" ? other.trim() : "");
+      {step === "reason" && (
+        <ReasonModal
+          action={action}
+          onCancel={cancel}
+          onConfirm={(picked) => {
+            setChoice(picked);
+            setStep("goodbye");
           }}
         />
       )}
-    </div>
+      {step === "goodbye" && (
+        <GoodbyeModal
+          action={action}
+          onCancel={cancel}
+          onConfirm={() => {
+            const picked = choice;
+            cancel();
+            onConfirmed(action.key, picked.reason, picked.details);
+          }}
+        />
+      )}
+    </>
   );
 }
 
-function GoodbyeModal({ color, onCancel, onApprove }) {
+function Modal({ onCancel, children, maxWidth = "420px" }) {
   return (
     <div
       role="dialog"
@@ -242,36 +218,109 @@ function GoodbyeModal({ color, onCancel, onApprove }) {
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: "#fff", borderRadius: "22px", padding: "28px 24px 20px",
-          maxWidth: "380px", width: "100%", textAlign: "center",
+          background: "#fff", borderRadius: "22px", padding: "24px",
+          maxWidth, width: "100%", maxHeight: "calc(100vh - 32px)", overflowY: "auto",
           boxShadow: "0 24px 80px rgba(0,0,0,0.25)",
         }}
       >
-        <div style={{ fontSize: "44px", marginBottom: "10px" }} aria-hidden="true">😔</div>
-        <p style={{ color: "#0F1B3E", fontWeight: 800, fontSize: "17px", lineHeight: 1.45, marginBottom: "20px" }}>
-          We are sad to see you leave. Hoping you get back soon.
-        </p>
-        <div style={{ display: "flex", gap: "10px" }}>
-          <button
-            onClick={onCancel}
-            style={{
-              flex: 1, padding: "12px", borderRadius: "14px", border: "1px solid #DDE3F5",
-              background: "#fff", color: "#5B6481", fontWeight: 700, fontSize: "14px", cursor: "pointer",
-            }}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onApprove}
-            style={{
-              flex: 1, padding: "12px", borderRadius: "14px", border: "none",
-              background: color, color: "#fff", fontWeight: 700, fontSize: "14px", cursor: "pointer",
-            }}
-          >
-            Approve
-          </button>
-        </div>
+        {children}
       </div>
     </div>
+  );
+}
+
+function ModalActions({ color, canConfirm = true, onCancel, onConfirm }) {
+  return (
+    <div style={{ display: "flex", gap: "10px", marginTop: "18px" }}>
+      <button
+        onClick={onCancel}
+        style={{
+          flex: 1, padding: "12px", borderRadius: "14px", border: "1px solid #DDE3F5",
+          background: "#fff", color: "#5B6481", fontWeight: 700, fontSize: "14px", cursor: "pointer",
+        }}
+      >
+        Cancel
+      </button>
+      <button
+        onClick={onConfirm}
+        disabled={!canConfirm}
+        style={{
+          flex: 1, padding: "12px", borderRadius: "14px", border: "none",
+          background: color, color: "#fff", fontWeight: 700, fontSize: "14px",
+          cursor: canConfirm ? "pointer" : "not-allowed", opacity: canConfirm ? 1 : 0.4,
+        }}
+      >
+        Confirm
+      </button>
+    </div>
+  );
+}
+
+// Step 1: what this does, and why they're leaving.
+function ReasonModal({ action, onCancel, onConfirm }) {
+  const [reason, setReason] = useState(null);
+  const [other, setOther] = useState("");
+  const options = [...action.reasons, { key: "other", label: "Other" }];
+  const canConfirm = Boolean(reason && (reason !== "other" || other.trim()));
+
+  return (
+    <Modal onCancel={onCancel}>
+      <p style={{ color: "#0F1B3E", fontWeight: 800, fontSize: "18px", marginBottom: "6px" }}>{action.title}</p>
+      <p style={{ color: "#5B6481", fontSize: "13.5px", lineHeight: 1.6, marginBottom: "14px" }}>{action.description}</p>
+
+      <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13px", marginBottom: "8px" }}>Please tell us why</p>
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        {options.map((option) => (
+          <label key={option.key} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "13.5px", color: "#0F1B3E", cursor: "pointer" }}>
+            <input
+              type="radio"
+              name={`${action.key}-reason`}
+              value={option.key}
+              checked={reason === option.key}
+              onChange={() => setReason(option.key)}
+              style={{ accentColor: action.color, width: "16px", height: "16px", flexShrink: 0 }}
+            />
+            {option.label}
+          </label>
+        ))}
+      </div>
+      {reason === "other" && (
+        <textarea
+          autoFocus
+          value={other}
+          onChange={(e) => setOther(e.target.value)}
+          maxLength={500}
+          rows={3}
+          placeholder="Tell us in your own words"
+          style={{
+            width: "100%", padding: "10px 12px", borderRadius: "12px", border: "1px solid #DDE3F5",
+            fontSize: "13.5px", marginTop: "10px", background: "#F8FAFF", resize: "vertical",
+          }}
+        />
+      )}
+
+      <ModalActions
+        color={action.color}
+        canConfirm={canConfirm}
+        onCancel={onCancel}
+        onConfirm={() => onConfirm({ reason, details: reason === "other" ? other.trim() : "" })}
+      />
+    </Modal>
+  );
+}
+
+// Step 2, the last chance to back out.
+function GoodbyeModal({ action, onCancel, onConfirm }) {
+  return (
+    <Modal onCancel={onCancel} maxWidth="380px">
+      <div style={{ textAlign: "center" }}>
+        <div style={{ fontSize: "44px", marginBottom: "10px" }} aria-hidden="true">😔</div>
+        <p style={{ color: "#0F1B3E", fontWeight: 800, fontSize: "18px", lineHeight: 1.4, marginBottom: "8px" }}>
+          We are sorry to see you leave
+        </p>
+        <p style={{ color: "#5B6481", fontSize: "13.5px", lineHeight: 1.6 }}>{action.goodbye}</p>
+      </div>
+      <ModalActions color={action.color} onCancel={onCancel} onConfirm={onConfirm} />
+    </Modal>
   );
 }

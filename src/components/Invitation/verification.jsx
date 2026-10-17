@@ -163,10 +163,19 @@ export default function Verification() {
           <div style={{ padding: "22px 24px 24px" }}>
             <div style={{ background: "#EDFBF3", borderRadius: "14px", padding: "14px 16px", border: "1px solid #B2EECC", marginBottom: "20px" }}>
               <p style={{ color: "#0F1B3E", fontSize: "14px", lineHeight: 1.65 }}>
-                Thank you for confirming this emergency alert. The sender has been notified of your response.
+                Thank you for confirming this emergency alert. The sender has been notified that you&apos;ve seen it.
               </p>
             </div>
             {alertInfo && <SenderLocation info={alertInfo} isLive={isLive} updatedAt={updatedAt} />}
+            {alertInfo && (
+              <AlertAnswer
+                code={code}
+                senderFirstName={names?.user_first_name || "them"}
+                contactFirstName={names?.contact_first_name}
+                initialAnswer={alertInfo.response}
+                initialResponders={alertInfo.responders || []}
+              />
+            )}
             <button
               onClick={() => router.push("/")}
               style={{
@@ -311,6 +320,139 @@ export default function Verification() {
           </p>
         </div>
       </div>
+    </div>
+  );
+}
+
+// "I'm on my way" / "I can't help". Each asks for confirmation first —
+// the sender is notified the moment it's sent. The other answer stays
+// available so a contact can change their mind (also confirmed).
+const ANSWERS = {
+  on_my_way: {
+    label: "I'm on my way",
+    color: "#1A9E5C",
+    ask: (name) => `Tell ${name} you're on your way?`,
+    detail: (name) => `${name} will be notified straight away that you're coming. Please only confirm if you can actually go.`,
+    confirm: "Yes, I'm on my way",
+    done: (name) => `${name} knows you're on your way.`,
+  },
+  cant_help: {
+    label: "I can't help",
+    color: "#4B5563",
+    ask: (name) => `Tell ${name} you can't help?`,
+    detail: (name) => `${name} will be notified straight away, so they can turn to someone else. Their other contacts have been alerted too.`,
+    confirm: "Yes, I can't help",
+    done: (name) => `${name} knows you can't help.`,
+  },
+};
+
+function AlertAnswer({ code, senderFirstName, contactFirstName, initialAnswer, initialResponders }) {
+  const [answer, setAnswer] = useState(initialAnswer || null);
+  const [responders, setResponders] = useState(initialResponders);
+  const [confirming, setConfirming] = useState(null);
+  const [sending, setSending] = useState(false);
+
+  const send = async (key) => {
+    setConfirming(null);
+    setSending(true);
+    try {
+      const res = await apiService.respondToAlert(code, key);
+      setAnswer(key);
+      setResponders(res.data.responders || []);
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Couldn't send that. Please try again.", { duration: 5000 });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  // Everyone else who has answered (the list includes this contact too).
+  const others = responders.filter(
+    (r) => !(r.first_name === contactFirstName && r.response === answer)
+  );
+
+  return (
+    <div style={{ marginBottom: "20px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "4px 0 14px" }}>
+        <div style={{ flex: 1, height: "1px", background: "#DDE3F5" }} />
+        <p style={{ color: "#8B94B2", fontSize: "11px", fontWeight: 600, letterSpacing: "0.8px" }}>CAN YOU HELP?</p>
+        <div style={{ flex: 1, height: "1px", background: "#DDE3F5" }} />
+      </div>
+
+      {others.length > 0 && (
+        <div style={{ marginBottom: "12px" }}>
+          {others.map((r) => (
+            <p key={`${r.first_name}-${r.response}`} style={{ color: "#5B6481", fontSize: "13px", textAlign: "center", margin: "0 0 4px" }}>
+              {r.response === "on_my_way" ? `🏃 ${r.first_name} is on the way` : `${r.first_name} can't help`}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {answer && (
+        <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14px", textAlign: "center", marginBottom: "12px" }}>
+          {ANSWERS[answer].done(senderFirstName)}
+        </p>
+      )}
+
+      <div style={{ display: "flex", gap: "12px" }}>
+        {Object.entries(ANSWERS).map(([key, a]) => {
+          const selected = answer === key;
+          return (
+            <button
+              key={key}
+              disabled={sending || selected}
+              onClick={() => setConfirming(key)}
+              style={{
+                flex: 1, padding: "14px 8px", borderRadius: "16px", border: selected ? "2px solid #0F1B3E" : "none",
+                background: a.color, color: "#fff", fontWeight: 700, fontSize: "14.5px",
+                cursor: sending || selected ? "default" : "pointer",
+                opacity: sending && !selected ? 0.5 : 1,
+              }}
+            >
+              {selected ? "✓ " : ""}{a.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {confirming && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setConfirming(null)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 60, background: "rgba(15,27,62,0.55)",
+            display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{ background: "#fff", borderRadius: "22px", padding: "24px", maxWidth: "380px", width: "100%", boxShadow: "0 24px 80px rgba(0,0,0,0.25)" }}
+          >
+            <p style={{ color: "#0F1B3E", fontWeight: 800, fontSize: "17px", marginBottom: "8px" }}>
+              {ANSWERS[confirming].ask(senderFirstName)}
+            </p>
+            <p style={{ color: "#5B6481", fontSize: "13.5px", lineHeight: 1.6, marginBottom: "18px" }}>
+              {ANSWERS[confirming].detail(senderFirstName)}
+            </p>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <button
+                onClick={() => setConfirming(null)}
+                style={{ flex: 1, padding: "12px", borderRadius: "14px", border: "1px solid #DDE3F5", background: "#fff", color: "#5B6481", fontWeight: 700, fontSize: "14px", cursor: "pointer" }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => send(confirming)}
+                style={{ flex: 1, padding: "12px", borderRadius: "14px", border: "none", background: ANSWERS[confirming].color, color: "#fff", fontWeight: 700, fontSize: "14px", cursor: "pointer" }}
+              >
+                {ANSWERS[confirming].confirm}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

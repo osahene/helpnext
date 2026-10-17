@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
 import { setPhoneNumbers, registerUser, googleLogin } from "@/redux/authSlice";
-import { GetContact, GetDependants } from "@/redux/userSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GoogleLogin } from "@react-oauth/google";
@@ -149,6 +148,9 @@ export default function Register() {
   const [formData, setFormData] = useState({ first_name: "", last_name: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  // From "Continue with Google": attaches the Google email to the account.
+  // The phone is still verified by OTP and a passkey is still required.
+  const [googleToken, setGoogleToken] = useState(null);
 
   // ── Legal protection acknowledgment state ──────────────────────────────
   const [acknowledged, setAcknowledged] = useState(false);
@@ -168,18 +170,20 @@ export default function Register() {
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     const result = await dispatch(googleLogin(credentialResponse.credential));
-    try {
-      if (result.meta.requestStatus === "fulfilled" && result.payload.status === "redirect") {
-        toast.success(result.payload.message || "Verify phone number", { duration: 5000 });
-        router.push(result.payload.redirectUrl);
-      } else if (result.meta.requestStatus === "fulfilled") {
-        dispatch(GetContact());
-        dispatch(GetDependants());
-        toast.success(result.payload.message || "Google Login Successful", { duration: 5000 });
-        router.push("/");
-      }
-    } catch (error) {
-      toast.error("An error occurred. Please try again.");
+    if (result.meta.requestStatus !== "fulfilled") {
+      toast.error(result.payload?.error || result.payload?.detail || "Google sign-in failed. Please try again.");
+      return;
+    }
+    const data = result.payload;
+    if (data.next_step === "verify_otp") {
+      // Existing account: same as a phone login from here on.
+      dispatch(setPhoneNumbers({ country_code: data.country_code, phone_number: data.phone_number }));
+      toast.success(data.message || "We've sent a code to your phone.");
+      router.push("/auth/verifyPhoneNumberOTP");
+    } else {
+      setGoogleToken(data.google_token);
+      setFormData({ first_name: data.first_name || "", last_name: data.last_name || "" });
+      toast.success(data.message || "Add your phone number to finish signing up.");
     }
   };
 
@@ -194,6 +198,7 @@ export default function Register() {
           country_code: selectedCountry.code,
           phone_number: cleanPhone,
           agree_to_terms: acknowledged,
+          ...(googleToken ? { google_token: googleToken } : {}),
         })
       );
       if (result.meta.requestStatus === "fulfilled") {
@@ -201,7 +206,7 @@ export default function Register() {
         toast.success("OTP sent. Proceed to verify your phone number.");
         router.push("/auth/verifyPhoneNumberOTP");
       } else {
-        toast.error("Registration failed. Please try again.");
+        toast.error(result.payload?.error || "Registration failed. Please try again.");
       }
     } catch (error) {
       toast.error("An error occurred. Please try again.");

@@ -1,7 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // import { resetAllSlices } from "./rootActions";
 import apiService from "@/utils/axios";
+import { createPasskey, getPasskey, isPasskeyCancelled } from "@/utils/webauthn";
 
+const passkeyFailure = (error, fallback) =>
+  isPasskeyCancelled(error)
+    ? { cancelled: true }
+    : error?.response?.data || { error: fallback };
+
+// Never a session: the backend answers with the next step — an OTP sent to
+// the account's phone ("verify_otp") or "add_phone" with a google_token for
+// the registration form. Phone OTP and a passkey always follow.
 export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
   async (googleToken, thunkAPI) => {
@@ -14,23 +23,7 @@ export const googleLogin = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      if (error.response?.status === 307) {
-        const tempAuthData = {
-          tokens: error.response.data.data.token,
-          user: {
-            email: error.response.data.data.email,
-            first_name: error.response.data.data.first_name,
-            last_name: error.response.data.data.last_name,
-          },
-        };
-        return thunkAPI.fulfillWithValue({
-          status: "redirect",
-          redirectUrl: error.response.data.redirect_next_url,
-          tempAuthData,
-        });
-      }
-
-      return thunkAPI.rejectWithValue(error);
+      return thunkAPI.rejectWithValue(error.response?.data || { error: error.message });
     }
   }
 );
@@ -101,6 +94,45 @@ export const verifyPhoneNumberOTP = createAsyncThunk(
     }
   }
 );
+// Step 3 on the web: create a passkey for this account. Uses the pending
+// enrollment token from verify-otp (or the session, if already signed in).
+export const registerPasskey = createAsyncThunk(
+  "auth/registerPasskey",
+  async (_, thunkAPI) => {
+    const { enrollmentToken } = thunkAPI.getState().auth;
+    const pass = enrollmentToken ? { enrollment_token: enrollmentToken } : {};
+    try {
+      const { data: options } = await apiService.passkeyRegisterOptions(pass);
+      const credential = await createPasskey(options);
+      const { data } = await apiService.passkeyRegisterVerify({ ...pass, credential });
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        passkeyFailure(error, "We couldn't set up a passkey on this device. Please try again.")
+      );
+    }
+  }
+);
+// Sign in with a passkey instead of an OTP (usernameless: the browser
+// offers whichever Help OO Help passkeys it has).
+export const loginWithPasskey = createAsyncThunk(
+  "auth/loginWithPasskey",
+  async (_, thunkAPI) => {
+    try {
+      const { data: start } = await apiService.passkeyLoginOptions();
+      const credential = await getPasskey(start.options);
+      const { data } = await apiService.passkeyLoginVerify({
+        flow_id: start.flow_id,
+        credential,
+      });
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        passkeyFailure(error, "We couldn't sign you in with a passkey. Please use your phone number.")
+      );
+    }
+  }
+);
 export const requestOTP = createAsyncThunk(
   "auth/requestOTP",
   async (data, thunkAPI) => {
@@ -108,7 +140,7 @@ export const requestOTP = createAsyncThunk(
       const response = await apiService.generateRegister(data);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response?.data || { error: error.message });
     }
   }
 );
@@ -146,20 +178,26 @@ const initialState = {
   email: "",
   country_code: "",
   phone_number: "",
+  // Set between a correct OTP and step 3 (passkey) — see hasPendingEnrollment.
+  enrollmentToken: null,
+  enrollmentIssuedAt: null,
+};
+
+// Every finished sign-in ({next_step: "complete", user, token, refresh}).
+const completeSignIn = (state, { user, token, refresh }) => {
+  state.accessToken = token;
+  state.refreshToken = refresh;
+  state.first_name = user.first_name;
+  state.last_name = user.last_name;
+  state.isAuthenticated = true;
+  state.enrollmentToken = null;
+  state.enrollmentIssuedAt = null;
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setTempAuthData: (state, action) => {
-      const { tokens, user } = action.payload;
-      state.accessToken = tokens.access;
-      state.refreshToken = tokens.refresh;
-      state.first_name = user.first_name;
-      state.last_name = user.last_name;
-      state.email = user.email;
-    },
     setEmail(state, action) {
       state.email = action.payload;
     },
@@ -179,7 +217,13 @@ const authSlice = createSlice({
       state.last_name = last_name;
       state.isAuthenticated = true;
     },
+    clearEnrollment: (state) => {
+      state.enrollmentToken = null;
+      state.enrollmentIssuedAt = null;
+    },
     logout: (state) => {
+      state.enrollmentToken = null;
+      state.enrollmentIssuedAt = null;
       state.accessToken = null;
       state.refreshToken = null;
       state.first_name = null;
@@ -200,24 +244,8 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(googleLogin.fulfilled, (state, action) => {
+      .addCase(googleLogin.fulfilled, (state) => {
         state.loading = false;
-        if (action.payload?.status === "redirect") {
-          state.redirectUrl = action.payload.redirectUrl;
-          const { tokens, user } = action.payload.tempAuthData;
-          state.accessToken = tokens.access;
-          state.refreshToken = tokens.refresh;
-          state.first_name = user.first_name;
-          state.last_name = user.last_name;
-          state.email = user.email;
-        } else {
-          const { tokens, first_name, last_name } = action.payload.data;
-          state.accessToken = tokens.access;
-          state.refreshToken = tokens.refresh;
-          state.first_name = first_name;
-          state.last_name = last_name;
-          state.isAuthenticated = true;
-        }
       })
       .addCase(googleLogin.rejected, (state, action) => {
         state.loading = false;
@@ -247,6 +275,8 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(logoutUser.fulfilled, (state) => {
+        state.enrollmentToken = null;
+        state.enrollmentIssuedAt = null;
         state.accessToken = null;
         state.refreshToken = null;
         state.first_name = null;
@@ -305,14 +335,47 @@ const authSlice = createSlice({
       })
       .addCase(verifyPhoneNumberOTP.fulfilled, (state, action) => {
         state.loading = false;
-        const { user, token, refresh } = action.payload.data;
-        state.accessToken = token;         // Backend uses "token", not "tokens.access"
-        state.refreshToken = refresh;       // Backend uses "refresh", not "tokens.refresh"
-        state.first_name = user.first_name;
-        state.last_name = user.last_name;
-        state.isAuthenticated = true;
+        const data = action.payload.data;
+        if (data.next_step === "biometric_enrollment") {
+          // Phone proven; no session until a passkey exists (step 3).
+          state.enrollmentToken = data.enrollment_token;
+          state.enrollmentIssuedAt = Date.now();
+          state.first_name = data.user.first_name;
+          state.last_name = data.user.last_name;
+          return;
+        }
+        completeSignIn(state, data);
       })
       .addCase(verifyPhoneNumberOTP.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Passkey: step 3, and passkey sign-in
+      .addCase(registerPasskey.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerPasskey.fulfilled, (state, action) => {
+        state.loading = false;
+        completeSignIn(state, action.payload);
+      })
+      .addCase(registerPasskey.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        if (action.payload?.code === "enrollment_expired") {
+          state.enrollmentToken = null;
+          state.enrollmentIssuedAt = null;
+        }
+      })
+      .addCase(loginWithPasskey.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginWithPasskey.fulfilled, (state, action) => {
+        state.loading = false;
+        completeSignIn(state, action.payload);
+      })
+      .addCase(loginWithPasskey.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -359,6 +422,7 @@ const authSlice = createSlice({
 });
 
 export const {
+  clearEnrollment,
   logout,
   refreshToken,
   setEmail,

@@ -3,7 +3,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
-import { requestOTP, setPhoneNumbers } from "@/redux/authSlice";
+import { loginWithPasskey, requestOTP, setPhoneNumbers } from "@/redux/authSlice";
+import { isPasskeySupported } from "@/utils/webauthn";
 import { useRouter } from "next/navigation";
 import mainLogo from "../../../public/svg/Help Logo.svg";
 import toast from "react-hot-toast";
@@ -32,6 +33,26 @@ export default function Login() {
   const router = useRouter();
 
   const isValid = phone_number.trim().length > 5;
+  // Passkey sign-in is the alternative to an OTP, for anyone who did step 3
+  // in a browser (the browser offers the passkeys it holds).
+  const [canUsePasskey, setCanUsePasskey] = useState(false);
+  useEffect(() => setCanUsePasskey(isPasskeySupported()), []);
+
+  const handlePasskey = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+    try {
+      const result = await dispatch(loginWithPasskey());
+      if (result.meta.requestStatus === "fulfilled") {
+        toast.success("Signed in.");
+        router.push("/");
+      } else if (!result.payload?.cancelled) {
+        toast.error(result.payload?.error || "Passkey sign-in failed. Please use your phone number.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,6 +67,10 @@ export default function Login() {
         dispatch(setPhoneNumbers({ country_code: selectedCountry.code, phone_number: cleanPhone }));
         toast.success(result.payload?.message || "OTP sent. Redirecting...");
         router.push("/auth/verifyPhoneNumberOTP");
+      } else if (result.payload?.code === "account_not_found") {
+        // No account for this number: say so, then go to registration.
+        toast(result.payload.error, { duration: 2500, icon: "ℹ️" });
+        setTimeout(() => router.push("/auth/register"), 2000);
       } else {
         toast.error(result.payload?.error || "Request failed. Please try again.");
       }
@@ -195,6 +220,20 @@ export default function Login() {
                   </>
                 )}
               </button>
+              {canUsePasskey && (
+                <button
+                  type="button"
+                  onClick={handlePasskey}
+                  disabled={isLoading}
+                  className="submit-btn"
+                  style={{ background: C.white, color: C.accent, border: `1.5px solid ${C.accent}` }}
+                >
+                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a7.464 7.464 0 01-1.15 3.993m1.989 3.559A11.209 11.209 0 008.25 10.5a3.75 3.75 0 117.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 01-3.6 9.75m6.633-4.596a18.666 18.666 0 01-2.485 5.33" />
+                  </svg>
+                  Sign in with a passkey
+                </button>
+              )}
               <p style={{ textAlign: "center", fontSize: 14, color: C.textSecondary, margin: 0 }}>
                 Don{"'"}t have an account?{" "}
                 <Link href="/auth/register" style={{ color: C.accent, fontWeight: 700, textDecoration: "none" }}>
