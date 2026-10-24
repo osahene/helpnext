@@ -12,6 +12,12 @@ const FIREBASE_CONNECT_ORIGINS =
 // Lora) — the CSP has to allow fetching that stylesheet from
 // fonts.googleapis.com *and* the actual font files it references, which
 // Google always serves from the separate fonts.gstatic.com domain.
+// The alert page (components/Invitation/verification.jsx) embeds a Google
+// map in an iframe: maps.google.com, which serves/redirects via
+// www.google.com/maps. Without these in frame-src the browser refuses to
+// show the map at all.
+const GOOGLE_MAPS_FRAME_ORIGINS = "https://maps.google.com https://www.google.com";
+
 const GOOGLE_FONTS_STYLESHEET_ORIGIN = "https://fonts.googleapis.com";
 const GOOGLE_FONTS_FILE_ORIGIN = "https://fonts.gstatic.com";
 
@@ -22,7 +28,7 @@ const CSP = [
   `img-src 'self' data: blob: https://lh3.googleusercontent.com https://flagcdn.com`,
   `font-src 'self' data: ${GOOGLE_FONTS_FILE_ORIGIN}`,
   `connect-src 'self' ${FIREBASE_CONNECT_ORIGINS} ${GOOGLE_OAUTH_ORIGIN}`,
-  `frame-src ${GOOGLE_OAUTH_ORIGIN}`,
+  `frame-src ${GOOGLE_OAUTH_ORIGIN} ${GOOGLE_MAPS_FRAME_ORIGINS}`,
   `object-src 'none'`,
   `base-uri 'self'`,
   `frame-ancestors 'none'`,

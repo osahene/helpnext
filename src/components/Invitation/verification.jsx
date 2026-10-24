@@ -174,6 +174,7 @@ export default function Verification() {
                 contactFirstName={names?.contact_first_name}
                 initialAnswer={alertInfo.response}
                 initialResponders={alertInfo.responders || []}
+                ringAgain={Boolean(alertInfo.ring_again)}
               />
             )}
             <button
@@ -346,9 +347,12 @@ const ANSWERS = {
   },
 };
 
-function AlertAnswer({ code, senderFirstName, contactFirstName, initialAnswer, initialResponders }) {
+// ringAgain: they said "I can't help" once and were called again, in case
+// it was a mis-tap — "I can't help" stays tappable so they can confirm it.
+function AlertAnswer({ code, senderFirstName, contactFirstName, initialAnswer, initialResponders, ringAgain }) {
   const [answer, setAnswer] = useState(initialAnswer || null);
   const [responders, setResponders] = useState(initialResponders);
+  const [confirmingDecline, setConfirmingDecline] = useState(ringAgain && initialAnswer === "cant_help");
   const [confirming, setConfirming] = useState(null);
   const [sending, setSending] = useState(false);
 
@@ -358,6 +362,7 @@ function AlertAnswer({ code, senderFirstName, contactFirstName, initialAnswer, i
     try {
       const res = await apiService.respondToAlert(code, key);
       setAnswer(key);
+      setConfirmingDecline(false);
       setResponders(res.data.responders || []);
     } catch (err) {
       toast.error(err.response?.data?.error || "Couldn't send that. Please try again.", { duration: 5000 });
@@ -389,7 +394,14 @@ function AlertAnswer({ code, senderFirstName, contactFirstName, initialAnswer, i
         </div>
       )}
 
-      {answer && (
+      {confirmingDecline && (
+        <p style={{ color: "#B45309", fontWeight: 700, fontSize: "14px", textAlign: "center", marginBottom: "12px" }}>
+          You said you can&apos;t help, and {senderFirstName} still needs someone. Did you mean it?
+          Tap &quot;I can&apos;t help&quot; again to confirm, or &quot;I&apos;m on my way&quot; if you can go.
+        </p>
+      )}
+
+      {answer && !confirmingDecline && (
         <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14px", textAlign: "center", marginBottom: "12px" }}>
           {ANSWERS[answer].done(senderFirstName)}
         </p>
@@ -397,7 +409,7 @@ function AlertAnswer({ code, senderFirstName, contactFirstName, initialAnswer, i
 
       <div style={{ display: "flex", gap: "12px" }}>
         {Object.entries(ANSWERS).map(([key, a]) => {
-          const selected = answer === key;
+          const selected = answer === key && !(confirmingDecline && key === "cant_help");
           return (
             <button
               key={key}
