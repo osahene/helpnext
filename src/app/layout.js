@@ -26,6 +26,9 @@ export const metadata = {
   title: "Help OO Help",
   description:
     "An Emergency response system for the modern world. It aids to swiftly broadcast vital information to your loved ones in case of an emergency.",
+  verification: {
+    google: "GU_wmI2tLK9adnXorm1aA0gQ4pNelg2bd66Qcxk1y1U",
+  },
 };
 
 export default function RootLayout({ children }) {
