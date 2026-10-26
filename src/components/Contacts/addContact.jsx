@@ -7,7 +7,9 @@ import CountryDropdown from "@/utils/countryDropdown";
 import { DEFAULT_COUNTRY, sanitizePhoneInput } from "@/utils/phone";
 
 
-const situations = ["Health Crisis", "Robbery Attack", "Fire Outbreak", "Flood Alert", "Call Emergency", "Violence Alert"];
+// The same six as the home page's alert cards (Cards/pageCards.jsx), so every
+// card has contacts who can receive it.
+const situations = ["Health Crisis", "Robbery Attack", "Fire Outbreak", "Flood Alert", "Call Emergency", "Accident Alert"];
 
 const situationColors = {
   "Health Crisis": "#1A9E5C",
@@ -15,7 +17,7 @@ const situationColors = {
   "Fire Outbreak": "#E8500A",
   "Flood Alert": "#0A72C4",
   "Call Emergency": "#7B22CE",
-  "Violence Alert": "#8B5C00",
+  "Accident Alert": "#8B5C00",
 };
 
 const SectionLabel = ({ color, label }) => (

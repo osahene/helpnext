@@ -5,14 +5,14 @@ import Link from "next/link";
 const COMPANY = "TeenByte Tech Lab";
 const APP = "Help OO Help";
 const EMAIL = "admin@teenbytetechlab.com";
-const EFFECTIVE = "1 July 2025";
+const EFFECTIVE = "26 October 2026";
 
 const sections = [
   {
     id: "overview",
     title: "1. Overview",
     color: "#2C5FD4",
-    content: `${APP} ("the App", "we", "our", or "us"), developed and operated by ${COMPANY}, is an emergency response platform that enables users to rapidly alert their designated emergency contacts during six categories of crisis: robbery attack, fire outbreak, flood alert, accident alert, health crisis, and general call emergency.
+    content: `${APP} ("the App", "we", "our", or "us"), developed and operated by ${COMPANY}, is an emergency alert platform that enables users to rapidly alert their designated emergency contacts for six types of emergency: robbery attack, health crisis, fire outbreak, flood alert, accident alert, and call emergency.
 
 This Privacy Policy explains what personal data we collect, why we collect it, how it is used, who it may be shared with, and what rights you have over your data. By using the App, you agree to the practices described in this Policy.`,
   },
@@ -27,23 +27,27 @@ This Privacy Policy explains what personal data we collect, why we collect it, h
       },
       {
         subtitle: "2.2 Emergency Contact Data",
-        body: "When you add an emergency contact, we collect the contact's first name, last name, phone number, email address, and your relationship to them. This data is used exclusively to send emergency alerts on your behalf once the contact has granted their approval.",
+        body: "When you add an emergency contact, we collect the contact's first name, last name, phone number, optional email address, your relationship to them, and the types of emergency they should be alerted for. This data is used to ask for their approval and, once they approve, to send emergency alerts on your behalf.",
       },
       {
-        subtitle: "2.3 Real-Time Location Data",
-        body: "When you trigger an emergency alert, the App captures your device's GPS coordinates (latitude, longitude, and accuracy) at that moment. This live location is included in the alert messages sent to your approved contacts so they can find and assist you. We do not continuously track or store your location outside of an active alert trigger.",
+        subtitle: "2.3 Location Data",
+        body: "When you trigger an emergency alert or send a Live Report, the App captures your device's GPS coordinates at that moment and shares them with the people receiving it so they can find and assist you. After an alert you can choose to keep sharing your live location with your contacts for up to 1 hour; you can stop at any time, and it ends automatically. The location is stored with the alert record together with its general area (such as town and region). We never track your location at any other time.",
       },
       {
         subtitle: "2.4 Alert History",
-        body: "We retain a log of alerts you have triggered, including the alert type, timestamp, and the contacts notified. This log is visible to you in your profile and is used for audit and support purposes.",
+        body: "We keep a log of alerts you have triggered, including the alert type, time, location, the contacts notified, how each was reached, and how they responded. This log is visible to you in your profile and is used for audit and support purposes.",
       },
       {
-        subtitle: "2.5 Device & Usage Data",
-        body: "We may collect anonymous device information (device type, OS version) and usage analytics to improve app performance and reliability. This data is not linked to your identity.",
+        subtitle: "2.5 Live Reports",
+        body: "If you send a Live Report from the mobile app, we collect the message, photos, videos and voice notes you choose to attach. They are stored privately and shared only with the response agencies you select.",
       },
       {
-        subtitle: "2.6 WhatsApp & SMS Communication Data",
-        body: "When an emergency alert is triggered, we send WhatsApp messages and SMS to your approved contacts on your behalf via the WhatsApp Business API and SMS gateway. These messages contain your name, the type of emergency, your live GPS location link, and a verification link. We do not store the content of WhatsApp conversations; we only log delivery status.",
+        subtitle: "2.6 Device Data",
+        body: "We store a push-notification token for each device you sign in on, so alerts and notices can reach you, and collect crash reports (device type, OS version and what went wrong) to fix bugs. If you turn on fingerprint/Face ID login, we keep a secure key for that device; your fingerprint or face never leaves your phone.",
+      },
+      {
+        subtitle: "2.7 Call, WhatsApp & SMS Delivery Data",
+        body: "When an emergency alert is triggered, we call your approved contacts and send them WhatsApp messages or SMS on your behalf via the WhatsApp Business API, voice and SMS gateways. These messages contain your name, the type of emergency, your GPS location link, and a link to respond. Message text is stored encrypted only until delivery finishes and then erased; we keep the delivery status.",
       },
     ],
   },
@@ -53,11 +57,13 @@ This Privacy Policy explains what personal data we collect, why we collect it, h
     color: "#1A9E5C",
     items: [
       "To create and maintain your user account",
-      "To facilitate the emergency alert workflow — sending SMS, WhatsApp messages, and automated voice calls to your approved contacts",
-      "To include your live GPS location in alert messages so your contacts can locate you",
-      "To generate and send a verification link so alert recipients can confirm receipt and authenticity",
+      "To facilitate the emergency alert workflow — calling your approved contacts and sending them WhatsApp, SMS and email alerts",
+      "To include your GPS location in alerts, and your live location if you choose to share it, so your contacts can locate you",
+      "To send alert recipients a link to respond, and to tell you who your alert reached and who is on the way",
+      "To deliver Live Reports to the response agencies you select",
       "To display your alert history in your account profile",
       "To send transactional notifications (OTP verification, account updates)",
+      "To send safety notices (such as weather or hazard warnings) and service announcements by SMS, email, push or in-app notification, using the general area of your latest alert to make local notices relevant",
       "To improve app performance and resolve technical issues",
       "To comply with our legal obligations",
     ],
@@ -66,15 +72,15 @@ This Privacy Policy explains what personal data we collect, why we collect it, h
     id: "whatsapp",
     title: "4. WhatsApp Business API Usage",
     color: "#25D366",
-    content: `Help OO Help uses the WhatsApp Business API, provided by Meta Platforms, Inc., solely for the purpose of delivering emergency alert messages to your approved contacts when you trigger an alert.
+    content: `Help OO Help uses the WhatsApp Business API, provided by Meta Platforms, Inc., only to deliver emergency alerts to your approved contacts when you trigger an alert, requests asking a contact to approve being your emergency contact, and login codes.
 
-These messages contain: (a) your full name as the sender, (b) the category of emergency you have triggered, (c) a Google Maps or equivalent link to your live GPS coordinates, and (d) a one-time verification link.
+Alert messages contain: (a) your full name as the sender, (b) the category of emergency you have triggered, (c) a Google Maps link to your GPS location, and (d) a link to respond to the alert.
 
 By using the App, you acknowledge that:
 • WhatsApp messages are delivered to your contacts' personal WhatsApp numbers.
-• Contacts must have WhatsApp installed to receive these messages.
+• Contacts must have WhatsApp installed to receive these messages; contacts who don't receive a WhatsApp message get an SMS instead.
 • Meta's own Terms of Service and Privacy Policy apply to the delivery of these messages on their platform.
-• We do not use WhatsApp data for marketing or any purpose other than emergency alert delivery.
+• We do not use WhatsApp for marketing.
 
 We comply fully with Meta's WhatsApp Business Policy and do not send unsolicited promotional content through this channel.`,
   },
@@ -86,9 +92,11 @@ We comply fully with Meta's WhatsApp Business Policy and do not send unsolicited
 
 We share data only in the following limited circumstances:
 
-• Emergency Contacts: Your name, emergency type, live location, and a verification link are shared with your approved contacts as part of the alert mechanism. You have explicitly added and the contact has explicitly approved this relationship.
+• Emergency Contacts: Your name, emergency type, location, and a link to respond are shared with your approved contacts as part of the alert mechanism. You have explicitly added and the contact has explicitly approved this relationship.
 
-• Service Providers: We use trusted third-party providers for SMS delivery, WhatsApp Business API, cloud hosting, and analytics. These providers are contractually bound to process your data only as instructed by us and in accordance with applicable data protection law.
+• Response Agencies: When you send a Live Report, its contents and your location are shared with the partner agencies you select.
+
+• Service Providers: We use trusted third-party providers for voice calls, SMS delivery, WhatsApp Business API, email, push notifications, crash reporting, and cloud hosting. These providers are contractually bound to process your data only as instructed by us and in accordance with applicable data protection law.
 
 • Legal Obligations: We may disclose your data if required to do so by law, court order, or governmental authority.
 
@@ -98,9 +106,9 @@ We share data only in the following limited circumstances:
     id: "retention",
     title: "6. Data Retention",
     color: "#0A72C4",
-    content: `We retain your personal data for as long as your account is active. If you request account deletion, we will permanently delete your account and associated data within 5 working days of receiving a verified deletion request, except where retention is required by law (e.g., for fraud prevention or regulatory compliance).
+    content: `We retain your personal data for as long as your account is active. When you delete your account in the App, it is deactivated immediately and permanently deleted, with all associated data, 30 days later; within those 30 days you can ask support to cancel the deletion. Deletion requests sent by email are completed within 30 days of verifying your identity. Data may be kept longer only where retention is required by law (e.g., for fraud prevention or regulatory compliance).
 
-Alert logs may be retained in anonymised form for statistical and safety research purposes after your account is deleted.`,
+Aggregate statistics that cannot identify you may be kept after your account is deleted.`,
   },
   {
     id: "rights",
@@ -113,7 +121,7 @@ Alert logs may be retained in anonymised form for statistical and safety researc
       "Right to Restriction — You may request that we restrict processing of your data in certain circumstances.",
       "Right to Data Portability — You may request your data in a structured, machine-readable format.",
       "Right to Object — You may object to processing based on our legitimate interests.",
-      "Right to Withdraw Consent — Where processing is based on consent, you may withdraw it at any time without affecting prior processing.",
+      "Right to Withdraw Consent — Where processing is based on consent, you may withdraw it at any time without affecting prior processing. For example, you can stop live location sharing, turn off location access in your device settings, or delete your account.",
     ],
     footer: `To exercise any of the above rights, contact us at ${EMAIL}. We will respond within 5 working days.`,
   },

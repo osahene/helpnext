@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCarBurst,
   faFire,
   faHandFist,
   faHeartPulse,
@@ -24,7 +25,8 @@ const SITUATIONS = {
   fire: { label: "Fire Outbreak", color: "#E8500A", icon: faFire },
   flood: { label: "Flood Alert", color: "#0A72C4", icon: faWater },
   other: { label: "Call Emergency", color: "#7B22CE", icon: faPhoneVolume },
-  violence: { label: "Violence Alert", color: "#8B5C00", icon: faHandFist },
+  accident: { label: "Accident Alert", color: "#8B5C00", icon: faCarBurst },
+  violence: { label: "Violence Alert", color: "#8B5C00", icon: faHandFist }, // older alerts only
 };
 
 // Same labels as the app (helpflutter RequestHistory.statusLabels). Only an

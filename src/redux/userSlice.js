@@ -154,8 +154,11 @@ const ContactSlice = createSlice({
       })
       .addCase(EditContactInfo.fulfilled, (state, action) => {
         state.loadData = "success";
+        // The API answers with just a message, so apply the fields that were
+        // sent (action.meta.arg) to the contact in the list.
+        const sent = action.meta.arg;
         state.contacts = state.contacts.map((contact) =>
-          contact.pk === action.payload.pk ? action.payload : contact
+          contact.pk === sent.pk ? { ...contact, ...sent } : contact
         );
       })
       .addCase(EditContactInfo.rejected, (state, action) => {

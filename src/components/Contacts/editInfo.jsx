@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import CountryDropdown from "@/utils/countryDropdown";
-import { DEFAULT_COUNTRY, sanitizePhoneInput, splitPhone } from "@/utils/phone";
+import { DEFAULT_COUNTRY, splitPhone } from "@/utils/phone";
 
 const C = {
   primary: "#2C5FD4",
@@ -12,11 +12,12 @@ const C = {
   text: "#0F1B3E",
   muted: "#8B94B2",
   error: "#EF4444",
+  locked: "#E4E9F5",
 };
 
 const situationsList = [
   "Health Crisis", "Robbery Attack", "Fire Outbreak",
-  "Flood Alert", "Call Emergency", "Violence Alert",
+  "Flood Alert", "Call Emergency", "Accident Alert",
 ];
 
 const situationColors = {
@@ -25,7 +26,7 @@ const situationColors = {
   "Fire Outbreak": "#E8500A",
   "Flood Alert": "#0A72C4",
   "Call Emergency": "#7B22CE",
-  "Violence Alert": "#8B5C00",
+  "Accident Alert": "#8B5C00",
 };
 
 const SectionLabel = ({ color, label }) => (
@@ -69,11 +70,12 @@ const userIcon = (
 );
 
 export default function EditContact({ contact, onSave, onCancel }) {
-  // Resolve whatever shape the saved number is in (E.164 or national + country_code)
-  const initial = () => splitPhone(contact?.phone_number || "", contact?.country_code || "");
-
-  const [selectedCountry, setSelectedCountry] = useState(() => initial().country || DEFAULT_COUNTRY);
-  const [phoneNumber, setPhoneNumber] = useState(() => initial().national);
+  // Resolve whatever shape the saved number is in (E.164 or national + country_code).
+  // Shown read-only: the phone number can't be changed and is never sent on save.
+  const [phone] = useState(() =>
+    splitPhone(contact?.phone_number || "", contact?.country_code || "")
+  );
+  const phoneCountry = phone.country || DEFAULT_COUNTRY;
 
   const [selectedSituations, setSelectedSituations] = useState(
     Array.isArray(contact?.situations)
@@ -90,19 +92,15 @@ export default function EditContact({ contact, onSave, onCancel }) {
     relation: contact?.relation || "",
   });
 
-  const validPhone = /^[1-9]\d{5,14}$/.test(phoneNumber);
-
   const errors = {
     first_name: !formData.first_name.trim() ? "Required" : null,
     last_name: !formData.last_name.trim() ? "Required" : null,
-    phone_number: phoneNumber && !validPhone ? "Enter a valid number" : null,
     relation: !formData.relation.trim() ? "Required" : null,
   };
 
   const isValid =
     formData.first_name.trim() &&
     formData.last_name.trim() &&
-    validPhone &&
     formData.relation.trim() &&
     selectedSituations.length > 0;
 
@@ -116,13 +114,12 @@ export default function EditContact({ contact, onSave, onCancel }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!isValid || !onSave) return;
-    onSave({
-      ...contact,
-      ...formData,
-      country_code: selectedCountry.code,
-      phone_number: sanitizePhoneInput(phoneNumber, selectedCountry.code),
-      situations: selectedSituations,
-    });
+    const payload = { ...contact, ...formData, situations: selectedSituations };
+    // Leave the number out entirely; the backend's partial update keeps the stored one.
+    delete payload.phone_number;
+    delete payload.country_code;
+    delete payload.full_phone_number;
+    onSave(payload);
   };
 
   return (
@@ -199,50 +196,35 @@ export default function EditContact({ contact, onSave, onCancel }) {
                 Phone Number
               </label>
               <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                <CountryDropdown
-                  height={48}
-                  selected={selectedCountry}
-                  onChange={(c) => {
-                    setSelectedCountry(c);
-                    setPhoneNumber((p) => sanitizePhoneInput(p, c.code));
-                  }}
-                />
-                <input
-                  type="tel"
-                  placeholder="244123456"
-                  value={phoneNumber}
-                  onChange={(e) =>
-                    setPhoneNumber(sanitizePhoneInput(e.target.value, selectedCountry.code))
-                  }
-                  required
-                  style={{
-                    flex: 1, height: 48, padding: "0 14px", borderRadius: 14,
-                    border: `1.5px solid ${errors.phone_number ? C.error : C.border}`,
-                    background: "#fff", color: C.text, fontSize: 14, fontWeight: 500,
-                    outline: "none", boxSizing: "border-box", transition: "border-color 0.2s",
-                  }}
-                  onFocus={(e) => (e.target.style.borderColor = C.primary)}
-                  onBlur={(e) => (e.target.style.borderColor = errors.phone_number ? C.error : C.border)}
-                />
+                <CountryDropdown height={48} selected={phoneCountry} onChange={() => {}} disabled />
+                <div style={{ position: "relative", flex: 1 }}>
+                  <input
+                    type="tel"
+                    value={phone.national}
+                    disabled
+                    readOnly
+                    aria-label="Phone number (cannot be changed)"
+                    style={{
+                      width: "100%", height: 48, padding: "0 40px 0 14px", borderRadius: 14,
+                      border: `1.5px solid ${C.border}`,
+                      background: C.locked, color: C.text, WebkitTextFillColor: C.text,
+                      opacity: 1, fontSize: 14, fontWeight: 500, cursor: "not-allowed",
+                      outline: "none", boxSizing: "border-box",
+                    }}
+                  />
+                  <svg
+                    style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", width: 16, height: 16, color: C.muted }}
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
               </div>
 
-              {errors.phone_number ? (
-                <p style={{ color: C.error, fontSize: 11.5, marginTop: 6 }}>{errors.phone_number}</p>
-              ) : phoneNumber ? (
-                <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 6 }}>
-                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: C.primary }} />
-                  <span style={{ fontSize: 12, color: C.muted }}>
-                    Full number:{" "}
-                    <span style={{ color: C.text, fontWeight: 600 }}>
-                      {selectedCountry.code} {phoneNumber}
-                    </span>
-                  </span>
-                </div>
-              ) : (
-                <p style={{ color: C.muted, fontSize: 12, marginTop: 6 }}>
-                  Enter the number without the leading 0.
-                </p>
-              )}
+              <p style={{ color: C.muted, fontSize: 12, marginTop: 6, lineHeight: 1.5 }}>
+                The phone number can&apos;t be changed. To use a different number,
+                delete this contact and add them again.
+              </p>
             </div>
 
             <InputField

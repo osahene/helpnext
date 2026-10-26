@@ -26,9 +26,11 @@ export default function Emergency() {
     dispatch(GetContact()).catch(() => { });
   }, [dispatch]);
 
+  // unwrap(): a dispatched thunk resolves even when the request fails, so
+  // without it the success toast showed for failures too.
   const handleEditSubmit = async (updated) => {
     try {
-      await dispatch(EditContactInfo(updated));
+      await dispatch(EditContactInfo(updated)).unwrap();
       toast.success("Contact updated successfully!", { duration: 5000 });
     } catch {
       toast.error("Failed to update contact.", { duration: 5000 });
@@ -37,7 +39,7 @@ export default function Emergency() {
 
   const handleDeleteConfirm = async () => {
     try {
-      await dispatch(DeleteContact(currentContact));
+      await dispatch(DeleteContact(currentContact)).unwrap();
       toast.success("Contact deleted successfully!", { duration: 5000 });
     } catch {
       toast.error("Failed to delete contact.", { duration: 5000 });

@@ -9,7 +9,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import mainLogo from "../../../public/svg/Help Logo.svg";
 import toast from "react-hot-toast";
 import CountryDropdown from "@/utils/countryDropdown";
-import { DEFAULT_COUNTRY, sanitizePhoneInput } from "@/utils/phone";
+import { DEFAULT_COUNTRY, sanitizePhoneInput, takeRegisterPrefill } from "@/utils/phone";
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
 const C = {
@@ -157,6 +157,14 @@ export default function Register() {
 
   const dispatch = useDispatch();
   const router = useRouter();
+
+  // The number a first-time user already typed on the login page.
+  useEffect(() => {
+    const prefill = takeRegisterPrefill();
+    if (!prefill) return;
+    setSelectedCountry(prefill.country);
+    setPhone_Number(prefill.phone_number);
+  }, []);
 
   const fullNumber = `${selectedCountry.code}${phone_number}`;
 
@@ -412,7 +420,10 @@ export default function Register() {
                     userSelect: "none",
                   }}
                 >
-                  I acknowledge that <strong>Help OO Help</strong> notifies my designated emergency contacts and does <strong>NOT</strong> automatically dispatch state emergency services.
+                  I acknowledge that <strong>Help OO Help</strong> notifies my designated emergency contacts and does <strong>NOT</strong> automatically dispatch state emergency services, and I agree to the{" "}
+                  <Link href="/legal/terms" target="_blank" style={{ color: C.accent, fontWeight: 600 }}>Terms of Service</Link>{" "}
+                  and{" "}
+                  <Link href="/legal/privacy" target="_blank" style={{ color: C.accent, fontWeight: 600 }}>Privacy Policy</Link>.
                 </label>
               </div>
 

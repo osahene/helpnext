@@ -4,27 +4,29 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import emergency from "../../../public/img/emergency.svg";
 
+// Positioning: real help from people who show up — not a location-sharing
+// app. Mirrors helpflutter's onboarding_screen.dart.
 const steps = [
   {
     number: "01",
     color: "#2C5FD4",
     bg: "#EEF4FF",
-    title: "Enable Location",
-    description: "Make sure your device's location services are turned on for accurate alerts.",
+    title: "Tap Your Emergency",
+    description: "Keep your location on, then tap the emergency you're facing. One tap is all it takes.",
   },
   {
     number: "02",
     color: "#E8500A",
     bg: "#FFF3EE",
-    title: "Tap Your Emergency",
-    description: "Select the type of emergency situation you are currently facing.",
+    title: "We Make Their Phones Ring",
+    description: "Your approved contacts get a voice call announcing your emergency, backed up by WhatsApp and SMS so it's hard to miss.",
   },
   {
     number: "03",
     color: "#1A9E5C",
     bg: "#EDFBF3",
-    title: "Notify Your Trusted Network",
-    description: "All approved personal contacts will be alerted instantly via call & SMS with your location.",
+    title: "Know Who's On the Way",
+    description: "They see exactly where you are and tap “I'm on my way”, so you know help is coming.",
   },
 ];
 
@@ -101,7 +103,7 @@ export default function IntroModal({ onClose }) {
                 Welcome to Help OO Help
               </h2>
               <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "13.5px", lineHeight: 1.5 }}>
-                Your personal emergency alert platform. Here{"'"}s how it works.
+                Not just a text. Real help from the people who{"'"}ll come for you. Here{"'"}s how it works.
               </p>
 
               {/* Live dot */}

@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import mainLogo from "../../../public/svg/Help Logo.svg";
 import toast from "react-hot-toast";
 import CountryDropdown from "@/utils/countryDropdown";
-import { DEFAULT_COUNTRY, sanitizePhoneInput } from "@/utils/phone";
+import { DEFAULT_COUNTRY, sanitizePhoneInput, stashRegisterPrefill } from "@/utils/phone";
 
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
@@ -29,8 +29,15 @@ export default function Login() {
   const [selectedCountry, setSelectedCountry] = useState(DEFAULT_COUNTRY);
   const [phone_number, setPhone_Number] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  // { country, phone } once the server says this number has no account.
+  const [newHere, setNewHere] = useState(null);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const goToRegister = () => {
+    stashRegisterPrefill(newHere.country, newHere.phone);
+    router.push("/auth/register");
+  };
 
   const isValid = phone_number.trim().length > 5;
   // Passkey sign-in is the alternative to an OTP, for anyone who did step 3
@@ -68,9 +75,10 @@ export default function Login() {
         toast.success(result.payload?.message || "OTP sent. Redirecting...");
         router.push("/auth/verifyPhoneNumberOTP");
       } else if (result.payload?.code === "account_not_found") {
-        // No account for this number: say so, then go to registration.
-        toast(result.payload.error, { duration: 2500, icon: "ℹ️" });
-        setTimeout(() => router.push("/auth/register"), 2000);
+        // Nearly always a first-time user who typed their number here
+        // instead of tapping Register: welcome them (it isn't an error) and
+        // carry the number across. Mirrors helpflutter's LoginScreen.
+        setNewHere({ country: selectedCountry, phone: cleanPhone });
       } else {
         toast.error(result.payload?.error || "Request failed. Please try again.");
       }
@@ -244,6 +252,65 @@ export default function Login() {
           </div>
         </div>
       </div>
+
+      {newHere && (
+        <div
+          onClick={() => setNewHere(null)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 100, background: "rgba(15,23,42,0.55)",
+            display: "flex", alignItems: "center", justifyContent: "center", padding: 16,
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="new-here-title"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "100%", maxWidth: 400, background: C.white, borderRadius: 24,
+              padding: "28px 24px 20px", textAlign: "center",
+              boxShadow: "0 24px 80px rgba(0,0,0,0.25)",
+            }}
+          >
+            <div style={{
+              width: 64, height: 64, borderRadius: "50%", background: C.accentLight,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              margin: "0 auto 18px", fontSize: 30,
+            }}>
+              👋
+            </div>
+            <h2 id="new-here-title" style={{ fontSize: 20, fontWeight: 800, color: C.textPrimary, margin: "0 0 10px", letterSpacing: "-0.3px" }}>
+              Welcome! You&apos;re new here
+            </h2>
+            <p style={{ fontSize: 14.5, color: C.textSecondary, lineHeight: 1.5, margin: "0 0 24px" }}>
+              <strong style={{ color: C.textPrimary }}>{newHere.country.code} {newHere.phone}</strong>{" "}
+              doesn&apos;t have an account yet. Create one first — it takes about a minute,
+              and we&apos;ll keep the number you entered.
+            </p>
+            <button
+              type="button"
+              onClick={goToRegister}
+              className="submit-btn"
+              style={{ background: C.accent, color: C.white, boxShadow: "0 4px 14px rgba(79,142,247,0.35)" }}
+            >
+              Create my account
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => setNewHere(null)}
+              style={{
+                marginTop: 8, background: "none", border: "none", cursor: "pointer",
+                color: C.textSecondary, fontSize: 14, fontWeight: 600, padding: 10, fontFamily: "inherit",
+              }}
+            >
+              I typed the wrong number
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

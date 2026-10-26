@@ -46,6 +46,36 @@ export function sanitizePhoneInput(input = "", dialCode = "") {
   return digits.replace(/^0+/, "").slice(0, 15);
 }
 
+// The login page hands a not-yet-registered number to the register page so
+// a first-time user doesn't type it twice. One-shot, and in sessionStorage
+// rather than the URL so the number stays out of history and server logs.
+const REGISTER_PREFILL_KEY = "registerPrefill";
+
+export function stashRegisterPrefill(country, phoneNumber) {
+  try {
+    sessionStorage.setItem(
+      REGISTER_PREFILL_KEY,
+      JSON.stringify({ iso: country.iso, code: country.code, phone_number: phoneNumber })
+    );
+  } catch {
+    // Storage blocked: the user just types the number again.
+  }
+}
+
+/** Returns { country, phone_number } once, or null. */
+export function takeRegisterPrefill() {
+  try {
+    const raw = sessionStorage.getItem(REGISTER_PREFILL_KEY);
+    sessionStorage.removeItem(REGISTER_PREFILL_KEY);
+    if (!raw) return null;
+    const { iso, code, phone_number } = JSON.parse(raw);
+    const country = countryOptions.find((c) => c.iso === iso && c.code === code);
+    return country && phone_number ? { country, phone_number } : null;
+  } catch {
+    return null;
+  }
+}
+
 /** Splits a stored number back into { country, dialCode, national } for editing/display. */
 export function splitPhone(raw = "", countryCode = "") {
   let value = String(raw).trim();

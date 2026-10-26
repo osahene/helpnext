@@ -4,8 +4,8 @@ import Link from "next/link";
 
 const COMPANY = "TeenByte Tech Lab";
 const APP = "Help OO Help";
-const EMAIL = "legal@helpoohelp.com";
-const EFFECTIVE = "1 July 2025";
+const EMAIL = "admin@teenbytetechlab.com";
+const EFFECTIVE = "26 October 2026";
 
 const sections = [
   {
@@ -20,16 +20,18 @@ These Terms constitute a legally binding agreement between you and ${COMPANY} ("
     id: "description",
     title: "2. Service Description",
     color: "#E8500A",
-    content: `${APP} is an emergency response platform that enables registered users to trigger rapid alert notifications to their pre-approved emergency contacts during six categories of crisis:
+    content: `${APP} is an emergency alert platform that gets your trusted people to you fast. Registered users can trigger an alert to their pre-approved emergency contacts for six types of emergency:
 
 • Robbery Attack
+• Health Crisis
 • Fire Outbreak
 • Flood Alert
 • Accident Alert
-• Health Crisis
-• General Call Emergency
+• Call Emergency
 
-When a user triggers an alert, the Service sends SMS messages, WhatsApp messages (via the WhatsApp Business API), and automated voice calls to the user's approved emergency contacts. Each alert includes the user's live GPS location and a one-time verification link.`,
+When a user triggers an alert, their approved contacts are called (their phone rings in the ${APP} app if they use it, otherwise they receive an automated voice call announcing the emergency) and sent a WhatsApp message via the WhatsApp Business API, or an SMS if WhatsApp doesn't get through, plus an email where one is on file. Each alert includes the user's name, the emergency type, their GPS location and a link contacts use to respond "I'm on my way" or "I can't help". The user is told who their alert reached.
+
+In the mobile app, users can also send a Live Report (a message, photos, video or voice notes, plus their location) to partner response agencies they select.`,
   },
   {
     id: "eligibility",
@@ -44,7 +46,7 @@ When a user triggers an alert, the Service sends SMS messages, WhatsApp messages
     items: [
       "You must provide a valid phone number to register. An OTP will be sent to that number to verify your identity.",
       "You are responsible for maintaining the confidentiality of your account and for all activities that occur under it.",
-      "You must notify us immediately at legal@helpoohelp.com if you suspect unauthorised access to your account.",
+      `You must notify us immediately at ${EMAIL} if you suspect unauthorised access to your account.`,
       "You may not create multiple accounts or impersonate another person.",
       "We reserve the right to suspend or terminate accounts that violate these Terms.",
     ],
@@ -55,33 +57,35 @@ When a user triggers an alert, the Service sends SMS messages, WhatsApp messages
     color: "#0A72C4",
     content: `The emergency alert system in ${APP} is built on explicit mutual consent:
 
-Condition 1 — Registration: You must register at least one emergency contact by providing their name, phone number, and email address.
+Condition 1 — Registration: You must register at least one emergency contact by providing their name and phone number (email is optional) and choosing which types of emergency they should be alerted for.
 
 Condition 2 — Approval: The registered contact must receive and explicitly approve your nomination request before they can receive any alert. A contact who has not approved cannot receive alerts.
 
 Condition 3 — Active Trigger: Even when both conditions above are met, alerts are only sent when you actively tap an emergency type on the home screen.
 
-By adding a person as your emergency contact, you confirm that you have their prior verbal or written consent to be added to your emergency list and to receive alerts (including their phone number being used for WhatsApp and SMS communications) on your behalf.`,
+By adding a person as your emergency contact, you confirm that you have their prior verbal or written consent to be added to your emergency list and to receive alerts (including their phone number being used for calls, WhatsApp and SMS) on your behalf.`,
   },
   {
     id: "whatsapp-use",
     title: "6. WhatsApp Communication",
     color: "#25D366",
-    content: `${APP} uses the WhatsApp Business API to send emergency alert messages to your approved contacts. By using this feature, you acknowledge that:
+    content: `${APP} uses the WhatsApp Business API to send emergency alerts to your approved contacts, requests asking a contact to approve being your emergency contact, and login codes. By using this feature, you acknowledge that:
 
 • WhatsApp messages are delivered via Meta's infrastructure and subject to Meta's Terms of Service.
-• Messages will include your name, emergency type, GPS coordinates, and a verification link.
-• We do not send promotional, marketing, or unsolicited messages through WhatsApp — only emergency alerts triggered by you.
+• Alert messages will include your name, emergency type, GPS location, and a link to respond.
+• We do not send promotional, marketing, or unsolicited messages through WhatsApp.
 • Message delivery is not guaranteed by ${APP} and may be subject to WhatsApp network availability.
-• Contacts who do not have WhatsApp will still receive the SMS version of the alert.`,
+• Contacts who don't receive the WhatsApp message (for example, because they don't use WhatsApp) get an SMS instead.`,
   },
   {
     id: "location",
     title: "7. Location Services",
     color: "#CC2222",
-    content: `The App requires access to your device's GPS location services to function correctly. Location data is captured only at the moment you trigger an emergency alert and is transmitted to your approved contacts within that alert message. We do not track or store your location at any other time.
+    content: `The App requires access to your device's GPS location services to function correctly. Your location is captured when you trigger an emergency alert or send a Live Report, and shared with the people receiving it. After an alert you can choose to keep sharing your live location with your contacts for up to 1 hour; you can stop at any time, and it ends automatically. We never track your location at any other time.
 
-You are responsible for ensuring your location services are enabled on your device. Failure to enable location services will prevent the App from including your coordinates in the alert, which may significantly reduce its effectiveness.`,
+The location of each alert is kept in your alert history until you delete your account, and the general area of your latest alert (such as your town or region) may be used to send you relevant local safety notices.
+
+You are responsible for ensuring your location services are enabled on your device. Failure to enable location services will prevent the App from including your location in the alert, which may significantly reduce its effectiveness.`,
   },
   {
     id: "prohibited",
@@ -105,7 +109,7 @@ You are responsible for ensuring your location services are enabled on your devi
     color: "#8B5C00",
     content: `${APP} is provided "as is" and "as available" without warranties of any kind, express or implied. To the fullest extent permitted by law, we disclaim all warranties, including merchantability, fitness for a particular purpose, and non-infringement.
 
-We do not warrant that the Service will be uninterrupted, error-free, or that alerts will reach their recipients within any particular time frame. Emergency situations are time-sensitive and we strongly encourage you to also contact official emergency services (police, ambulance, fire service) directly when facing any emergency.`,
+We do not warrant that the Service will be uninterrupted, error-free, or that alerts will reach their recipients within any particular time frame. ${APP} is NOT a replacement for state emergency services: your alerts go to your approved contacts and do not automatically notify the police, fire service or ambulance. Emergency situations are time-sensitive and we strongly encourage you to also contact official emergency services directly when facing any emergency: Ghana Police Service 191 / 18555, Ghana National Fire Service 192, National Ambulance Service 193, NADMO 112.`,
   },
   {
     id: "liability",
@@ -113,18 +117,18 @@ We do not warrant that the Service will be uninterrupted, error-free, or that al
     color: "#5B3FE8",
     content: `To the maximum extent permitted by applicable law, ${COMPANY} shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to:
 
-• Failure to deliver an emergency alert due to network, device, or location service issues
-• Delay in contact response or contact unavailability
-• Harm resulting from a contact's inability to receive a WhatsApp or SMS message
-• Any actions or omissions of your emergency contacts
+• Failure to deliver an emergency alert or Live Report due to network, device, or location service issues
+• Delay in contact or agency response, or contact unavailability
+• Harm resulting from a contact's inability to receive a call, WhatsApp or SMS message
+• Any actions or omissions of your emergency contacts or of response agencies
 
-Our total aggregate liability to you in respect of any claim shall not exceed the amount paid by you for the Service in the 12 months preceding the claim (or £50, whichever is greater).`,
+Our total aggregate liability to you in respect of any claim shall not exceed the amount paid by you for the Service in the 12 months preceding the claim.`,
   },
   {
     id: "termination",
     title: "11. Termination",
     color: "#CC2222",
-    content: `You may delete your account at any time via your Profile settings. We may suspend or terminate your account at our discretion if you breach these Terms, use the Service fraudulently, or for any reason we deem necessary to protect the Service or other users.
+    content: `You may delete your account at any time via your Profile settings. Your account is deactivated immediately and permanently deleted 30 days later (see our Data Deletion page). We may suspend or terminate your account at our discretion if you breach these Terms, use the Service fraudulently, or for any reason we deem necessary to protect the Service or other users.
 
 Upon termination, your right to use the Service ceases immediately. Sections 9, 10, 12, and 13 of these Terms shall survive termination.`,
   },
@@ -222,10 +226,10 @@ export default function TermsOfService() {
         ))}
 
         <div style={{ textAlign: "center", paddingTop: "12px" }}>
-          <Link href="/privacy" style={{ color: "#2C5FD4", fontSize: "13.5px", fontWeight: 600, textDecoration: "none", marginRight: "24px" }}>
+          <Link href="/legal/privacy" style={{ color: "#2C5FD4", fontSize: "13.5px", fontWeight: 600, textDecoration: "none", marginRight: "24px" }}>
             View Privacy Policy
           </Link>
-          <Link href="/delete" style={{ color: "#CC2222", fontSize: "13.5px", fontWeight: 600, textDecoration: "none", marginRight: "24px" }}>
+          <Link href="/legal/delete" style={{ color: "#CC2222", fontSize: "13.5px", fontWeight: 600, textDecoration: "none", marginRight: "24px" }}>
             Data Deletion Instructions
           </Link>
           <Link href="/" style={{ color: "#8B94B2", fontSize: "13.5px", fontWeight: 600, textDecoration: "none" }}>

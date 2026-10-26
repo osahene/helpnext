@@ -19,35 +19,35 @@ const steps = [
     color: "#E07A1A",
     bg: "#FFF3EE",
     title: "Navigate to Your Profile",
-    detail: "From the home screen, tap the profile avatar in the top-left corner of the navigation bar, or tap the menu icon and select 'Profile'.",
+    detail: "In the mobile app, tap your profile avatar in the top-left corner of the home screen. On the web app, open the menu and select 'Profile & Account'.",
   },
   {
     number: "03",
     color: "#CC2222",
     bg: "#FFF0F0",
     title: "Select 'Delete Account'",
-    detail: "Scroll to the bottom of your Profile page. You will find a 'Delete Account' button highlighted in red. Tap it to begin the deletion process.",
+    detail: "Scroll to the 'ACCOUNT ACTIONS' section at the bottom of your Profile page and tap the red 'Delete Account' button to begin the deletion process.",
   },
   {
     number: "04",
     color: "#7B22CE",
     bg: "#F3EEFF",
-    title: "Confirm Your Identity",
-    detail: "For security purposes, you will receive a one-time OTP (One-Time Password) to the phone number linked to your account. Enter the OTP to verify that you are the authorised account owner.",
+    title: "Tell Us Why",
+    detail: "Choose the reason you are leaving (or write your own), then tap 'Confirm'.",
   },
   {
     number: "05",
     color: "#1A9E5C",
     bg: "#EDFBF3",
     title: "Confirm Deletion",
-    detail: "A final confirmation dialog will appear, summarising what will be permanently deleted. Read the summary carefully, then tap 'Confirm & Delete' to proceed. This action is irreversible.",
+    detail: "A final screen summarises what happens next. Tap 'Confirm' to proceed. You will be logged out immediately and cannot undo this yourself — contact support within 30 days if you change your mind.",
   },
   {
     number: "06",
     color: "#8B5C00",
     bg: "#FFF8EE",
     title: "Deletion Processed",
-    detail: "Your account, personal data, emergency contacts, dependents, and alert history will be permanently deleted within 30 days. You will receive a confirmation message at the email or phone number on file.",
+    detail: "Your account is deactivated immediately. Your account, personal data, emergency contacts, dependents, alert history and Live Reports are then permanently deleted 30 days later, unless you contact support to cancel it first.",
   },
 ];
 
@@ -56,8 +56,9 @@ const deletedData = [
   { icon: "📋", label: "Emergency Contact List", detail: "All contacts you have added as your emergency contacts" },
   { icon: "👥", label: "Dependent Records", detail: "All records of people who have added you as their contact" },
   { icon: "📍", label: "Location History", detail: "All GPS coordinates captured during past emergency alerts" },
-  { icon: "📣", label: "Alert History", detail: "All triggered alert records, timestamps, and delivery logs" },
-  { icon: "🔒", label: "Authentication Tokens", detail: "All session tokens, OTPs, and verification tokens" },
+  { icon: "📣", label: "Alert History", detail: "All triggered alert records, contact responses, timestamps, and delivery logs" },
+  { icon: "📷", label: "Live Reports", detail: "All Live Reports and their photos, videos, and voice notes" },
+  { icon: "🔒", label: "Device & Authentication Data", detail: "Push-notification tokens, fingerprint/Face ID login keys, session tokens, OTPs, and verification tokens" },
 ];
 
 const retained = [
@@ -89,7 +90,7 @@ export default function DataDeletion() {
             You have the right to delete your account and all associated personal data from Help OO Help at any time. Follow the steps below or submit a manual request.
           </p>
           <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "12.5px" }}>
-            Data deletion is permanent and irreversible. All deletions are processed within 30 days.
+            Your account is deactivated immediately and permanently deleted 30 days later.
           </p>
         </div>
       </div>
@@ -110,7 +111,7 @@ export default function DataDeletion() {
           <div>
             <p style={{ color: "#CC2222", fontWeight: 700, fontSize: "14.5px", marginBottom: "5px" }}>Important Warning</p>
             <p style={{ color: "#374151", fontSize: "13.5px", lineHeight: 1.7 }}>
-              Deleting your account is <strong>permanent and cannot be undone</strong>. All your data, emergency contacts, dependent relationships, and alert history will be erased. Your emergency contacts will no longer be able to receive alerts from you, and any pending approvals will be cancelled.
+              Your account is deactivated straight away: your emergency contacts will no longer receive alerts from you. After 30 days, all your data, emergency contacts, dependent relationships, and alert history are erased — this is <strong>permanent and cannot be undone</strong>.
             </p>
           </div>
         </div>

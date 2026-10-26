@@ -6,9 +6,10 @@ import { countryOptions } from "@/utils/phone";
 const C = {
   accent: "#4F8EF7", accentLight: "#EAF1FE", surface: "#F7F9FC",
   border: "#E2E8F0", textPrimary: "#0F172A", textSecondary: "#64748B", white: "#FFFFFF",
+  locked: "#E4E9F5",
 };
 
-export default function CountryDropdown({ selected, onChange, height = 54 }) {
+export default function CountryDropdown({ selected, onChange, height = 54, disabled = false }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const ref = useRef(null);
@@ -30,12 +31,13 @@ export default function CountryDropdown({ selected, onChange, height = 54 }) {
     <div ref={ref} style={{ position: "relative", flexShrink: 0 }}>
       <button
         type="button"
+        disabled={disabled}
         onClick={() => { setOpen((o) => !o); setSearch(""); }}
         style={{
           display: "flex", alignItems: "center", gap: 6,
-          height, padding: "0 12px", background: C.surface,
+          height, padding: "0 12px", background: disabled ? C.locked : C.surface,
           border: `1.5px solid ${open ? C.accent : C.border}`,
-          borderRadius: 14, cursor: "pointer", whiteSpace: "nowrap",
+          borderRadius: 14, cursor: disabled ? "not-allowed" : "pointer", whiteSpace: "nowrap",
           transition: "border-color 0.2s", fontFamily: "inherit",
         }}
       >
@@ -47,14 +49,16 @@ export default function CountryDropdown({ selected, onChange, height = 54 }) {
         <span style={{ fontSize: 14, fontWeight: 600, color: C.textPrimary }}>
           {selected.code}
         </span>
-        <svg width="14" height="14" fill="none" viewBox="0 0 24 24"
-          stroke={C.textSecondary} strokeWidth={2}
-          style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-        </svg>
+        {!disabled && (
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24"
+            stroke={C.textSecondary} strokeWidth={2}
+            style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+          </svg>
+        )}
       </button>
 
-      {open && (
+      {open && !disabled && (
         <div style={{
           position: "absolute", top: "calc(100% + 8px)", left: 0,
           width: 280, maxHeight: 320, background: C.white,
