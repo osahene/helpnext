@@ -9,6 +9,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import { Toaster } from "react-hot-toast";
 import EnableNotificationsPrompt from "@/components/Notifications/EnableNotificationsPrompt";
 import LiveLocationBanner from "@/components/LiveLocation/LiveLocationBanner";
+import ConnectivityBanner from "@/components/ConnectivityBanner";
 config.autoAddCss = false;
 
 const geistSans = localFont({
@@ -37,6 +38,8 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* "No internet connection" / "Back online" strip */}
+        <ConnectivityBanner />
         <ReduxProvider>
           <Toaster position="bottom-center" />
           <GlobalLoading />
