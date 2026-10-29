@@ -9,6 +9,7 @@ export default function FooterAdmin() {
     // { href: "/contact/more", label: "Contact Us" },
     // { href: "/auth/register", label: "Register" },
     // { href: "/auth/login", label: "Login" },
+    { href: "/legal/support", label: "Support" },
     { href: "/legal/terms", label: "Terms" },
     { href: "/legal/privacy", label: "Privacy" },
     { href: "/legal/delete", label: "Data Deletion" },

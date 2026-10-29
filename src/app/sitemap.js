@@ -12,6 +12,7 @@ const routes = [
   "/legal/privacy",
   "/legal/terms",
   "/legal/delete",
+  "/legal/support",
   "/auth/login",
   "/auth/register",
 ];

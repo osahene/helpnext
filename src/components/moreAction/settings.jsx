@@ -7,7 +7,7 @@ import nadmo from "../../../public/emerg/nadmo.jpg";
 import amb from "../../../public/emerg/ambulance.jpg";
 import elec from "../../../public/emerg/ecg.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFacebookF, faTwitter, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { faFacebookF, faWhatsapp, faTiktok, faXTwitter, faSnapchat } from "@fortawesome/free-brands-svg-icons";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { EMERGENCY_SERVICES } from "@/utils/emergencyServices";
 
@@ -59,10 +59,12 @@ export default function MoreAction() {
   }));
 
   const contactUs = [
-    { name: "WhatsApp", icon: faWhatsapp, actions: ["+233506053020"], link: "https://wa.me/233506053020" },
-    { name: "Facebook", icon: faFacebookF, actions: "Visit Facebook", link: "https://facebook.com/home" },
-    { name: "Twitter",  icon: faTwitter,   actions: "Visit Twitter",  link: "https://twitter.com/home" },
-    { name: "Call",     icon: faPhone,     actions: ["+233546045726"] },
+    { name: "WhatsApp", icon: faWhatsapp, actions: ["+233540531370"], link: "https://wa.me/233540531370" },
+    { name: "Facebook", icon: faFacebookF, actions: "Visit Facebook", link: "https://web.facebook.com/profile.php?id=61595907178051" },
+    { name: "Twitter",  icon: faXTwitter,   actions: "Visit X",  link: "https://x.com/HelpOOHelp" },
+    { name: "TikTok",  icon: faTiktok,   actions: "Visit TikTok",  link: "https://www.tiktok.com/@helpoohelp?lang=en" },
+    { name: "SnapChat",  icon: faSnapchat,   actions: "Visit SnapChat",  link: "https://www.snapchat.com/add/helpoohelp" },
+    { name: "Call",     icon: faPhone,     actions: ["+233540531370"] },
   ];
 
   return (

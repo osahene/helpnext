@@ -34,6 +34,7 @@ const PUBLIC_ROUTES = [
   "/guestInvite",
   "/legal/delete",
   "/legal/privacy",
+  "/legal/support",
   "/legal/terms",
   "/verifyEmerg",
 ];
