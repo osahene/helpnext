@@ -84,10 +84,10 @@ export default function EnableNotificationsPrompt() {
         maxWidth: "380px",
         margin: "0 auto",
         zIndex: 70,
-        background: "#fff",
+        background: "var(--hoh-bg-ffffff)",
         borderRadius: "16px",
         boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
-        border: "1px solid #DDE3F5",
+        border: "1px solid var(--hoh-line-dde3f5)",
         padding: "16px",
         display: "flex",
         gap: "12px",
@@ -100,7 +100,7 @@ export default function EnableNotificationsPrompt() {
           width: "36px",
           height: "36px",
           borderRadius: "10px",
-          background: "#EEF2FF",
+          background: "var(--hoh-bg-eef2ff)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -111,10 +111,10 @@ export default function EnableNotificationsPrompt() {
         🔔
       </span>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontSize: "13.5px", fontWeight: 700, color: "#14213D", margin: 0 }}>
+        <p style={{ fontSize: "13.5px", fontWeight: 700, color: "var(--hoh-text-14213d)", margin: 0 }}>
           Stay in the loop
         </p>
-        <p style={{ fontSize: "12.5px", color: "#5B6483", margin: "3px 0 10px" }}>
+        <p style={{ fontSize: "12.5px", color: "var(--hoh-text-5b6483)", margin: "3px 0 10px" }}>
           Enable notifications to get hazard warnings and updates the moment they happen.
         </p>
         <div style={{ display: "flex", gap: "8px" }}>
@@ -140,8 +140,8 @@ export default function EnableNotificationsPrompt() {
             style={{
               padding: "8px 14px",
               borderRadius: "10px",
-              background: "#F0F4FF",
-              color: "#5B6483",
+              background: "var(--hoh-bg-f0f4ff)",
+              color: "var(--hoh-text-5b6483)",
               fontSize: "12.5px",
               fontWeight: 600,
               border: "none",

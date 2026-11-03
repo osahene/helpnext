@@ -10,42 +10,42 @@ const steps = [
   {
     number: "01",
     color: "#2C5FD4",
-    bg: "#EEF4FF",
+    bg: "var(--hoh-bg-eef4ff)",
     title: "Log In to Your Account",
     detail: "Open the Help OO Help app on your mobile device or visit the web app at helpoohelp.com. Sign in with the phone number you registered with.",
   },
   {
     number: "02",
     color: "#E07A1A",
-    bg: "#FFF3EE",
+    bg: "var(--hoh-bg-fff3ee)",
     title: "Navigate to Your Profile",
     detail: "In the mobile app, tap your profile avatar in the top-left corner of the home screen. On the web app, open the menu and select 'Profile & Account'.",
   },
   {
     number: "03",
     color: "#CC2222",
-    bg: "#FFF0F0",
+    bg: "var(--hoh-bg-fff0f0)",
     title: "Select 'Delete Account'",
     detail: "Scroll to the 'ACCOUNT ACTIONS' section at the bottom of your Profile page and tap the red 'Delete Account' button to begin the deletion process.",
   },
   {
     number: "04",
-    color: "#7B22CE",
-    bg: "#F3EEFF",
+    color: "var(--hoh-text-7b22ce)",
+    bg: "var(--hoh-bg-f3eeff)",
     title: "Tell Us Why",
     detail: "Choose the reason you are leaving (or write your own), then tap 'Confirm'.",
   },
   {
     number: "05",
     color: "#1A9E5C",
-    bg: "#EDFBF3",
+    bg: "var(--hoh-bg-edfbf3)",
     title: "Confirm Deletion",
     detail: "A final screen summarises what happens next. Tap 'Confirm' to proceed. You will be logged out immediately and cannot undo this yourself — contact support within 30 days if you change your mind.",
   },
   {
     number: "06",
     color: "#8B5C00",
-    bg: "#FFF8EE",
+    bg: "var(--hoh-bg-fff8ee)",
     title: "Deletion Processed",
     detail: "Your account is deactivated immediately. Your account, personal data, emergency contacts, dependents, alert history and Live Reports are then permanently deleted 30 days later, unless you contact support to cancel it first.",
   },
@@ -69,7 +69,7 @@ const retained = [
 
 export default function DataDeletion() {
   return (
-    <div style={{ background: "#F0F4FF", minHeight: "100vh" }}>
+    <div style={{ background: "var(--hoh-bg-f0f4ff)", minHeight: "100vh" }}>
       {/* ── Hero ──────────────────────────────────────────── */}
       <div style={{
         background: "linear-gradient(135deg, #3D0000 0%, #CC2222 100%)",
@@ -99,44 +99,44 @@ export default function DataDeletion() {
 
         {/* ── Warning notice ────────────────────────────── */}
         <div style={{
-          background: "#FFF8F8", border: "1.5px solid #FFCCCC", borderRadius: "18px",
+          background: "var(--hoh-bg-fff8f8)", border: "1.5px solid var(--hoh-line-ffcccc)", borderRadius: "18px",
           padding: "18px 20px", marginBottom: "32px",
           display: "flex", alignItems: "flex-start", gap: "14px",
         }}>
-          <div style={{ width: "40px", height: "40px", borderRadius: "12px", background: "#FFF0F0", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <div style={{ width: "40px", height: "40px", borderRadius: "12px", background: "var(--hoh-bg-fff0f0)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             <svg style={{ width: "20px", height: "20px", color: "#CC2222" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
           <div>
             <p style={{ color: "#CC2222", fontWeight: 700, fontSize: "14.5px", marginBottom: "5px" }}>Important Warning</p>
-            <p style={{ color: "#374151", fontSize: "13.5px", lineHeight: 1.7 }}>
+            <p style={{ color: "var(--hoh-text-374151)", fontSize: "13.5px", lineHeight: 1.7 }}>
               Your account is deactivated straight away: your emergency contacts will no longer receive alerts from you. After 30 days, all your data, emergency contacts, dependent relationships, and alert history are erased — this is <strong>permanent and cannot be undone</strong>.
             </p>
           </div>
         </div>
 
         {/* ── Step-by-step ──────────────────────────────── */}
-        <div style={{ background: "#fff", borderRadius: "20px", padding: "28px", marginBottom: "20px", border: "1px solid #DDE3F5", boxShadow: "0 4px 16px rgba(44,95,212,0.06)" }}>
+        <div style={{ background: "var(--hoh-bg-ffffff)", borderRadius: "20px", padding: "28px", marginBottom: "20px", border: "1px solid var(--hoh-line-dde3f5)", boxShadow: "0 4px 16px rgba(44,95,212,0.06)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "22px" }}>
             <div style={{ width: "4px", height: "22px", background: "#CC2222", borderRadius: "2px" }} />
-            <h2 style={{ color: "#0F1B3E", fontSize: "17px", fontWeight: 800 }}>How to Delete Your Account (In-App)</h2>
+            <h2 style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "17px", fontWeight: 800 }}>How to Delete Your Account (In-App)</h2>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {steps.map((step, i) => (
               <div key={i} style={{
                 display: "flex", alignItems: "flex-start", gap: "14px",
-                background: "#F8FAFF", borderRadius: "16px",
-                padding: "16px", border: "1px solid #DDE3F5",
+                background: "var(--hoh-bg-f8faff)", borderRadius: "16px",
+                padding: "16px", border: "1px solid var(--hoh-line-dde3f5)",
               }}>
                 {/* Number badge */}
                 <div style={{ width: "40px", height: "40px", borderRadius: "12px", background: step.bg, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <span style={{ color: step.color, fontWeight: 800, fontSize: "13px" }}>{step.number}</span>
                 </div>
                 <div style={{ flex: 1 }}>
-                  <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14.5px", marginBottom: "4px" }}>{step.title}</p>
-                  <p style={{ color: "#8B94B2", fontSize: "13.5px", lineHeight: 1.6 }}>{step.detail}</p>
+                  <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "14.5px", marginBottom: "4px" }}>{step.title}</p>
+                  <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "13.5px", lineHeight: 1.6 }}>{step.detail}</p>
                 </div>
               </div>
             ))}
@@ -144,39 +144,39 @@ export default function DataDeletion() {
         </div>
 
         {/* ── Manual request ────────────────────────────── */}
-        <div style={{ background: "#fff", borderRadius: "20px", padding: "28px", marginBottom: "20px", border: "1px solid #DDE3F5", boxShadow: "0 4px 16px rgba(44,95,212,0.06)" }}>
+        <div style={{ background: "var(--hoh-bg-ffffff)", borderRadius: "20px", padding: "28px", marginBottom: "20px", border: "1px solid var(--hoh-line-dde3f5)", boxShadow: "0 4px 16px rgba(44,95,212,0.06)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
             <div style={{ width: "4px", height: "22px", background: "#2C5FD4", borderRadius: "2px" }} />
-            <h2 style={{ color: "#0F1B3E", fontSize: "17px", fontWeight: 800 }}>Can{"'"}t Access the App? Submit a Manual Request</h2>
+            <h2 style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "17px", fontWeight: 800 }}>Can{"'"}t Access the App? Submit a Manual Request</h2>
           </div>
-          <p style={{ color: "#374151", fontSize: "14px", lineHeight: 1.8, marginBottom: "16px" }}>
+          <p style={{ color: "var(--hoh-text-374151)", fontSize: "14px", lineHeight: 1.8, marginBottom: "16px" }}>
             If you are unable to access your account or the in-app deletion option, you may submit a manual data deletion request by emailing us at:
           </p>
-          <div style={{ background: "#F0F4FF", borderRadius: "14px", padding: "16px 18px", border: "1px solid #DDE3F5", marginBottom: "16px" }}>
-            <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14px", marginBottom: "8px" }}>Email: <a href={`mailto:${EMAIL}`} style={{ color: "#2C5FD4" }}>{EMAIL}</a></p>
-            <p style={{ color: "#374151", fontSize: "13.5px", lineHeight: 1.7 }}>
+          <div style={{ background: "var(--hoh-bg-f0f4ff)", borderRadius: "14px", padding: "16px 18px", border: "1px solid var(--hoh-line-dde3f5)", marginBottom: "16px" }}>
+            <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "14px", marginBottom: "8px" }}>Email: <a href={`mailto:${EMAIL}`} style={{ color: "#2C5FD4" }}>{EMAIL}</a></p>
+            <p style={{ color: "var(--hoh-text-374151)", fontSize: "13.5px", lineHeight: 1.7 }}>
               <strong>Subject:</strong> Data Deletion Request — [Your Registered Phone Number]<br />
               <strong>Body:</strong> Please include your full name, the phone number linked to your account, and confirm that you wish to permanently delete your data. We may request a short identity verification step.
             </p>
           </div>
-          <p style={{ color: "#8B94B2", fontSize: "13px", lineHeight: 1.6 }}>
+          <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "13px", lineHeight: 1.6 }}>
             We will acknowledge your request within <strong>72 hours</strong> and complete the deletion within <strong>30 days</strong> of identity verification.
           </p>
         </div>
 
         {/* ── What gets deleted ─────────────────────────── */}
-        <div style={{ background: "#fff", borderRadius: "20px", padding: "28px", marginBottom: "20px", border: "1px solid #DDE3F5", boxShadow: "0 4px 16px rgba(44,95,212,0.06)" }}>
+        <div style={{ background: "var(--hoh-bg-ffffff)", borderRadius: "20px", padding: "28px", marginBottom: "20px", border: "1px solid var(--hoh-line-dde3f5)", boxShadow: "0 4px 16px rgba(44,95,212,0.06)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "18px" }}>
             <div style={{ width: "4px", height: "22px", background: "#CC2222", borderRadius: "2px" }} />
-            <h2 style={{ color: "#0F1B3E", fontSize: "17px", fontWeight: 800 }}>What Data Is Deleted</h2>
+            <h2 style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "17px", fontWeight: 800 }}>What Data Is Deleted</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {deletedData.map((d, i) => (
-              <div key={i} style={{ background: "#FFF8F8", borderRadius: "14px", padding: "14px 16px", border: "1px solid #FFE0E0", display: "flex", alignItems: "flex-start", gap: "12px" }}>
+              <div key={i} style={{ background: "var(--hoh-bg-fff8f8)", borderRadius: "14px", padding: "14px 16px", border: "1px solid var(--hoh-line-ffe0e0)", display: "flex", alignItems: "flex-start", gap: "12px" }}>
                 <span style={{ fontSize: "22px", flexShrink: 0 }}>{d.icon}</span>
                 <div>
-                  <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13.5px", marginBottom: "3px" }}>{d.label}</p>
-                  <p style={{ color: "#8B94B2", fontSize: "12.5px", lineHeight: 1.5 }}>{d.detail}</p>
+                  <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "13.5px", marginBottom: "3px" }}>{d.label}</p>
+                  <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "12.5px", lineHeight: 1.5 }}>{d.detail}</p>
                 </div>
               </div>
             ))}
@@ -184,21 +184,21 @@ export default function DataDeletion() {
         </div>
 
         {/* ── What is retained ──────────────────────────── */}
-        <div style={{ background: "#fff", borderRadius: "20px", padding: "28px", marginBottom: "20px", border: "1px solid #DDE3F5", boxShadow: "0 4px 16px rgba(44,95,212,0.06)" }}>
+        <div style={{ background: "var(--hoh-bg-ffffff)", borderRadius: "20px", padding: "28px", marginBottom: "20px", border: "1px solid var(--hoh-line-dde3f5)", boxShadow: "0 4px 16px rgba(44,95,212,0.06)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
             <div style={{ width: "4px", height: "22px", background: "#E07A1A", borderRadius: "2px" }} />
-            <h2 style={{ color: "#0F1B3E", fontSize: "17px", fontWeight: 800 }}>Data We May Retain (Limited Exceptions)</h2>
+            <h2 style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "17px", fontWeight: 800 }}>Data We May Retain (Limited Exceptions)</h2>
           </div>
-          <p style={{ color: "#374151", fontSize: "14px", lineHeight: 1.7, marginBottom: "14px" }}>
+          <p style={{ color: "var(--hoh-text-374151)", fontSize: "14px", lineHeight: 1.7, marginBottom: "14px" }}>
             In limited cases required by law or legitimate business necessity, we may retain certain non-personal or anonymised data after account deletion:
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             {retained.map((r, i) => (
-              <div key={i} style={{ background: "#FFFBF0", borderRadius: "13px", padding: "13px 15px", border: "1px solid #FFDEA0", display: "flex", alignItems: "flex-start", gap: "12px" }}>
+              <div key={i} style={{ background: "var(--hoh-bg-fffbf0)", borderRadius: "13px", padding: "13px 15px", border: "1px solid var(--hoh-line-ffdea0)", display: "flex", alignItems: "flex-start", gap: "12px" }}>
                 <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#E07A1A", flexShrink: 0, marginTop: "5px" }} />
                 <div>
-                  <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13.5px", marginBottom: "3px" }}>{r.label}</p>
-                  <p style={{ color: "#8B94B2", fontSize: "13px", lineHeight: 1.5 }}>{r.detail}</p>
+                  <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "13.5px", marginBottom: "3px" }}>{r.label}</p>
+                  <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "13px", lineHeight: 1.5 }}>{r.detail}</p>
                 </div>
               </div>
             ))}
@@ -214,7 +214,7 @@ export default function DataDeletion() {
           </p>
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
             <a href={`mailto:${EMAIL}`}
-              style={{ padding: "11px 20px", borderRadius: "14px", background: "#fff", color: "#2C5FD4", fontWeight: 700, fontSize: "14px", textDecoration: "none", display: "flex", alignItems: "center", gap: "7px" }}>
+              style={{ padding: "11px 20px", borderRadius: "14px", background: "var(--hoh-bg-ffffff)", color: "#2C5FD4", fontWeight: 700, fontSize: "14px", textDecoration: "none", display: "flex", alignItems: "center", gap: "7px" }}>
               <svg style={{ width: "16px", height: "16px" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>

@@ -182,11 +182,11 @@ export default function NotificationBell() {
           right: 0,
           width: "340px",
           maxWidth: "90vw",
-          background: "#fff",
+          background: "var(--hoh-bg-ffffff)",
           borderRadius: "18px",
           overflow: "hidden",
           boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
-          border: "1px solid #DDE3F5",
+          border: "1px solid var(--hoh-line-dde3f5)",
           transition: "all 0.2s ease",
           opacity: isOpen ? 1 : 0,
           transform: isOpen ? "translateY(0)" : "translateY(-8px)",
@@ -217,15 +217,15 @@ export default function NotificationBell() {
 
         <div style={{ maxHeight: "360px", overflowY: "auto" }}>
           {loadingItems ? (
-            <div style={{ padding: "24px", textAlign: "center", color: "#8A93B3", fontSize: "13px" }}>
+            <div style={{ padding: "24px", textAlign: "center", color: "var(--hoh-text-8a93b3)", fontSize: "13px" }}>
               Loading…
             </div>
           ) : fetchFailed ? (
-            <div style={{ padding: "24px", textAlign: "center", color: "#8A93B3", fontSize: "13px" }}>
+            <div style={{ padding: "24px", textAlign: "center", color: "var(--hoh-text-8a93b3)", fontSize: "13px" }}>
               Couldn&apos;t load notifications right now.
             </div>
           ) : items.length === 0 ? (
-            <div style={{ padding: "24px", textAlign: "center", color: "#8A93B3", fontSize: "13px" }}>
+            <div style={{ padding: "24px", textAlign: "center", color: "var(--hoh-text-8a93b3)", fontSize: "13px" }}>
               You&apos;re all caught up.
             </div>
           ) : (

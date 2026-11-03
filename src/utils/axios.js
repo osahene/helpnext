@@ -83,6 +83,21 @@ const apiService = {
   registerPushDevice: (data) => $axios.post("/notifications/register-device/", data),
   unregisterPushDevice: (token) =>
     $axios.delete("/notifications/register-device/", { data: { token } }),
+  // Safety Companion (EmergencySystem/account/safety.py)
+  // First time both PINs; after that currentPin plus either new PIN or both.
+  setSafetyPins: ({ currentPin, pin, duressPin }) =>
+    $axios.post("/account/safety/pin/", { current_pin: currentPin, pin, duress_pin: duressPin }),
+  getSafetySession: () => $axios.get("/account/safety/session/"),
+  startSafetySession: (data) => $axios.post("/account/safety/session/", data),
+  // action: arrive | cancel | extend | location
+  safetySessionAction: (id, action, data = {}) =>
+    $axios.post(`/account/safety/session/${id}/${action}/`, data, {
+      silent: action === "location",
+    }),
+  getDailyCheckIn: () => $axios.get("/account/safety/check-in/"),
+  saveDailyCheckIn: (data) => $axios.put("/account/safety/check-in/", data),
+  confirmDailyCheckIn: (data) => $axios.post("/account/safety/check-in/confirm/", data),
+  skipDailyCheckIn: (undo = false) => $axios.post("/account/safety/check-in/skip/", { undo }),
 };
 
 export default apiService;

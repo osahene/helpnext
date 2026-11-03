@@ -16,6 +16,7 @@ const SITUATION_SERVICE = {
   robbery: "Ghana Police Service",
   violence: "Ghana Police Service",
   call: "Ghana Police Service",
+  safety: "Ghana Police Service",
   fire: "Ghana Fire Service",
   health: "National Ambulance Service",
   accident: "National Ambulance Service",

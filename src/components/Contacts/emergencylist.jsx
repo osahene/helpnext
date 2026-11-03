@@ -7,9 +7,9 @@ import RemoveInfo from "./removeInfo";
 import toast from "react-hot-toast";
 
 const statusConfig = {
-  approved: { color: "#1A9E5C", bg: "#E8F8F0", icon: "✓", label: "Approved" },
-  rejected: { color: "#CC2222", bg: "#FFF0F0", icon: "✕", label: "Rejected" },
-  pending: { color: "#E07A1A", bg: "#FFF3E0", icon: "⏳", label: "Pending" },
+  approved: { color: "#1A9E5C", bg: "var(--hoh-bg-e8f8f0)", icon: "✓", label: "Approved" },
+  rejected: { color: "#CC2222", bg: "var(--hoh-bg-fff0f0)", icon: "✕", label: "Rejected" },
+  pending: { color: "#E07A1A", bg: "var(--hoh-bg-fff3e0)", icon: "⏳", label: "Pending" },
 };
 
 const avatarColors = ["#2C5FD4", "#5B3FE8", "#1A9E5C", "#D4368A", "#E07A1A"];
@@ -56,24 +56,24 @@ export default function Emergency() {
             MY EMERGENCY CONTACTS
           </p>
         </div>
-        <p style={{ color: "#8B94B2", fontSize: "12.5px", paddingLeft: "12px" }}>
+        <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "12.5px", paddingLeft: "12px" }}>
           {contacts.length} contact{contacts.length !== 1 ? "s" : ""} registered
         </p>
       </div>
 
       {contacts.length === 0 ? (
         <div style={{
-          background: "#fff", borderRadius: "20px", padding: "40px 20px",
-          textAlign: "center", border: "1px solid #DDE3F5",
+          background: "var(--hoh-bg-ffffff)", borderRadius: "20px", padding: "40px 20px",
+          textAlign: "center", border: "1px solid var(--hoh-line-dde3f5)",
           boxShadow: "0 4px 16px rgba(44,95,212,0.06)",
         }}>
-          <div style={{ width: "72px", height: "72px", borderRadius: "50%", background: "#F0F4FF", border: "2px solid #DDE3F5", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-            <svg style={{ width: "32px", height: "32px", color: "#8B94B2" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <div style={{ width: "72px", height: "72px", borderRadius: "50%", background: "var(--hoh-bg-f0f4ff)", border: "2px solid var(--hoh-line-dde3f5)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
+            <svg style={{ width: "32px", height: "32px", color: "var(--hoh-text-8b94b2)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </div>
-          <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "15px", marginBottom: "6px" }}>No Contacts in Records</p>
-          <p style={{ color: "#8B94B2", fontSize: "13px", lineHeight: 1.6 }}>Register your first emergency contact<br />using the Register tab.</p>
+          <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "15px", marginBottom: "6px" }}>No Contacts in Records</p>
+          <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "13px", lineHeight: 1.6 }}>Register your first emergency contact<br />using the Register tab.</p>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -87,8 +87,8 @@ export default function Emergency() {
               <div
                 key={contact.pk}
                 style={{
-                  background: "#fff", borderRadius: "20px",
-                  border: "1px solid #DDE3F5",
+                  background: "var(--hoh-bg-ffffff)", borderRadius: "20px",
+                  border: "1px solid var(--hoh-line-dde3f5)",
                   boxShadow: "0 4px 16px rgba(44,95,212,0.06)",
                   overflow: "hidden",
                 }}
@@ -115,9 +115,9 @@ export default function Emergency() {
                     </span>
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "15px", marginBottom: "4px" }}>{name}</p>
+                    <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "15px", marginBottom: "4px" }}>{name}</p>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span style={{ color: "#8B94B2", fontSize: "12.5px" }}>{contact.relation}</span>
+                      <span style={{ color: "var(--hoh-text-8b94b2)", fontSize: "12.5px" }}>{contact.relation}</span>
                       <span style={{
                         background: status.bg, color: status.color,
                         fontSize: "11px", fontWeight: 600, padding: "2px 8px", borderRadius: "20px",
@@ -127,7 +127,7 @@ export default function Emergency() {
                     </div>
                   </div>
                   <svg
-                    style={{ width: "18px", height: "18px", color: "#8B94B2", flexShrink: 0, transition: "transform 0.2s", transform: isOpen ? "rotate(180deg)" : "rotate(0)" }}
+                    style={{ width: "18px", height: "18px", color: "var(--hoh-text-8b94b2)", flexShrink: 0, transition: "transform 0.2s", transform: isOpen ? "rotate(180deg)" : "rotate(0)" }}
                     fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -136,8 +136,8 @@ export default function Emergency() {
 
                 {/* Expanded detail panel */}
                 {isOpen && (
-                  <div style={{ borderTop: "1px solid #F0F4FF", padding: "14px 16px 16px" }}>
-                    <div style={{ background: "#F0F4FF", borderRadius: "14px", padding: "14px", marginBottom: "14px" }}>
+                  <div style={{ borderTop: "1px solid var(--hoh-line-f0f4ff)", padding: "14px 16px 16px" }}>
+                    <div style={{ background: "var(--hoh-bg-f0f4ff)", borderRadius: "14px", padding: "14px", marginBottom: "14px" }}>
                       {[
                         {
                           icon: "📞",
@@ -192,13 +192,13 @@ export default function Emergency() {
                                 <span
                                   key={index}
                                   style={{
-                                    background: "#fff",
-                                    color: "#0F1B3E",
+                                    background: "var(--hoh-bg-ffffff)",
+                                    color: "var(--hoh-text-0f1b3e)",
                                     fontSize: "12px",
                                     fontWeight: 600,
                                     padding: "3px 8px",
                                     borderRadius: "6px",
-                                    border: "1px solid #DDE3F5",
+                                    border: "1px solid var(--hoh-line-dde3f5)",
                                     whiteSpace: "nowrap" // Prevents single words inside a badge from breaking
                                   }}
                                 >
@@ -207,7 +207,7 @@ export default function Emergency() {
                               ))}
                             </div>
                           ) : (
-                            <span style={{ color: "#0F1B3E", fontSize: "13.5px", fontWeight: 500 }}>
+                            <span style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "13.5px", fontWeight: 500 }}>
                               {row.label}
                             </span>
                           )}
@@ -220,9 +220,9 @@ export default function Emergency() {
                           onClick={() => { setCurrentContact(contact); setIsEditing(true); }}
                           style={{
                             flex: 1, padding: "10px", borderRadius: "12px",
-                            background: "#EEF4FF", color: "#2C5FD4",
+                            background: "var(--hoh-bg-eef4ff)", color: "#2C5FD4",
                             fontWeight: 700, fontSize: "13.5px",
-                            border: "1px solid #DDE3F5", cursor: "pointer",
+                            border: "1px solid var(--hoh-line-dde3f5)", cursor: "pointer",
                           }}
                         >
                           Edit
@@ -231,9 +231,9 @@ export default function Emergency() {
                           onClick={() => { setCurrentContact(contact); setIsDeleting(true); }}
                           style={{
                             flex: 1, padding: "10px", borderRadius: "12px",
-                            background: "#FFF0F0", color: "#CC2222",
+                            background: "var(--hoh-bg-fff0f0)", color: "#CC2222",
                             fontWeight: 700, fontSize: "13.5px",
-                            border: "1px solid #FFCCCC", cursor: "pointer",
+                            border: "1px solid var(--hoh-line-ffcccc)", cursor: "pointer",
                           }}
                         >
                           Remove
@@ -245,9 +245,9 @@ export default function Emergency() {
                         onClick={() => { setCurrentContact(contact); setIsDeleting(true); }}
                         style={{
                           width: "100%", padding: "10px", borderRadius: "12px",
-                          background: "#FFF0F0", color: "#CC2222",
+                          background: "var(--hoh-bg-fff0f0)", color: "#CC2222",
                           fontWeight: 700, fontSize: "13.5px",
-                          border: "1px solid #FFCCCC", cursor: "pointer",
+                          border: "1px solid var(--hoh-line-ffcccc)", cursor: "pointer",
                         }}
                       >
                         Remove

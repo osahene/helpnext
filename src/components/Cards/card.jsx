@@ -1,7 +1,8 @@
 'use client';
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const Cards = ({ cardName, cardName2, cardLogo, iconVariant, accentColor }) => {
+const Cards = ({ cardName, cardName2, cardLogo, faIcon, iconVariant, accentColor }) => {
   const [pressed, setPressed] = useState(false);
 
   // Derive a darker shade for gradient bottom
@@ -79,12 +80,16 @@ const Cards = ({ cardName, cardName2, cardLogo, iconVariant, accentColor }) => {
           flexShrink: 0,
         }}
       >
-        <span 
+        {faIcon ? (
+          <FontAwesomeIcon icon={faIcon} style={{ fontSize: "40px", color: "#fff" }} />
+        ) : (
+          <span 
             className={iconVariant} 
-            style={{ fontSize: '50px' }}
+            style={{ fontSize: '50px', color: '#fff' }}
           >
             {cardLogo}
           </span>
+        )}
       </div>
 
       {/* Title */}

@@ -52,7 +52,7 @@ export default function AccountSettings() {
   };
 
   return (
-    <div style={{ background: "#F0F4FF", minHeight: "100vh" }} className="pt-20 pb-10">
+    <div style={{ background: "var(--hoh-bg-f0f4ff)", minHeight: "100vh" }} className="pt-20 pb-10">
       {/* ── Header ─────────────────────────────────────── */}
       <div className="px-5 pt-6 pb-4">
         <div style={{
@@ -80,16 +80,16 @@ export default function AccountSettings() {
 
       <div className="px-5" style={{ maxWidth: "640px", margin: "0 auto" }}>
         {/* ── Account info ──────────────────────────────── */}
-        <div style={{ background: "#fff", borderRadius: "20px", padding: "22px", marginBottom: "20px", border: "1px solid #DDE3F5", boxShadow: "0 4px 16px rgba(44,95,212,0.06)" }}>
-          <p style={{ color: "#8B94B2", fontSize: "11px", fontWeight: 700, letterSpacing: "1.2px", marginBottom: "14px" }}>ACCOUNT INFORMATION</p>
+        <div style={{ background: "var(--hoh-bg-ffffff)", borderRadius: "20px", padding: "22px", marginBottom: "20px", border: "1px solid var(--hoh-line-dde3f5)", boxShadow: "0 4px 16px rgba(44,95,212,0.06)" }}>
+          <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "11px", fontWeight: 700, letterSpacing: "1.2px", marginBottom: "14px" }}>ACCOUNT INFORMATION</p>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             <div>
-              <p style={{ color: "#8B94B2", fontSize: "12px" }}>Email</p>
-              <p style={{ color: "#0F1B3E", fontWeight: 600, fontSize: "14.5px" }}>{email || "—"}</p>
+              <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "12px" }}>Email</p>
+              <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 600, fontSize: "14.5px" }}>{email || "—"}</p>
             </div>
             <div>
-              <p style={{ color: "#8B94B2", fontSize: "12px" }}>Phone Number</p>
-              <p style={{ color: "#0F1B3E", fontWeight: 600, fontSize: "14.5px" }}>{phone_number || "—"}</p>
+              <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "12px" }}>Phone Number</p>
+              <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 600, fontSize: "14.5px" }}>{phone_number || "—"}</p>
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@ export default function AccountSettings() {
         <RequestHistory />
 
         {/* ── Account actions ────────────────────────────── */}
-        <div style={{ background: "#fff", borderRadius: "20px", padding: "22px", border: "1.5px solid #FFCCCC", boxShadow: "0 4px 16px rgba(204,34,34,0.06)" }}>
+        <div style={{ background: "var(--hoh-bg-ffffff)", borderRadius: "20px", padding: "22px", border: "1.5px solid var(--hoh-line-ffcccc)", boxShadow: "0 4px 16px rgba(204,34,34,0.06)" }}>
           <p style={{ color: "#CC2222", fontSize: "11px", fontWeight: 700, letterSpacing: "1.2px", marginBottom: "14px" }}>ACCOUNT ACTIONS</p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -135,7 +135,7 @@ const DEACTIVATE = {
   description:
     "You'll be logged out straight away and your contacts will stop receiving your alerts. Nothing is deleted, but you can't reactivate it yourself — contact support to come back.",
   reasons: DEACTIVATE_REASONS,
-  color: "#0F1B3E",
+  color: "var(--hoh-text-0f1b3e)",
   goodbye: "Your account will be deactivated now. We hope you come back soon.",
 };
 
@@ -218,7 +218,7 @@ function Modal({ onCancel, children, maxWidth = "420px" }) {
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: "#fff", borderRadius: "22px", padding: "24px",
+          background: "var(--hoh-bg-ffffff)", borderRadius: "22px", padding: "24px",
           maxWidth, width: "100%", maxHeight: "calc(100vh - 32px)", overflowY: "auto",
           boxShadow: "0 24px 80px rgba(0,0,0,0.25)",
         }}
@@ -235,8 +235,8 @@ function ModalActions({ color, canConfirm = true, onCancel, onConfirm }) {
       <button
         onClick={onCancel}
         style={{
-          flex: 1, padding: "12px", borderRadius: "14px", border: "1px solid #DDE3F5",
-          background: "#fff", color: "#5B6481", fontWeight: 700, fontSize: "14px", cursor: "pointer",
+          flex: 1, padding: "12px", borderRadius: "14px", border: "1px solid var(--hoh-line-dde3f5)",
+          background: "var(--hoh-bg-ffffff)", color: "var(--hoh-text-5b6481)", fontWeight: 700, fontSize: "14px", cursor: "pointer",
         }}
       >
         Cancel
@@ -265,13 +265,13 @@ function ReasonModal({ action, onCancel, onConfirm }) {
 
   return (
     <Modal onCancel={onCancel}>
-      <p style={{ color: "#0F1B3E", fontWeight: 800, fontSize: "18px", marginBottom: "6px" }}>{action.title}</p>
-      <p style={{ color: "#5B6481", fontSize: "13.5px", lineHeight: 1.6, marginBottom: "14px" }}>{action.description}</p>
+      <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 800, fontSize: "18px", marginBottom: "6px" }}>{action.title}</p>
+      <p style={{ color: "var(--hoh-text-5b6481)", fontSize: "13.5px", lineHeight: 1.6, marginBottom: "14px" }}>{action.description}</p>
 
-      <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13px", marginBottom: "8px" }}>Please tell us why</p>
+      <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "13px", marginBottom: "8px" }}>Please tell us why</p>
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         {options.map((option) => (
-          <label key={option.key} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "13.5px", color: "#0F1B3E", cursor: "pointer" }}>
+          <label key={option.key} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "13.5px", color: "var(--hoh-text-0f1b3e)", cursor: "pointer" }}>
             <input
               type="radio"
               name={`${action.key}-reason`}
@@ -293,8 +293,8 @@ function ReasonModal({ action, onCancel, onConfirm }) {
           rows={3}
           placeholder="Tell us in your own words"
           style={{
-            width: "100%", padding: "10px 12px", borderRadius: "12px", border: "1px solid #DDE3F5",
-            fontSize: "13.5px", marginTop: "10px", background: "#F8FAFF", resize: "vertical",
+            width: "100%", padding: "10px 12px", borderRadius: "12px", border: "1px solid var(--hoh-line-dde3f5)",
+            fontSize: "13.5px", marginTop: "10px", background: "var(--hoh-bg-f8faff)", resize: "vertical",
           }}
         />
       )}
@@ -315,10 +315,10 @@ function GoodbyeModal({ action, onCancel, onConfirm }) {
     <Modal onCancel={onCancel} maxWidth="380px">
       <div style={{ textAlign: "center" }}>
         <div style={{ fontSize: "44px", marginBottom: "10px" }} aria-hidden="true">😔</div>
-        <p style={{ color: "#0F1B3E", fontWeight: 800, fontSize: "18px", lineHeight: 1.4, marginBottom: "8px" }}>
+        <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 800, fontSize: "18px", lineHeight: 1.4, marginBottom: "8px" }}>
           We are sorry to see you leave
         </p>
-        <p style={{ color: "#5B6481", fontSize: "13.5px", lineHeight: 1.6 }}>{action.goodbye}</p>
+        <p style={{ color: "var(--hoh-text-5b6481)", fontSize: "13.5px", lineHeight: 1.6 }}>{action.goodbye}</p>
       </div>
       <ModalActions color={action.color} onCancel={onCancel} onConfirm={onConfirm} />
     </Modal>

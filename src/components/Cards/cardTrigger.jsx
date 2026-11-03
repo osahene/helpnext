@@ -20,6 +20,7 @@ export default function TriggerCard({
   cardName,
   cardName2,
   cardLogo,
+  faIcon,
   iconVariant,
   logoAlt,
   accentColor = "#CC2222",
@@ -176,21 +177,21 @@ export default function TriggerCard({
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <p style={{ color: "#0F1B3E", fontSize: "18px", fontWeight: 800, marginBottom: "8px" }}>
+          <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "18px", fontWeight: 800, marginBottom: "8px" }}>
             Alert Sent
           </p>
-          <p style={{ color: "#8B94B2", fontSize: "14px", lineHeight: 1.6, marginBottom: liveLocationEnabled ? "12px" : "20px" }}>
+          <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "14px", lineHeight: 1.6, marginBottom: liveLocationEnabled ? "12px" : "20px" }}>
             Your emergency alert has been sent to your contacts.
           </p>
 
           {liveLocationEnabled && (
             <div style={{
               width: "100%", display: "flex", alignItems: "center", gap: "10px",
-              background: "#F8FAFF", border: "1px solid #DDE3F5", borderRadius: "14px",
+              background: "var(--hoh-bg-f8faff)", border: "1px solid var(--hoh-line-dde3f5)", borderRadius: "14px",
               padding: "12px 16px", marginBottom: "20px", textAlign: "left",
             }}>
               <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#1A9E5C", flexShrink: 0 }} />
-              <p style={{ color: "#0F1B3E", fontSize: "12.5px", lineHeight: 1.5 }}>
+              <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "12.5px", lineHeight: 1.5 }}>
                 Sharing your live location with contacts for up to 1 hour. You can stop it anytime from the banner at the top of the screen.
               </p>
             </div>
@@ -244,10 +245,10 @@ export default function TriggerCard({
           <p style={{ color: "#CC2222", fontSize: "11px", fontWeight: 700, letterSpacing: "1.4px", marginBottom: "6px" }}>
             NO CONTACTS
           </p>
-          <p style={{ color: "#0F1B3E", fontSize: "17px", fontWeight: 800, marginBottom: "8px" }}>
+          <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "17px", fontWeight: 800, marginBottom: "8px" }}>
             No Emergency Contacts
           </p>
-          <p style={{ color: "#8B94B2", fontSize: "13.5px", lineHeight: 1.6, marginBottom: "20px" }}>
+          <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "13.5px", lineHeight: 1.6, marginBottom: "20px" }}>
             You need at least one approved contact in your emergency list to send alerts.
           </p>
           <div className="flex gap-3 w-full">
@@ -265,9 +266,9 @@ export default function TriggerCard({
               onClick={handleClose}
               style={{
                 flex: 1, padding: "11px", borderRadius: "14px",
-                background: "#F0F4FF", color: "#8B94B2",
+                background: "var(--hoh-bg-f0f4ff)", color: "var(--hoh-text-8b94b2)",
                 fontWeight: 600, fontSize: "14px",
-                border: "1px solid #DDE3F5",
+                border: "1px solid var(--hoh-line-dde3f5)",
               }}
             >
               Cancel
@@ -292,25 +293,25 @@ export default function TriggerCard({
           <p style={{ color: "#E07A1A", fontSize: "11px", fontWeight: 700, letterSpacing: "1.4px", marginBottom: "6px" }}>
             PENDING APPROVAL
           </p>
-          <p style={{ color: "#0F1B3E", fontSize: "17px", fontWeight: 800, marginBottom: "8px" }}>
+          <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "17px", fontWeight: 800, marginBottom: "8px" }}>
             No Approved Contacts
           </p>
-          <p style={{ color: "#8B94B2", fontSize: "13.5px", lineHeight: 1.6, marginBottom: "12px" }}>
+          <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "13.5px", lineHeight: 1.6, marginBottom: "12px" }}>
             None of your contacts have approved your request yet. You can:
           </p>
           <div
             style={{
-              background: "#F0F4FF", borderRadius: "14px",
+              background: "var(--hoh-bg-f0f4ff)", borderRadius: "14px",
               padding: "14px 16px", width: "100%",
-              border: "1px solid #DDE3F5", marginBottom: "20px",
+              border: "1px solid var(--hoh-line-dde3f5)", marginBottom: "20px",
               textAlign: "left",
             }}
           >
-            <p style={{ color: "#0F1B3E", fontSize: "13px", marginBottom: "6px" }}>
+            <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "13px", marginBottom: "6px" }}>
               <span style={{ color: "#2C5FD4", fontWeight: 700 }}>1.</span>&nbsp;
               Alert them to approve your request.
             </p>
-            <p style={{ color: "#0F1B3E", fontSize: "13px" }}>
+            <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "13px" }}>
               <span style={{ color: "#2C5FD4", fontWeight: 700 }}>2.</span>&nbsp;
               Register a new contact relation.
             </p>
@@ -330,9 +331,9 @@ export default function TriggerCard({
               onClick={handleClose}
               style={{
                 flex: 1, padding: "11px", borderRadius: "14px",
-                background: "#F0F4FF", color: "#8B94B2",
+                background: "var(--hoh-bg-f0f4ff)", color: "var(--hoh-text-8b94b2)",
                 fontWeight: 600, fontSize: "14px",
-                border: "1px solid #DDE3F5",
+                border: "1px solid var(--hoh-line-dde3f5)",
               }}
             >
               Cancel
@@ -359,36 +360,43 @@ export default function TriggerCard({
           )}
           <div style={{
             width: "80px", height: "80px", borderRadius: "50%",
-            background: isActionDisabled ? "#E2E8F0" : `${accentColor}22`,
-            border: `2px solid ${isActionDisabled ? "#CBD5E1" : `${accentColor}44`}`,
+            background: isActionDisabled ? "var(--hoh-bg-e2e8f0)" : `${accentColor}22`,
+            border: `2px solid ${isActionDisabled ? "var(--hoh-line-cbd5e1)" : `${accentColor}44`}`,
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
             <div style={{
               width: "60px", height: "60px", borderRadius: "50%",
-              background: isActionDisabled ? "#CBD5E1" : `${accentColor}33`,
+              background: isActionDisabled ? "var(--hoh-bg-cbd5e1)" : `${accentColor}33`,
               display: "flex", alignItems: "center", justifyContent: "center",
             }}>
-              <span
-                className={iconVariant}
-                style={{
-                  fontSize: "32px",
-                  color: isActionDisabled ? "#94A3B8" : accentColor,
-                  fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24"
-                }}
-              >
-                {cardLogo}
-              </span>
+              {faIcon ? (
+                <FontAwesomeIcon
+                  icon={faIcon}
+                  style={{ fontSize: "28px", color: isActionDisabled ? "#94A3B8" : accentColor }}
+                />
+              ) : (
+                <span
+                  className={iconVariant}
+                  style={{
+                    fontSize: "32px",
+                    color: isActionDisabled ? "#94A3B8" : accentColor,
+                    fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24"
+                  }}
+                >
+                  {cardLogo}
+                </span>
+              )}
             </div>
           </div>
         </div>
 
-        <p style={{ color: "#8B94B2", fontSize: "11px", fontWeight: 700, letterSpacing: "1.4px", marginBottom: "6px" }}>
+        <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "11px", fontWeight: 700, letterSpacing: "1.4px", marginBottom: "6px" }}>
           EMERGENCY ALERT
         </p>
-        <p style={{ color: "#0F1B3E", fontSize: "20px", fontWeight: 800, marginBottom: "6px", letterSpacing: "-0.02em" }}>
+        <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "20px", fontWeight: 800, marginBottom: "6px", letterSpacing: "-0.02em" }}>
           {cardName} {cardName2}
         </p>
-        <p style={{ color: "#8B94B2", fontSize: "13.5px", lineHeight: 1.6, marginBottom: "16px" }}>
+        <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "13.5px", lineHeight: 1.6, marginBottom: "16px" }}>
           {isActionDisabled
             ? "You cannot dispatch this alert because no contacts match this situation profile."
             : "All approved contacts supporting this specific emergency scenario will be immediately notified."
@@ -397,7 +405,7 @@ export default function TriggerCard({
 
         {/* Dynamic Recipients Box */}
         <div style={{ width: "100%", textAlign: "left", marginBottom: "18px" }}>
-          <p style={{ color: "#8B94B2", fontSize: "11px", fontWeight: 700, letterSpacing: "1.4px", marginBottom: "8px" }}>
+          <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "11px", fontWeight: 700, letterSpacing: "1.4px", marginBottom: "8px" }}>
             RECIPIENTS ({matchingRecipients.length})
           </p>
           {!isActionDisabled ? (
@@ -406,16 +414,16 @@ export default function TriggerCard({
                 <div
                   key={idx}
                   style={{
-                    background: "#F0F4FF",
+                    background: "var(--hoh-bg-f0f4ff)",
                     borderRadius: "12px",
                     padding: "10px 14px",
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    border: "1px solid #DDE3F5"
+                    border: "1px solid var(--hoh-line-dde3f5)"
                   }}
                 >
-                  <span style={{ color: "#0F1B3E", fontSize: "13px", fontWeight: 600 }}>
+                  <span style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "13px", fontWeight: 600 }}>
                      {c.first_name} {c.last_name}
                   </span>
                   <span style={{ background: "#1A9E5C15", color: "#1A9E5C", fontSize: "11px", fontWeight: 700, padding: "2px 8px", borderRadius: "6px" }}>
@@ -425,7 +433,7 @@ export default function TriggerCard({
               ))}
             </div>
           ) : (
-            <div style={{ background: "#FFF0F0", border: "1px solid #FFD2D2", borderRadius: "14px", padding: "14px", display: "flex", gap: "10px", alignItems: "flex-start" }}>
+            <div style={{ background: "var(--hoh-bg-fff0f0)", border: "1px solid var(--hoh-line-ffd2d2)", borderRadius: "14px", padding: "14px", display: "flex", gap: "10px", alignItems: "flex-start" }}>
               <span className="material-symbols-rounded" style={{ color: "#CC2222", fontSize: "18px", marginTop: "2px" }}>
                 error
               </span>
@@ -442,7 +450,7 @@ export default function TriggerCard({
             for up to 1 hour once the alert goes out. */}
         <div style={{
           width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
-          background: "#F0F4FF", border: "1px solid #DDE3F5", borderRadius: "14px",
+          background: "var(--hoh-bg-f0f4ff)", border: "1px solid var(--hoh-line-dde3f5)", borderRadius: "14px",
           padding: "12px 16px", marginBottom: "22px", textAlign: "left", gap: "12px",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -451,10 +459,10 @@ export default function TriggerCard({
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             <div>
-              <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13px" }}>
+              <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "13px" }}>
                 Share Live Location
               </p>
-              <p style={{ color: "#8B94B2", fontSize: "11.5px", lineHeight: 1.4 }}>
+              <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "11.5px", lineHeight: 1.4 }}>
                 {liveLocationEnabled
                   ? "Keeps updating for contacts, for up to 1 hour."
                   : "Off — a one-time location goes with this alert."}
@@ -468,13 +476,13 @@ export default function TriggerCard({
             aria-pressed={liveLocationEnabled}
             style={{
               flexShrink: 0, width: "44px", height: "26px", borderRadius: "999px",
-              background: liveLocationEnabled ? "#1A9E5C" : "#DDE3F5", position: "relative",
+              background: liveLocationEnabled ? "#1A9E5C" : "var(--hoh-bg-dde3f5)", position: "relative",
               border: "none", cursor: isActionDisabled || isSending ? "not-allowed" : "pointer", transition: "background 0.2s",
             }}
           >
             <span style={{
               position: "absolute", top: "3px", left: liveLocationEnabled ? "21px" : "3px",
-              width: "20px", height: "20px", borderRadius: "50%", background: "#fff",
+              width: "20px", height: "20px", borderRadius: "50%", background: "var(--hoh-bg-ffffff)",
               boxShadow: "0 2px 4px rgba(0,0,0,0.2)", transition: "left 0.2s",
             }} />
           </button>
@@ -488,7 +496,7 @@ export default function TriggerCard({
             style={{
               flex: 2, padding: "14px", borderRadius: "16px",
               background: isActionDisabled || isSending
-                ? "#E2E8F0"
+                ? "var(--hoh-bg-e2e8f0)"
                 : `linear-gradient(135deg, ${accentColor}cc, ${accentColor})`,
               color: isActionDisabled || isSending ? "#94A3B8" : "#fff",
               fontWeight: 700, fontSize: "15px",
@@ -523,9 +531,9 @@ export default function TriggerCard({
             disabled={isSending}
             style={{
               flex: 1, padding: "14px", borderRadius: "16px",
-              background: "#F0F4FF", color: "#8B94B2",
+              background: "var(--hoh-bg-f0f4ff)", color: "var(--hoh-text-8b94b2)",
               fontWeight: 600, fontSize: "14px",
-              border: "1px solid #DDE3F5",
+              border: "1px solid var(--hoh-line-dde3f5)",
               cursor: isSending ? "not-allowed" : "pointer",
               opacity: isSending ? 0.6 : 1,
             }}
@@ -561,7 +569,7 @@ export default function TriggerCard({
           >
             <motion.div
               style={{
-                background: "#fff",
+                background: "var(--hoh-bg-ffffff)",
                 borderRadius: "28px",
                 width: "100%",
                 maxWidth: "400px",

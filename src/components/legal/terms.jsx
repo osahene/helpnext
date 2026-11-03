@@ -27,7 +27,7 @@ These Terms constitute a legally binding agreement between you and ${COMPANY} ("
 • Fire Outbreak
 • Flood Alert
 • Accident Alert
-• Call Emergency
+• Safety Companion
 
 When a user triggers an alert, their approved contacts are called (their phone rings in the ${APP} app if they use it, otherwise they receive an automated voice call announcing the emergency) and sent a WhatsApp message via the WhatsApp Business API, or an SMS if WhatsApp doesn't get through, plus an email where one is on file. Each alert includes the user's name, the emergency type, their GPS location and a link contacts use to respond "I'm on my way" or "I can't help". The user is told who their alert reached.
 
@@ -42,7 +42,7 @@ In the mobile app, users can also send a Live Report (a message, photos, video o
   {
     id: "registration",
     title: "4. Account Registration & Security",
-    color: "#7B22CE",
+    color: "var(--hoh-text-7b22ce)",
     items: [
       "You must provide a valid phone number to register. An OTP will be sent to that number to verify your identity.",
       "You are responsible for maintaining the confidentiality of your account and for all activities that occur under it.",
@@ -153,7 +153,7 @@ WhatsApp: +233 54 053 1370`,
 
 export default function TermsOfService() {
   return (
-    <div style={{ background: "#F0F4FF", minHeight: "100vh" }}>
+    <div style={{ background: "var(--hoh-bg-f0f4ff)", minHeight: "100vh" }}>
       {/* Hero */}
       <div style={{
         background: "linear-gradient(135deg, #0D1B4B 0%, #2C5FD4 100%)",
@@ -181,14 +181,14 @@ export default function TermsOfService() {
 
       <div style={{ maxWidth: "820px", margin: "0 auto", padding: "40px 24px 80px" }}>
         {/* Table of contents */}
-        <div style={{ background: "#fff", borderRadius: "20px", padding: "22px 24px", marginBottom: "32px", border: "1px solid #DDE3F5", boxShadow: "0 4px 16px rgba(44,95,212,0.07)" }}>
+        <div style={{ background: "var(--hoh-bg-ffffff)", borderRadius: "20px", padding: "22px 24px", marginBottom: "32px", border: "1px solid var(--hoh-line-dde3f5)", boxShadow: "0 4px 16px rgba(44,95,212,0.07)" }}>
           <p style={{ color: "#2C5FD4", fontSize: "11px", fontWeight: 700, letterSpacing: "1.4px", marginBottom: "14px" }}>TABLE OF CONTENTS</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {sections.map((s) => (
               <a key={s.id} href={`#${s.id}`}
-                style={{ color: "#0F1B3E", fontSize: "13.5px", textDecoration: "none", padding: "5px 0", display: "flex", alignItems: "center", gap: "8px", transition: "color 0.18s" }}
+                style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "13.5px", textDecoration: "none", padding: "5px 0", display: "flex", alignItems: "center", gap: "8px", transition: "color 0.18s" }}
                 onMouseEnter={e => (e.currentTarget.style.color = "#2C5FD4")}
-                onMouseLeave={e => (e.currentTarget.style.color = "#0F1B3E")}
+                onMouseLeave={e => (e.currentTarget.style.color = "var(--hoh-text-0f1b3e)")}
               >
                 <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: s.color, flexShrink: 0 }} />
                 {s.title}
@@ -199,14 +199,14 @@ export default function TermsOfService() {
 
         {/* Sections */}
         {sections.map((s) => (
-          <div key={s.id} id={s.id} style={{ background: "#fff", borderRadius: "20px", padding: "28px", marginBottom: "16px", border: "1px solid #DDE3F5", boxShadow: "0 4px 16px rgba(44,95,212,0.05)" }}>
+          <div key={s.id} id={s.id} style={{ background: "var(--hoh-bg-ffffff)", borderRadius: "20px", padding: "28px", marginBottom: "16px", border: "1px solid var(--hoh-line-dde3f5)", boxShadow: "0 4px 16px rgba(44,95,212,0.05)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
               <div style={{ width: "4px", height: "22px", background: s.color, borderRadius: "2px" }} />
-              <h2 style={{ color: "#0F1B3E", fontSize: "17px", fontWeight: 800, letterSpacing: "-0.01em" }}>{s.title}</h2>
+              <h2 style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "17px", fontWeight: 800, letterSpacing: "-0.01em" }}>{s.title}</h2>
             </div>
 
             {s.content && (
-              <p style={{ color: "#374151", fontSize: "14px", lineHeight: 1.8, whiteSpace: "pre-line" }}>{s.content}</p>
+              <p style={{ color: "var(--hoh-text-374151)", fontSize: "14px", lineHeight: 1.8, whiteSpace: "pre-line" }}>{s.content}</p>
             )}
 
             {s.items && (
@@ -215,11 +215,11 @@ export default function TermsOfService() {
                   {s.items.map((item, i) => (
                     <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px", marginBottom: "10px" }}>
                       <div style={{ width: "7px", height: "7px", borderRadius: "50%", background: s.color, flexShrink: 0, marginTop: "6px" }} />
-                      <p style={{ color: "#374151", fontSize: "14px", lineHeight: 1.7 }}>{item}</p>
+                      <p style={{ color: "var(--hoh-text-374151)", fontSize: "14px", lineHeight: 1.7 }}>{item}</p>
                     </li>
                   ))}
                 </ul>
-                {s.footer && <p style={{ color: "#374151", fontSize: "14px", lineHeight: 1.8, fontStyle: "italic", borderTop: "1px solid #F0F4FF", paddingTop: "12px" }}>{s.footer}</p>}
+                {s.footer && <p style={{ color: "var(--hoh-text-374151)", fontSize: "14px", lineHeight: 1.8, fontStyle: "italic", borderTop: "1px solid var(--hoh-line-f0f4ff)", paddingTop: "12px" }}>{s.footer}</p>}
               </>
             )}
           </div>
@@ -232,7 +232,7 @@ export default function TermsOfService() {
           <Link href="/legal/delete" style={{ color: "#CC2222", fontSize: "13.5px", fontWeight: 600, textDecoration: "none", marginRight: "24px" }}>
             Data Deletion Instructions
           </Link>
-          <Link href="/" style={{ color: "#8B94B2", fontSize: "13.5px", fontWeight: 600, textDecoration: "none" }}>
+          <Link href="/" style={{ color: "var(--hoh-text-8b94b2)", fontSize: "13.5px", fontWeight: 600, textDecoration: "none" }}>
             ← Home
           </Link>
         </div>

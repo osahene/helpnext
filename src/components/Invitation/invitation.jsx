@@ -10,21 +10,21 @@ export default function Invite() {
     {
       number: "01",
       color: "#2C5FD4",
-      bg: "#EEF4FF",
+      bg: "var(--hoh-bg-eef4ff)",
       title: "Enable Location",
       desc: "Turn on your device's location services for accurate emergency alerts.",
     },
     {
       number: "02",
       color: "#E8500A",
-      bg: "#FFF3EE",
+      bg: "var(--hoh-bg-fff3ee)",
       title: "Tap Your Emergency",
       desc: "Select the type of emergency situation you are facing.",
     },
     {
       number: "03",
       color: "#1A9E5C",
-      bg: "#EDFBF3",
+      bg: "var(--hoh-bg-edfbf3)",
       title: "Contacts Notified",
       desc: "Your ICE list receives an automated message and voice call instantly.",
     },
@@ -33,11 +33,11 @@ export default function Invite() {
   return (
     <div style={{ width: "100%", maxWidth: "480px", padding: "20px" }}>
       <div style={{
-        background: "#fff",
+        background: "var(--hoh-bg-ffffff)",
         borderRadius: "28px",
         overflow: "hidden",
         boxShadow: "0 24px 80px rgba(0,0,0,0.18)",
-        border: "1px solid #DDE3F5",
+        border: "1px solid var(--hoh-line-dde3f5)",
       }}>
         {/* Gradient header */}
         <div style={{
@@ -72,13 +72,13 @@ export default function Invite() {
         <div style={{ padding: "24px" }}>
           {/* Intro text */}
           <div style={{
-            background: "#F0F4FF",
+            background: "var(--hoh-bg-f0f4ff)",
             borderRadius: "16px",
             padding: "16px 18px",
-            border: "1px solid #DDE3F5",
+            border: "1px solid var(--hoh-line-dde3f5)",
             marginBottom: "20px",
           }}>
-            <p style={{ color: "#0F1B3E", fontSize: "13.5px", lineHeight: 1.7 }}>
+            <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "13.5px", lineHeight: 1.7 }}>
               Help OO Help lets people quickly reach their loved ones during emergencies.
               With <strong>location enabled</strong> and a single tap, an automated message
               and voice call is sent to their <strong>In Case of Emergency (ICE)</strong> list.
@@ -96,8 +96,8 @@ export default function Invite() {
             {steps.map((s, i) => (
               <div key={i} style={{
                 display: "flex", alignItems: "flex-start", gap: "12px",
-                background: "#F8FAFF", borderRadius: "14px",
-                padding: "13px 14px", border: "1px solid #DDE3F5",
+                background: "var(--hoh-bg-f8faff)", borderRadius: "14px",
+                padding: "13px 14px", border: "1px solid var(--hoh-line-dde3f5)",
               }}>
                 <div style={{
                   width: "34px", height: "34px", borderRadius: "10px",
@@ -107,8 +107,8 @@ export default function Invite() {
                   <span style={{ color: s.color, fontWeight: 800, fontSize: "12px" }}>{s.number}</span>
                 </div>
                 <div>
-                  <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "13.5px", marginBottom: "2px" }}>{s.title}</p>
-                  <p style={{ color: "#8B94B2", fontSize: "12px", lineHeight: 1.5 }}>{s.desc}</p>
+                  <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "13.5px", marginBottom: "2px" }}>{s.title}</p>
+                  <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "12px", lineHeight: 1.5 }}>{s.desc}</p>
                 </div>
               </div>
             ))}
@@ -119,9 +119,9 @@ export default function Invite() {
             <Link href="/" style={{ flex: 1 }}>
               <button style={{
                 width: "100%", padding: "13px", borderRadius: "16px",
-                background: "#F0F4FF", color: "#8B94B2",
+                background: "var(--hoh-bg-f0f4ff)", color: "var(--hoh-text-8b94b2)",
                 fontWeight: 600, fontSize: "14px",
-                border: "1px solid #DDE3F5", cursor: "pointer",
+                border: "1px solid var(--hoh-line-dde3f5)", cursor: "pointer",
               }}>
                 Maybe Later
               </button>

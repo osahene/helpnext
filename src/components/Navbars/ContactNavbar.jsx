@@ -108,8 +108,8 @@ export function ContactNavbar() {
               ref={dropdownRef}
               style={{
                 position: "absolute", top: "44px", right: 0, width: "200px",
-                background: "#fff", borderRadius: "18px", overflow: "hidden",
-                boxShadow: "0 20px 60px rgba(0,0,0,0.2)", border: "1px solid #DDE3F5",
+                background: "var(--hoh-bg-ffffff)", borderRadius: "18px", overflow: "hidden",
+                boxShadow: "0 20px 60px rgba(0,0,0,0.2)", border: "1px solid var(--hoh-line-dde3f5)",
                 transition: "all 0.2s ease",
                 opacity: isDropdownOpen ? 1 : 0,
                 transform: isDropdownOpen ? "translateY(0)" : "translateY(-8px)",
@@ -121,8 +121,8 @@ export function ContactNavbar() {
               </div>
               <div style={{ padding: "8px" }}>
                 <Link href="/profile" style={{ textDecoration: "none" }}>
-                  <button style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", background: "transparent", color: "#0F1B3E", fontWeight: 600, fontSize: "13.5px", border: "none", cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ width: "28px", height: "28px", borderRadius: "8px", background: "#F0F4FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <button style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", background: "transparent", color: "var(--hoh-text-0f1b3e)", fontWeight: 600, fontSize: "13.5px", border: "none", cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: "8px" }}>
+                    <span style={{ width: "28px", height: "28px", borderRadius: "8px", background: "var(--hoh-bg-f0f4ff)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                       <svg style={{ width: "13px", height: "13px", color: "#2C5FD4" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
@@ -131,7 +131,7 @@ export function ContactNavbar() {
                   </button>
                 </Link>
                 <button onClick={handleLogout} style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", background: "transparent", color: "#CC2222", fontWeight: 600, fontSize: "13.5px", border: "none", cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: "8px" }}>
-                  <span style={{ width: "28px", height: "28px", borderRadius: "8px", background: "#FFF0F0", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ width: "28px", height: "28px", borderRadius: "8px", background: "var(--hoh-bg-fff0f0)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <svg style={{ width: "13px", height: "13px", color: "#CC2222" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
@@ -144,7 +144,7 @@ export function ContactNavbar() {
         ) : (
           <div style={{ display: "flex", gap: "8px" }}>
             <Link href="/auth/login">
-              <button style={{ padding: "8px 14px", borderRadius: "10px", background: "#fff", color: "#6B0F0F", fontWeight: 700, fontSize: "13px", border: "none", cursor: "pointer" }}>Login</button>
+              <button style={{ padding: "8px 14px", borderRadius: "10px", background: "var(--hoh-bg-ffffff)", color: "var(--hoh-text-6b0f0f)", fontWeight: 700, fontSize: "13px", border: "none", cursor: "pointer" }}>Login</button>
             </Link>
           </div>
         )}

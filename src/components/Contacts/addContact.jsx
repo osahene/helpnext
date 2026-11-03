@@ -9,14 +9,14 @@ import { DEFAULT_COUNTRY, sanitizePhoneInput } from "@/utils/phone";
 
 // The same six as the home page's alert cards (Cards/pageCards.jsx), so every
 // card has contacts who can receive it.
-const situations = ["Health Crisis", "Robbery Attack", "Fire Outbreak", "Flood Alert", "Call Emergency", "Accident Alert"];
+const situations = ["Health Crisis", "Robbery Attack", "Fire Outbreak", "Flood Alert", "Safety Companion", "Accident Alert"];
 
 const situationColors = {
   "Health Crisis": "#1A9E5C",
   "Robbery Attack": "#CC2222",
   "Fire Outbreak": "#E8500A",
   "Flood Alert": "#0A72C4",
-  "Call Emergency": "#7B22CE",
+  "Safety Companion": "#7B22CE",
   "Accident Alert": "#8B5C00",
 };
 
@@ -31,11 +31,11 @@ const SectionLabel = ({ color, label }) => (
 
 const InputField = ({ label, icon, error, ...props }) => (
   <div>
-    <label style={{ display: "block", color: "#0F1B3E", fontSize: "13px", fontWeight: 600, marginBottom: "6px" }}>
+    <label style={{ display: "block", color: "var(--hoh-text-0f1b3e)", fontSize: "13px", fontWeight: 600, marginBottom: "6px" }}>
       {label}
     </label>
     <div style={{ position: "relative" }}>
-      <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "#8B94B2" }}>
+      <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "var(--hoh-text-8b94b2)" }}>
         {icon}
       </span>
       <input
@@ -44,9 +44,9 @@ const InputField = ({ label, icon, error, ...props }) => (
           width: "100%",
           padding: "13px 14px 13px 42px",
           borderRadius: "14px",
-          border: `1px solid ${error ? "#f87171" : "#DDE3F5"}`,
-          background: "#fff",
-          color: "#0F1B3E",
+          border: `1px solid ${error ? "#f87171" : "var(--hoh-line-dde3f5)"}`,
+          background: "var(--hoh-bg-ffffff)",
+          color: "var(--hoh-text-0f1b3e)",
           fontSize: "14px",
           fontWeight: 500,
           outline: "none",
@@ -54,7 +54,7 @@ const InputField = ({ label, icon, error, ...props }) => (
           transition: "border-color 0.2s",
         }}
         onFocus={(e) => (e.target.style.borderColor = "#2C5FD4")}
-        onBlur={(e) => (e.target.style.borderColor = error ? "#f87171" : "#DDE3F5")}
+        onBlur={(e) => (e.target.style.borderColor = error ? "#f87171" : "var(--hoh-line-dde3f5)")}
       />
     </div>
     {error && <p style={{ color: "#ef4444", fontSize: "11.5px", marginTop: "4px" }}>{error}</p>}
@@ -141,11 +141,11 @@ export default function AddContacts() {
     <form onSubmit={handleSubmit}>
       <div
         style={{
-          background: "#fff",
+          background: "var(--hoh-bg-ffffff)",
           borderRadius: "22px",
           padding: "24px",
           boxShadow: "0 4px 24px rgba(44,95,212,0.08)",
-          border: "1px solid #DDE3F5",
+          border: "1px solid var(--hoh-line-dde3f5)",
         }}
       >
         {/* ── Personal Info ─────────────────────────────── */}
@@ -176,7 +176,7 @@ export default function AddContacts() {
 
           {/* Phone row */}
           <div>
-            <label style={{ display: "block", color: "#0F1B3E", fontSize: "13px", fontWeight: 600, marginBottom: "6px" }}>
+            <label style={{ display: "block", color: "var(--hoh-text-0f1b3e)", fontSize: "13px", fontWeight: 600, marginBottom: "6px" }}>
               Phone Number
             </label>
             <div style={{ display: "flex", gap: "10px" }}>
@@ -207,12 +207,12 @@ export default function AddContacts() {
                 required
                 style={{
                   flex: 1, padding: "13px 14px", borderRadius: "14px",
-                  border: `1px solid ${errors.phone_number ? "#f87171" : "#DDE3F5"}`,
-                  background: "#fff", color: "#0F1B3E", fontSize: "14px",
+                  border: `1px solid ${errors.phone_number ? "#f87171" : "var(--hoh-line-dde3f5)"}`,
+                  background: "var(--hoh-bg-ffffff)", color: "var(--hoh-text-0f1b3e)", fontSize: "14px",
                   fontWeight: 500, outline: "none",
                 }}
                 onFocus={(e) => (e.target.style.borderColor = "#2C5FD4")}
-                onBlur={(e) => (e.target.style.borderColor = errors.phone_number ? "#f87171" : "#DDE3F5")}
+                onBlur={(e) => (e.target.style.borderColor = errors.phone_number ? "#f87171" : "var(--hoh-line-dde3f5)")}
               />
             </div>
             {errors.phone_number ? (
@@ -220,7 +220,7 @@ export default function AddContacts() {
                 {errors.phone_number}
               </p>
             ) : (
-              <p style={{ color: "#8B94B2", fontSize: "12px", marginTop: "6px" }}>
+              <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "12px", marginTop: "6px" }}>
                 Enter the number without the leading 0.
               </p>
             )}
@@ -236,7 +236,7 @@ export default function AddContacts() {
 
         {/* ── Notify For ────────────────────────────────── */}
         <SectionLabel color="#E07A1A" label="Notify For" />
-        <p style={{ color: "#8B94B2", fontSize: "12.5px", marginBottom: "12px", lineHeight: 1.5 }}>
+        <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "12.5px", marginBottom: "12px", lineHeight: 1.5 }}>
           Select the situations this contact should be alerted for.
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "28px" }}>
@@ -248,9 +248,9 @@ export default function AddContacts() {
                 key={s} type="button" onClick={() => toggleSituation(s)}
                 style={{
                   padding: "8px 14px", borderRadius: "20px",
-                  background: sel ? `${col}15` : "#F0F4FF",
-                  border: `${sel ? 1.8 : 1}px solid ${sel ? col : "#DDE3F5"}`,
-                  color: sel ? col : "#8B94B2",
+                  background: sel ? `${col}15` : "var(--hoh-bg-f0f4ff)",
+                  border: `${sel ? 1.8 : 1}px solid ${sel ? col : "var(--hoh-line-dde3f5)"}`,
+                  color: sel ? col : "var(--hoh-text-8b94b2)",
                   fontSize: "13px", fontWeight: sel ? 700 : 500,
                   cursor: "pointer", display: "flex", alignItems: "center", gap: "5px",
                   transition: "all 0.2s ease",
@@ -282,9 +282,9 @@ export default function AddContacts() {
             }}
             style={{
               flex: 1, padding: "14px", borderRadius: "16px",
-              background: "#F0F4FF", color: "#8B94B2",
+              background: "var(--hoh-bg-f0f4ff)", color: "var(--hoh-text-8b94b2)",
               fontWeight: 600, fontSize: "14.5px",
-              border: "1px solid #DDE3F5", cursor: "pointer",
+              border: "1px solid var(--hoh-line-dde3f5)", cursor: "pointer",
             }}
           >
             Clear
@@ -296,8 +296,8 @@ export default function AddContacts() {
               flex: 2, padding: "14px", borderRadius: "16px",
               background: isValid
                 ? "linear-gradient(135deg, #2C5FD4, #5B3FE8)"
-                : "#DDE3F5",
-              color: isValid ? "#fff" : "#8B94B2",
+                : "var(--hoh-bg-dde3f5)",
+              color: isValid ? "#fff" : "var(--hoh-text-8b94b2)",
               fontWeight: 700, fontSize: "14.5px",
               boxShadow: isValid ? "0 8px 24px rgba(91,63,232,0.35)" : "none",
               border: "none", cursor: isValid ? "pointer" : "not-allowed",

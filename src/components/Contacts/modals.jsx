@@ -7,7 +7,7 @@ export function DependantAction({ contact, onAction, onCancel, actionType }) {
   const name = `${contact.first_name} ${contact.last_name}`;
 
   return (
-    <div style={{ background: "#fff", borderRadius: "24px", width: "100%", maxWidth: "380px", overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.25)" }}>
+    <div style={{ background: "var(--hoh-bg-ffffff)", borderRadius: "24px", width: "100%", maxWidth: "380px", overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.25)" }}>
       {/* Header */}
       <div style={{
         background: isApprove ? "linear-gradient(135deg, #1A9E5C, #0D7A45)" : "linear-gradient(135deg, #CC2222, #8B0000)",
@@ -25,8 +25,8 @@ export function DependantAction({ contact, onAction, onCancel, actionType }) {
       </div>
 
       <div style={{ padding: "22px 20px 20px" }}>
-        <div style={{ background: "#F0F4FF", borderRadius: "14px", padding: "14px 16px", marginBottom: "20px", border: "1px solid #DDE3F5" }}>
-          <p style={{ color: "#0F1B3E", fontSize: "14px", lineHeight: 1.6 }}>
+        <div style={{ background: "var(--hoh-bg-f0f4ff)", borderRadius: "14px", padding: "14px 16px", marginBottom: "20px", border: "1px solid var(--hoh-line-dde3f5)" }}>
+          <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "14px", lineHeight: 1.6 }}>
             Do you want to <strong style={{ color: isApprove ? "#1A9E5C" : "#CC2222" }}>{actionType}</strong>{" "}
             <strong>{name}</strong> as your dependent?
           </p>
@@ -34,7 +34,7 @@ export function DependantAction({ contact, onAction, onCancel, actionType }) {
         <div style={{ display: "flex", gap: "10px" }}>
           <button
             onClick={onCancel}
-            style={{ flex: 1, padding: "13px", borderRadius: "14px", background: "#F0F4FF", color: "#8B94B2", fontWeight: 600, fontSize: "14px", border: "1px solid #DDE3F5", cursor: "pointer" }}
+            style={{ flex: 1, padding: "13px", borderRadius: "14px", background: "var(--hoh-bg-f0f4ff)", color: "var(--hoh-text-8b94b2)", fontWeight: 600, fontSize: "14px", border: "1px solid var(--hoh-line-dde3f5)", cursor: "pointer" }}
           >
             Cancel
           </button>
@@ -74,7 +74,7 @@ export function EditContact({ contact, onSave, onCancel }) {
   ];
 
   return (
-    <div style={{ background: "#fff", borderRadius: "24px", width: "100%", maxWidth: "420px", overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.25)" }}>
+    <div style={{ background: "var(--hoh-bg-ffffff)", borderRadius: "24px", width: "100%", maxWidth: "420px", overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.25)" }}>
       <div style={{ background: "linear-gradient(135deg, #2C5FD4, #5B3FE8)", padding: "22px 20px" }}>
         <div style={{ width: "48px", height: "48px", borderRadius: "14px", background: "rgba(255,255,255,0.15)", border: "1.5px solid rgba(255,255,255,0.25)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "12px" }}>
           <svg style={{ width: "22px", height: "22px", color: "#fff" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -89,7 +89,7 @@ export function EditContact({ contact, onSave, onCancel }) {
         <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "20px" }}>
           {fields.map((f) => (
             <div key={f.name}>
-              <label style={{ display: "block", color: "#0F1B3E", fontSize: "12px", fontWeight: 600, marginBottom: "5px", letterSpacing: "0.3px" }}>
+              <label style={{ display: "block", color: "var(--hoh-text-0f1b3e)", fontSize: "12px", fontWeight: 600, marginBottom: "5px", letterSpacing: "0.3px" }}>
                 {f.label}
               </label>
               <input
@@ -97,19 +97,19 @@ export function EditContact({ contact, onSave, onCancel }) {
                 onChange={handleChange} placeholder={f.placeholder} required
                 style={{
                   width: "100%", padding: "12px 14px", borderRadius: "13px",
-                  border: "1px solid #DDE3F5", background: "#F0F4FF",
-                  color: "#0F1B3E", fontSize: "14px", fontWeight: 500,
+                  border: "1px solid var(--hoh-line-dde3f5)", background: "var(--hoh-bg-f0f4ff)",
+                  color: "var(--hoh-text-0f1b3e)", fontSize: "14px", fontWeight: 500,
                   outline: "none", boxSizing: "border-box",
                 }}
                 onFocus={(e) => (e.target.style.borderColor = "#2C5FD4")}
-                onBlur={(e) => (e.target.style.borderColor = "#DDE3F5")}
+                onBlur={(e) => (e.target.style.borderColor = "var(--hoh-line-dde3f5)")}
               />
             </div>
           ))}
         </div>
         <div style={{ display: "flex", gap: "10px" }}>
           <button type="button" onClick={onCancel}
-            style={{ flex: 1, padding: "13px", borderRadius: "14px", background: "#F0F4FF", color: "#8B94B2", fontWeight: 600, fontSize: "14px", border: "1px solid #DDE3F5", cursor: "pointer" }}>
+            style={{ flex: 1, padding: "13px", borderRadius: "14px", background: "var(--hoh-bg-f0f4ff)", color: "var(--hoh-text-8b94b2)", fontWeight: 600, fontSize: "14px", border: "1px solid var(--hoh-line-dde3f5)", cursor: "pointer" }}>
             Cancel
           </button>
           <button type="submit"
@@ -127,7 +127,7 @@ export function EditContact({ contact, onSave, onCancel }) {
 export function RemoveInfo({ contact, onDelete, onCancel }) {
   const name = `${contact.first_name} ${contact.last_name}`;
   return (
-    <div style={{ background: "#fff", borderRadius: "24px", width: "100%", maxWidth: "380px", overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.25)" }}>
+    <div style={{ background: "var(--hoh-bg-ffffff)", borderRadius: "24px", width: "100%", maxWidth: "380px", overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.25)" }}>
       <div style={{ background: "linear-gradient(135deg, #CC2222, #8B0000)", padding: "24px 20px" }}>
         <div style={{ width: "56px", height: "56px", borderRadius: "50%", background: "rgba(255,255,255,0.15)", border: "2px solid rgba(255,255,255,0.25)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "12px" }}>
           <svg style={{ width: "26px", height: "26px", color: "#fff" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -138,8 +138,8 @@ export function RemoveInfo({ contact, onDelete, onCancel }) {
         <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "13px", marginTop: "3px" }}>This action cannot be undone</p>
       </div>
       <div style={{ padding: "22px 20px 20px" }}>
-        <div style={{ background: "#FFF8F8", borderRadius: "14px", padding: "14px 16px", marginBottom: "20px", border: "1px solid #FFE0E0" }}>
-          <p style={{ color: "#0F1B3E", fontSize: "14px", lineHeight: 1.6 }}>
+        <div style={{ background: "var(--hoh-bg-fff8f8)", borderRadius: "14px", padding: "14px 16px", marginBottom: "20px", border: "1px solid var(--hoh-line-ffe0e0)" }}>
+          <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "14px", lineHeight: 1.6 }}>
             Are you sure you want to remove{" "}
             <strong style={{ color: "#CC2222" }}>{name}</strong>{" "}
             from your emergency list?
@@ -147,7 +147,7 @@ export function RemoveInfo({ contact, onDelete, onCancel }) {
         </div>
         <div style={{ display: "flex", gap: "10px" }}>
           <button onClick={onCancel}
-            style={{ flex: 1, padding: "13px", borderRadius: "14px", background: "#F0F4FF", color: "#8B94B2", fontWeight: 600, fontSize: "14px", border: "1px solid #DDE3F5", cursor: "pointer" }}>
+            style={{ flex: 1, padding: "13px", borderRadius: "14px", background: "var(--hoh-bg-f0f4ff)", color: "var(--hoh-text-8b94b2)", fontWeight: 600, fontSize: "14px", border: "1px solid var(--hoh-line-dde3f5)", cursor: "pointer" }}>
             Cancel
           </button>
           <button onClick={onDelete}

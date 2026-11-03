@@ -24,10 +24,10 @@ export default function NotificationListItem({
         gap: "12px",
         alignItems: "flex-start",
         padding: compact ? "10px 14px" : "16px",
-        background: isUnread ? "#F7F9FF" : "#fff",
-        borderBottom: "1px solid #EEF1FA",
+        background: isUnread ? "var(--hoh-bg-f7f9ff)" : "var(--hoh-bg-ffffff)",
+        borderBottom: "1px solid var(--hoh-line-eef1fa)",
         borderRadius: compact ? 0 : "16px",
-        border: compact ? undefined : "1px solid #EEF1FA",
+        border: compact ? undefined : "1px solid var(--hoh-line-eef1fa)",
         marginBottom: compact ? 0 : "10px",
         cursor: "pointer",
       }}
@@ -78,7 +78,7 @@ export default function NotificationListItem({
             style={{
               marginLeft: "auto",
               fontSize: "11px",
-              color: "#8A93B3",
+              color: "var(--hoh-text-8a93b3)",
               whiteSpace: "nowrap",
             }}
           >
@@ -91,7 +91,7 @@ export default function NotificationListItem({
             display: "block",
             fontSize: compact ? "13px" : "14.5px",
             fontWeight: 700,
-            color: "#14213D",
+            color: "var(--hoh-text-14213d)",
             marginTop: "2px",
           }}
         >
@@ -102,7 +102,7 @@ export default function NotificationListItem({
           style={{
             display: "block",
             fontSize: compact ? "12.5px" : "13.5px",
-            color: "#5B6483",
+            color: "var(--hoh-text-5b6483)",
             marginTop: "2px",
             ...(expanded
               ? {}
@@ -142,7 +142,7 @@ export default function NotificationListItem({
               display: "block",
               marginTop: "8px",
               fontSize: "11.5px",
-              color: "#8A93B3",
+              color: "var(--hoh-text-8a93b3)",
               fontStyle: "italic",
             }}
           >

@@ -338,7 +338,7 @@ export default function StatusBanner() {
 
       <style jsx global>{`
         .hoh-banner-cta:focus-visible {
-          outline: 2px solid #fff;
+          outline: 2px solid var(--hoh-line-ffffff);
           outline-offset: 3px;
         }
         .hoh-banner-cta:active {

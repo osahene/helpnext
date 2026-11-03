@@ -15,7 +15,7 @@ describe("serviceForSituation", () => {
 
   it("accepts full situation labels in any case", () => {
     expect(name("fire outbreak")).toBe("Ghana Fire Service");
-    expect(name("Call Emergency")).toBe("Ghana Police Service");
+    expect(name("Safety Companion")).toBe("Ghana Police Service");
   });
 
   it("falls back to the police for anything unknown", () => {

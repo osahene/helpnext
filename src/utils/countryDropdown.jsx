@@ -4,9 +4,9 @@ import Image from "next/image";
 import { countryOptions } from "@/utils/phone";
 
 const C = {
-  accent: "#4F8EF7", accentLight: "#EAF1FE", surface: "#F7F9FC",
-  border: "#E2E8F0", textPrimary: "#0F172A", textSecondary: "#64748B", white: "#FFFFFF",
-  locked: "#E4E9F5",
+  accent: "#4F8EF7", accentLight: "var(--hoh-bg-eaf1fe)", surface: "var(--hoh-bg-f7f9fc)",
+  border: "var(--hoh-line-e2e8f0)", textPrimary: "var(--hoh-text-0f172a)", textSecondary: "var(--hoh-text-64748b)", white: "var(--hoh-bg-ffffff)",
+  locked: "var(--hoh-bg-e4e9f5)",
 };
 
 export default function CountryDropdown({ selected, onChange, height = 54, disabled = false }) {

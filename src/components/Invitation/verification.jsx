@@ -75,20 +75,20 @@ export default function Verification() {
     return (
       <div style={{ width: "100%", maxWidth: "420px", padding: "20px" }}>
         <div style={{
-          background: "#fff", borderRadius: "28px", padding: "48px 24px",
+          background: "var(--hoh-bg-ffffff)", borderRadius: "28px", padding: "48px 24px",
           textAlign: "center", boxShadow: "0 24px 80px rgba(0,0,0,0.12)",
-          border: "1px solid #DDE3F5",
+          border: "1px solid var(--hoh-line-dde3f5)",
         }}>
           <div style={{
             width: "56px", height: "56px", borderRadius: "50%",
-            border: "3px solid #DDE3F5", borderTopColor: "#2C5FD4",
+            border: "3px solid var(--hoh-line-dde3f5)", borderTopColor: "#2C5FD4",
             animation: "spin 0.8s linear infinite",
             margin: "0 auto 16px",
           }} />
-          <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "16px", marginBottom: "6px" }}>
+          <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "16px", marginBottom: "6px" }}>
             Loading verification…
           </p>
-          <p style={{ color: "#8B94B2", fontSize: "13px" }}>Please wait a moment</p>
+          <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "13px" }}>Please wait a moment</p>
           <style jsx global>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
       </div>
@@ -100,9 +100,9 @@ export default function Verification() {
     return (
       <div style={{ width: "100%", maxWidth: "420px", padding: "20px" }}>
         <div style={{
-          background: "#fff", borderRadius: "28px",
+          background: "var(--hoh-bg-ffffff)", borderRadius: "28px",
           overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.15)",
-          border: "1px solid #DDE3F5",
+          border: "1px solid var(--hoh-line-dde3f5)",
         }}>
           <div style={{ background: "linear-gradient(135deg, #CC2222, #8B0000)", padding: "28px 24px" }}>
             <div style={{ width: "56px", height: "56px", borderRadius: "50%", background: "rgba(255,255,255,0.15)", border: "2px solid rgba(255,255,255,0.25)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
@@ -114,7 +114,7 @@ export default function Verification() {
             <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "13px", textAlign: "center" }}>Token error</p>
           </div>
           <div style={{ padding: "22px 24px 24px" }}>
-            <div style={{ background: "#FFF8F8", borderRadius: "14px", padding: "14px 16px", border: "1px solid #FFE0E0", marginBottom: "20px" }}>
+            <div style={{ background: "var(--hoh-bg-fff8f8)", borderRadius: "14px", padding: "14px 16px", border: "1px solid var(--hoh-line-ffe0e0)", marginBottom: "20px" }}>
               <p style={{ color: "#CC2222", fontSize: "14px", lineHeight: 1.6 }}>{error}</p>
             </div>
             <button
@@ -144,9 +144,9 @@ export default function Verification() {
     return (
       <div style={{ width: "100%", maxWidth: "480px", padding: "20px" }}>
         <div style={{
-          background: "#fff", borderRadius: "28px",
+          background: "var(--hoh-bg-ffffff)", borderRadius: "28px",
           overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.15)",
-          border: "1px solid #DDE3F5",
+          border: "1px solid var(--hoh-line-dde3f5)",
         }}>
           <div style={{ background: "linear-gradient(135deg, #1A9E5C, #0D7A45)", padding: "32px 24px", textAlign: "center" }}>
             <div style={{ position: "relative", width: "72px", height: "72px", margin: "0 auto 16px" }}>
@@ -161,11 +161,14 @@ export default function Verification() {
             <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "13.5px" }}>Alert confirmed successfully</p>
           </div>
           <div style={{ padding: "22px 24px 24px" }}>
-            <div style={{ background: "#EDFBF3", borderRadius: "14px", padding: "14px 16px", border: "1px solid #B2EECC", marginBottom: "20px" }}>
-              <p style={{ color: "#0F1B3E", fontSize: "14px", lineHeight: 1.65 }}>
+            <div style={{ background: "var(--hoh-bg-edfbf3)", borderRadius: "14px", padding: "14px 16px", border: "1px solid var(--hoh-line-b2eecc)", marginBottom: "20px" }}>
+              <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "14px", lineHeight: 1.65 }}>
                 Thank you for confirming this emergency alert. The sender has been notified that you&apos;ve seen it.
               </p>
             </div>
+            {(alertInfo?.safety || names?.safety) && (
+              <SafetyReport safety={alertInfo?.safety || names.safety} />
+            )}
             {alertInfo && <SenderLocation info={alertInfo} isLive={isLive} updatedAt={updatedAt} />}
             {alertInfo && (
               <AlertAnswer
@@ -203,9 +206,9 @@ export default function Verification() {
   return (
     <div style={{ width: "100%", maxWidth: "480px", padding: "20px" }}>
       <div style={{
-        background: "#fff", borderRadius: "28px",
+        background: "var(--hoh-bg-ffffff)", borderRadius: "28px",
         overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.18)",
-        border: "1px solid #DDE3F5",
+        border: "1px solid var(--hoh-line-dde3f5)",
       }}>
         {/* Header */}
         <div style={{
@@ -235,17 +238,17 @@ export default function Verification() {
         <div style={{ padding: "24px" }}>
           {names && (
             <div style={{
-              background: "#FFF8F8", borderRadius: "16px",
-              padding: "16px 18px", border: "1px solid #FFE0E0", marginBottom: "16px",
+              background: "var(--hoh-bg-fff8f8)", borderRadius: "16px",
+              padding: "16px 18px", border: "1px solid var(--hoh-line-ffe0e0)", marginBottom: "16px",
             }}>
               <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                <div style={{ width: "36px", height: "36px", borderRadius: "10px", background: "#FFF0F0", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: "1px" }}>
+                <div style={{ width: "36px", height: "36px", borderRadius: "10px", background: "var(--hoh-bg-fff0f0)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: "1px" }}>
                   <svg style={{ width: "16px", height: "16px", color: "#CC2222" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                   </svg>
                 </div>
                 <div>
-                  <p style={{ color: "#0F1B3E", fontSize: "14px", lineHeight: 1.65 }}>
+                  <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "14px", lineHeight: 1.65 }}>
                     This is an authentic emergency alert from{" "}
                     <strong style={{ color: "#CC2222" }}>
                       {names.user_first_name} {names.user_last_name}
@@ -257,26 +260,28 @@ export default function Verification() {
             </div>
           )}
 
+          {names?.safety && <SafetyReport safety={names.safety} />}
+
           {/* Location info note */}
           <div style={{
-            background: "#F0F4FF", borderRadius: "14px",
-            padding: "12px 14px", border: "1px solid #DDE3F5",
+            background: "var(--hoh-bg-f0f4ff)", borderRadius: "14px",
+            padding: "12px 14px", border: "1px solid var(--hoh-line-dde3f5)",
             display: "flex", alignItems: "center", gap: "10px", marginBottom: "22px",
           }}>
             <svg style={{ width: "15px", height: "15px", color: "#2C5FD4", flexShrink: 0 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            <p style={{ color: "#8B94B2", fontSize: "12.5px" }}>
+            <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "12.5px" }}>
               Verifying confirms you are aware of this emergency.
             </p>
           </div>
 
           {/* Divider */}
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "18px" }}>
-            <div style={{ flex: 1, height: "1px", background: "#DDE3F5" }} />
-            <p style={{ color: "#8B94B2", fontSize: "11px", fontWeight: 600, letterSpacing: "0.8px" }}>YOUR RESPONSE</p>
-            <div style={{ flex: 1, height: "1px", background: "#DDE3F5" }} />
+            <div style={{ flex: 1, height: "1px", background: "var(--hoh-bg-dde3f5)" }} />
+            <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.8px" }}>YOUR RESPONSE</p>
+            <div style={{ flex: 1, height: "1px", background: "var(--hoh-bg-dde3f5)" }} />
           </div>
 
           {/* Action buttons */}
@@ -285,9 +290,9 @@ export default function Verification() {
               onClick={() => router.push("/")}
               style={{
                 flex: 1, padding: "14px", borderRadius: "16px",
-                background: "#F0F4FF", color: "#8B94B2",
+                background: "var(--hoh-bg-f0f4ff)", color: "var(--hoh-text-8b94b2)",
                 fontWeight: 600, fontSize: "14px",
-                border: "1px solid #DDE3F5", cursor: "pointer",
+                border: "1px solid var(--hoh-line-dde3f5)", cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: "7px",
               }}
             >
@@ -316,7 +321,7 @@ export default function Verification() {
             </button>
           </div>
 
-          <p style={{ textAlign: "center", color: "#8B94B2", fontSize: "11.5px", marginTop: "14px" }}>
+          <p style={{ textAlign: "center", color: "var(--hoh-text-8b94b2)", fontSize: "11.5px", marginTop: "14px" }}>
             Your confirmation will be sent to the alert sender.
           </p>
         </div>
@@ -339,7 +344,7 @@ const ANSWERS = {
   },
   cant_help: {
     label: "I can't help",
-    color: "#4B5563",
+    color: "var(--hoh-text-4b5563)",
     ask: (name) => `Tell ${name} you can't help?`,
     detail: (name) => `${name} will be notified straight away, so they can turn to someone else. Their other contacts have been alerted too.`,
     confirm: "Yes, I can't help",
@@ -379,15 +384,15 @@ function AlertAnswer({ code, senderFirstName, contactFirstName, initialAnswer, i
   return (
     <div style={{ marginBottom: "20px" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "4px 0 14px" }}>
-        <div style={{ flex: 1, height: "1px", background: "#DDE3F5" }} />
-        <p style={{ color: "#8B94B2", fontSize: "11px", fontWeight: 600, letterSpacing: "0.8px" }}>CAN YOU HELP?</p>
-        <div style={{ flex: 1, height: "1px", background: "#DDE3F5" }} />
+        <div style={{ flex: 1, height: "1px", background: "var(--hoh-bg-dde3f5)" }} />
+        <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.8px" }}>CAN YOU HELP?</p>
+        <div style={{ flex: 1, height: "1px", background: "var(--hoh-bg-dde3f5)" }} />
       </div>
 
       {others.length > 0 && (
         <div style={{ marginBottom: "12px" }}>
           {others.map((r) => (
-            <p key={`${r.first_name}-${r.response}`} style={{ color: "#5B6481", fontSize: "13px", textAlign: "center", margin: "0 0 4px" }}>
+            <p key={`${r.first_name}-${r.response}`} style={{ color: "var(--hoh-text-5b6481)", fontSize: "13px", textAlign: "center", margin: "0 0 4px" }}>
               {r.response === "on_my_way" ? `🏃 ${r.first_name} is on the way` : `${r.first_name} can't help`}
             </p>
           ))}
@@ -402,7 +407,7 @@ function AlertAnswer({ code, senderFirstName, contactFirstName, initialAnswer, i
       )}
 
       {answer && !confirmingDecline && (
-        <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14px", textAlign: "center", marginBottom: "12px" }}>
+        <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "14px", textAlign: "center", marginBottom: "12px" }}>
           {ANSWERS[answer].done(senderFirstName)}
         </p>
       )}
@@ -440,18 +445,18 @@ function AlertAnswer({ code, senderFirstName, contactFirstName, initialAnswer, i
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            style={{ background: "#fff", borderRadius: "22px", padding: "24px", maxWidth: "380px", width: "100%", boxShadow: "0 24px 80px rgba(0,0,0,0.25)" }}
+            style={{ background: "var(--hoh-bg-ffffff)", borderRadius: "22px", padding: "24px", maxWidth: "380px", width: "100%", boxShadow: "0 24px 80px rgba(0,0,0,0.25)" }}
           >
-            <p style={{ color: "#0F1B3E", fontWeight: 800, fontSize: "17px", marginBottom: "8px" }}>
+            <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 800, fontSize: "17px", marginBottom: "8px" }}>
               {ANSWERS[confirming].ask(senderFirstName)}
             </p>
-            <p style={{ color: "#5B6481", fontSize: "13.5px", lineHeight: 1.6, marginBottom: "18px" }}>
+            <p style={{ color: "var(--hoh-text-5b6481)", fontSize: "13.5px", lineHeight: 1.6, marginBottom: "18px" }}>
               {ANSWERS[confirming].detail(senderFirstName)}
             </p>
             <div style={{ display: "flex", gap: "10px" }}>
               <button
                 onClick={() => setConfirming(null)}
-                style={{ flex: 1, padding: "12px", borderRadius: "14px", border: "1px solid #DDE3F5", background: "#fff", color: "#5B6481", fontWeight: 700, fontSize: "14px", cursor: "pointer" }}
+                style={{ flex: 1, padding: "12px", borderRadius: "14px", border: "1px solid var(--hoh-line-dde3f5)", background: "var(--hoh-bg-ffffff)", color: "var(--hoh-text-5b6481)", fontWeight: 700, fontSize: "14px", cursor: "pointer" }}
               >
                 Cancel
               </button>
@@ -486,7 +491,7 @@ function SenderLocation({ info, isLive, updatedAt }) {
   return (
     <div style={{ marginBottom: "20px" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
-        <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14px", flex: 1 }}>
+        <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "14px", flex: 1 }}>
           {info.user_name ? `${info.user_name}'s location` : "Sender's location"}
         </p>
         {isLive && (
@@ -495,17 +500,17 @@ function SenderLocation({ info, isLive, updatedAt }) {
             background: "#CC2222", color: "#fff", borderRadius: "999px",
             padding: "4px 10px", fontSize: "11px", fontWeight: 800, letterSpacing: "1px",
           }}>
-            <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#fff", animation: "livePulse 1.2s ease-in-out infinite" }} />
+            <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--hoh-bg-ffffff)", animation: "livePulse 1.2s ease-in-out infinite" }} />
             LIVE
           </span>
         )}
       </div>
       {info.location && (
-        <p style={{ color: "#8B94B2", fontSize: "13px", marginBottom: "10px" }}>{info.location}</p>
+        <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "13px", marginBottom: "10px" }}>{info.location}</p>
       )}
       {coords ? (
         <>
-          <div style={{ borderRadius: "16px", overflow: "hidden", border: "1px solid #DDE3F5", height: "240px" }}>
+          <div style={{ borderRadius: "16px", overflow: "hidden", border: "1px solid var(--hoh-line-dde3f5)", height: "240px" }}>
             <iframe
               key={`${lat},${lng}`}
               title="Sender location"
@@ -515,20 +520,28 @@ function SenderLocation({ info, isLive, updatedAt }) {
               referrerPolicy="no-referrer-when-downgrade"
             />
           </div>
-          <p style={{ color: isLive ? "#CC2222" : "#8B94B2", fontSize: "12px", marginTop: "8px", fontWeight: 600 }}>
+          <p style={{ color: isLive ? "#CC2222" : "var(--hoh-text-8b94b2)", fontSize: "12px", marginTop: "8px", fontWeight: 600 }}>
             {isLive
               ? `Sharing live location — this map follows them${updatedAt ? ` · updated ${updatedAt.toLocaleTimeString()}` : ""}`
               : info.live_location_enabled
                 ? "Live location sharing has ended. Showing the last position."
                 : "Location when the alert was sent."}
           </p>
+          {/* Old or rough position (backend Emergency.location_note()): e.g.
+              their location was off and this is the last one their phone
+              remembered. Shown so nobody mistakes it for where they are now. */}
+          {info.location_note && (
+            <p style={{ color: "var(--hoh-text-b45309)", fontSize: "12.5px", marginTop: "6px", fontWeight: 600 }}>
+              {info.location_note}
+            </p>
+          )}
           <a
             href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`}
             target="_blank"
             rel="noopener noreferrer"
             style={{
               display: "block", textAlign: "center", marginTop: "10px", padding: "12px",
-              borderRadius: "14px", border: "1px solid #DDE3F5", color: "#2C5FD4",
+              borderRadius: "14px", border: "1px solid var(--hoh-line-dde3f5)", color: "#2C5FD4",
               fontWeight: 700, fontSize: "14px", textDecoration: "none",
             }}
           >
@@ -536,9 +549,95 @@ function SenderLocation({ info, isLive, updatedAt }) {
           </a>
         </>
       ) : (
-        <p style={{ color: "#8B94B2", fontSize: "13px" }}>Location not available for this alert.</p>
+        <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "13px" }}>Location not available for this alert.</p>
       )}
       <style jsx global>{`@keyframes livePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }`}</style>
+    </div>
+  );
+}
+
+// ── Safety Companion report ───────────────────────────────
+// What a Safety Companion alert carries (backend Emergency.safety_details):
+// why it went off and, for a journey, where they were going, who they were
+// visiting and the vehicle — the details a contact (and the police) act on.
+const SAFETY_HEADLINES = {
+  journey_overdue: "Hasn't confirmed arriving safely",
+  duress: "Sent a silent alert — may be in danger",
+  missed_checkin: "Missed their daily check-in",
+  panic: "Pressed their panic button",
+};
+
+const SAFETY_ADVICE = {
+  journey_overdue:
+    "Call them now. If you can't reach them, contact the person they were visiting, then the police (191).",
+  duress:
+    "Calling them openly may put them at risk. Contact the police (191 or 112) and go to their location if it is safe.",
+  missed_checkin: "Please call or visit them to make sure they are fine.",
+  panic: "They may not be able to talk. Contact them or the police (191 or 112).",
+};
+
+function clock(value) {
+  if (!value) return "";
+  return new Date(value).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+}
+
+export function SafetyReport({ safety }) {
+  const journey = safety.journey || {};
+  const visiting = [journey.visiting_name, journey.visiting_phone].filter(Boolean).join(" · ");
+  const rows = [
+    ["From", journey.from],
+    ["Going to", journey.to],
+    ["Changed plans", journey.plan_changed_at
+      ? `${clock(journey.plan_changed_at)}${journey.original_to ? ` (first going to ${journey.original_to})` : ""}`
+      : null],
+    ["Set off", clock(journey.started_at)],
+    ["Expected by", clock(journey.expected_by)],
+    ["Visiting", visiting],
+    ["Vehicle", journey.vehicle_details],
+    ["Last seen", clock(journey.last_seen_at)],
+    ["Check-in due by", safety.check_in?.check_by],
+  ].filter(([, value]) => value);
+
+  return (
+    <div style={{
+      background: "var(--hoh-bg-f7f0ff)", borderRadius: "16px", padding: "16px 18px",
+      border: "1px solid var(--hoh-line-e2ccff)", marginBottom: "16px",
+    }}>
+      <p style={{ color: "var(--hoh-text-5a189a)", fontSize: "11px", fontWeight: 700, letterSpacing: "1.2px", marginBottom: "6px" }}>
+        SAFETY COMPANION
+      </p>
+      <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 800, fontSize: "16px", marginBottom: "6px" }}>
+        {SAFETY_HEADLINES[safety.kind] || SAFETY_HEADLINES.panic}
+      </p>
+      <p style={{ color: "var(--hoh-text-4a5272)", fontSize: "13.5px", lineHeight: 1.6, marginBottom: rows.length || journey.note ? "12px" : 0 }}>
+        {SAFETY_ADVICE[safety.kind] || SAFETY_ADVICE.panic}
+      </p>
+      {journey.note && (
+        <p style={{ color: "var(--hoh-text-0f1b3e)", fontStyle: "italic", fontSize: "14.5px", marginBottom: "12px" }}>
+          “{journey.note}”
+        </p>
+      )}
+      {rows.length > 0 && (
+        <dl style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "6px 14px", margin: 0 }}>
+          {rows.map(([label, value]) => (
+            <React.Fragment key={label}>
+              <dt style={{ color: "var(--hoh-text-8b94b2)", fontSize: "13px" }}>{label}</dt>
+              <dd style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "13.5px", fontWeight: 600, margin: 0, overflowWrap: "anywhere" }}>{value}</dd>
+            </React.Fragment>
+          ))}
+        </dl>
+      )}
+      {journey.visiting_phone && (
+        <a
+          href={`tel:${journey.visiting_phone}`}
+          style={{
+            display: "inline-block", marginTop: "12px", padding: "10px 14px", borderRadius: "12px",
+            background: "#7B22CE", color: "#fff", fontWeight: 700, fontSize: "13.5px", textDecoration: "none",
+          }}
+        >
+          Call {journey.visiting_name || "who they were visiting"}
+        </a>
+      )}
     </div>
   );
 }

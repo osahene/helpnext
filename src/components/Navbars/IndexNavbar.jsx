@@ -142,9 +142,9 @@ export default function HeaderBar() {
                   : "opacity-0 -translate-y-3 pointer-events-none"
               }`}
               style={{
-                background: "#fff",
+                background: "var(--hoh-bg-ffffff)",
                 boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
-                border: "1px solid #DDE3F5",
+                border: "1px solid var(--hoh-line-dde3f5)",
               }}
             >
               {/* User info header */}
@@ -168,18 +168,18 @@ export default function HeaderBar() {
 
               <div className="p-2">
                 {/* <Link href="/subscribe">
-                  <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-colors hover:bg-blue-50 group"
-                    style={{ color: "#0F1B3E" }}>
+                  <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-colors hover:bg-blue-50 dark:hover:bg-white/10 group"
+                    style={{ color: "var(--hoh-text-0f1b3e)" }}>
                     <span
                       className="w-7 h-7 rounded-lg flex items-center justify-center text-xs"
-                      style={{ background: "#F0F4FF", color: "#2C5FD4" }}
+                      style={{ background: "var(--hoh-bg-f0f4ff)", color: "#2C5FD4" }}
                     >
                       ✦
                     </span>
                     Subscription Plan
                     <span
                       className="ml-auto text-xs font-bold px-2 py-0.5 rounded-full"
-                      style={{ background: "#EEF2FF", color: "#2C5FD4" }}
+                      style={{ background: "var(--hoh-bg-eef2ff)", color: "#2C5FD4" }}
                     >
                       FREE
                     </span>
@@ -187,11 +187,11 @@ export default function HeaderBar() {
                 </Link> */}
 
                 <Link href="/profile">
-                  <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-colors hover:bg-blue-50"
-                    style={{ color: "#0F1B3E" }}>
+                  <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-colors hover:bg-blue-50 dark:hover:bg-white/10"
+                    style={{ color: "var(--hoh-text-0f1b3e)" }}>
                     <span
                       className="w-7 h-7 rounded-lg flex items-center justify-center"
-                      style={{ background: "#F0F4FF", color: "#2C5FD4" }}
+                      style={{ background: "var(--hoh-bg-f0f4ff)", color: "#2C5FD4" }}
                     >
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -201,16 +201,16 @@ export default function HeaderBar() {
                   </button>
                 </Link>
 
-                <div className="my-1.5 h-px" style={{ background: "#F0F4FF" }} />
+                <div className="my-1.5 h-px" style={{ background: "var(--hoh-bg-f0f4ff)" }} />
 
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors hover:bg-red-50"
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors hover:bg-red-50 dark:hover:bg-red-500/15"
                   style={{ color: "#CC2222" }}
                 >
                   <span
                     className="w-7 h-7 rounded-lg flex items-center justify-center"
-                    style={{ background: "#FFF0F0" }}
+                    style={{ background: "var(--hoh-bg-fff0f0)" }}
                   >
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -241,11 +241,11 @@ export default function HeaderBar() {
               <button
                 className="px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200"
                 style={{
-                  background: "#fff",
-                  color: "#6B0F0F",
+                  background: "var(--hoh-bg-ffffff)",
+                  color: "var(--hoh-text-6b0f0f)",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#f5f5f5")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hoh-bg-f5f5f5)")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "var(--hoh-bg-ffffff)")}
               >
                 Login
               </button>

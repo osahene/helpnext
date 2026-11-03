@@ -10,12 +10,12 @@ import { isPasskeySupported } from "@/utils/webauthn";
 // ── Design tokens ─────────────────────────────────────────────────────────────
 const C = {
   accent: "#4F8EF7",
-  accentLight: "#EAF1FE",
-  surface: "#F7F9FC",
-  border: "#E2E8F0",
-  textPrimary: "#0F172A",
-  textSecondary: "#64748B",
-  white: "#FFFFFF",
+  accentLight: "var(--hoh-bg-eaf1fe)",
+  surface: "var(--hoh-bg-f7f9fc)",
+  border: "var(--hoh-line-e2e8f0)",
+  textPrimary: "var(--hoh-text-0f172a)",
+  textSecondary: "var(--hoh-text-64748b)",
+  white: "var(--hoh-bg-ffffff)",
 };
 
 // Step 3 of 3 on the web. Reached only after a correct OTP (the auth slice
@@ -68,7 +68,7 @@ export default function PasskeySetup() {
         .form-panel {
           flex: 1; display: flex; flex-direction: column;
           justify-content: center; align-items: center;
-          padding: 48px 16px; background: #FFFFFF;
+          padding: 48px 16px; background: var(--hoh-bg-ffffff);
           animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both;
         }
         .form-inner { width: 100%; max-width: 420px; }
@@ -86,7 +86,7 @@ export default function PasskeySetup() {
         .submit-btn:disabled { cursor: not-allowed; }
         .link-btn {
           background: none; border: none; font-family: inherit; cursor: pointer;
-          font-size: 14px; color: #64748B; padding: 8px; width: 100%;
+          font-size: 14px; color: var(--hoh-text-64748b); padding: 8px; width: 100%;
         }
       `}</style>
 

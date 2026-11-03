@@ -8,7 +8,7 @@ const SHOW_FOR_MS = 3000;
 
 const STYLES = {
   offline: { background: "#000000", color: "#FFFFFF", label: "No internet connection" },
-  online: { background: "#F8B4A9", color: "#3A3A3A", label: "Back online" },
+  online: { background: "#F8B4A9", color: "var(--hoh-text-3a3a3a)", label: "Back online" },
 };
 
 function CloudOffIcon({ color }) {

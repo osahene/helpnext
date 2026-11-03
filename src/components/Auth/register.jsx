@@ -14,12 +14,12 @@ import { DEFAULT_COUNTRY, sanitizePhoneInput, takeRegisterPrefill } from "@/util
 // ── Design tokens ─────────────────────────────────────────────────────────────
 const C = {
   accent: "#4F8EF7",
-  accentLight: "#EAF1FE",
-  surface: "#F7F9FC",
-  border: "#E2E8F0",
-  textPrimary: "#0F172A",
-  textSecondary: "#64748B",
-  white: "#FFFFFF",
+  accentLight: "var(--hoh-bg-eaf1fe)",
+  surface: "var(--hoh-bg-f7f9fc)",
+  border: "var(--hoh-line-e2e8f0)",
+  textPrimary: "var(--hoh-text-0f172a)",
+  textSecondary: "var(--hoh-text-64748b)",
+  white: "var(--hoh-bg-ffffff)",
   error: "#EF4444",
 };
 
@@ -105,7 +105,7 @@ function ConfirmModal({ firstName, lastName, fullPhone, countryFlag, countryName
 function InputField({ label, icon, error, children }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <label style={{ fontSize: 13, fontWeight: 600, color: "#374151", letterSpacing: "0.3px" }}>
+      <label style={{ fontSize: 13, fontWeight: 600, color: "var(--hoh-text-374151)", letterSpacing: "0.3px" }}>
         {label}
       </label>
       <div
@@ -136,7 +136,7 @@ function InputField({ label, icon, error, children }) {
 
 const inputStyle = {
   flex: 1, border: "none", outline: "none", background: "transparent",
-  fontSize: 15, color: "#0F172A", fontWeight: 500,
+  fontSize: 15, color: "var(--hoh-text-0f172a)", fontWeight: 500,
   padding: "16px 16px 16px 0", fontFamily: "inherit",
 };
 
@@ -238,7 +238,7 @@ export default function Register() {
         .form-panel {
           flex: 1; display: flex; flex-direction: column;
           justify-content: center; align-items: center;
-          padding: 48px 32px; background: #FFFFFF; overflow-y: auto;
+          padding: 48px 32px; background: var(--hoh-bg-ffffff); overflow-y: auto;
           animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both;
         }
         .form-inner { width: 100%; max-width: 440px; }
@@ -259,9 +259,9 @@ export default function Register() {
         .name-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
         @media (min-width: 560px) { .name-grid { grid-template-columns: 1fr 1fr; } }
         .phone-input {
-          flex: 1; border: 1.5px solid #E2E8F0; border-radius: 14px;
-          background: #F7F9FC; padding: 0 16px; height: 54px;
-          font-size: 15px; font-weight: 500; color: #0F172A;
+          flex: 1; border: 1.5px solid var(--hoh-line-e2e8f0); border-radius: 14px;
+          background: var(--hoh-bg-f7f9fc); padding: 0 16px; height: 54px;
+          font-size: 15px; font-weight: 500; color: var(--hoh-text-0f172a);
           outline: none; font-family: inherit; transition: border-color 0.2s;
         }
         .phone-input:focus { border-color: #4F8EF7; }
@@ -356,7 +356,7 @@ export default function Register() {
 
               {/* Phone Number */}
               <div>
-                <label style={{ fontSize: 13, fontWeight: 600, color: "#374151", letterSpacing: "0.3px", display: "block", marginBottom: 8 }}>
+                <label style={{ fontSize: 13, fontWeight: 600, color: "var(--hoh-text-374151)", letterSpacing: "0.3px", display: "block", marginBottom: 8 }}>
                   Phone Number
                 </label>
                 <div style={{ display: "flex", gap: 10 }}>

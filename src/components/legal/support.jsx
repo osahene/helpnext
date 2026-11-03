@@ -20,7 +20,7 @@ If the OTP doesn't arrive within a couple of minutes, check that your number was
   {
     id: "emergency-contacts",
     title: "Adding & Approving Emergency Contacts",
-    color: "#7B22CE",
+    color: "var(--hoh-text-7b22ce)",
     content: `Before anyone can receive your alerts, you need at least one approved emergency contact. This is a mutual-consent process:
 
 1. You add a contact's name and phone number, and choose which emergency types they should be notified for (e.g. only Health Crisis, or everything).
@@ -33,7 +33,7 @@ If a contact says they never received an approval request, ask them to check spa
     id: "triggering-alert",
     title: "Triggering an Emergency Alert",
     color: "#E8500A",
-    content: `From the home screen, tap one of the six emergency types: Robbery Attack, Health Crisis, Fire Outbreak, Flood Alert, Accident Alert, or Call Emergency. Only your approved contacts for that specific type are notified — their phone rings with an automated voice call, and they get a WhatsApp message (or SMS if WhatsApp doesn't reach them) plus an email if one is on file. The message includes your name, the emergency type, your GPS location, and a link they use to respond "I'm on my way" or "I can't help." You'll see who your alert reached.
+    content: `From the home screen, tap one of the six emergency types: Robbery Attack, Health Crisis, Fire Outbreak, Flood Alert, Accident Alert, or Safety Companion. Only your approved contacts for that specific type are notified — their phone rings with an automated voice call, and they get a WhatsApp message (or SMS if WhatsApp doesn't reach them) plus an email if one is on file. The message includes your name, the emergency type, your GPS location, and a link they use to respond "I'm on my way" or "I can't help." You'll see who your alert reached.
 
 If you triggered an alert by accident, contact your recipients directly to let them know, and consider reaching out to us if you'd like the alert record corrected.`,
   },
@@ -92,7 +92,7 @@ NADMO: 112`,
 
 export default function Support() {
   return (
-    <div style={{ background: "#F0F4FF", minHeight: "100vh" }}>
+    <div style={{ background: "var(--hoh-bg-f0f4ff)", minHeight: "100vh" }}>
       {/* Hero */}
       <div style={{
         background: "linear-gradient(135deg, #003D33 0%, #1A9E5C 100%)",
@@ -129,7 +129,7 @@ export default function Support() {
           </p>
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
             <a href={`mailto:${EMAIL}`}
-              style={{ padding: "11px 20px", borderRadius: "14px", background: "#fff", color: "#2C5FD4", fontWeight: 700, fontSize: "14px", textDecoration: "none", display: "flex", alignItems: "center", gap: "7px" }}>
+              style={{ padding: "11px 20px", borderRadius: "14px", background: "var(--hoh-bg-ffffff)", color: "#2C5FD4", fontWeight: 700, fontSize: "14px", textDecoration: "none", display: "flex", alignItems: "center", gap: "7px" }}>
               <svg style={{ width: "16px", height: "16px" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
@@ -143,14 +143,14 @@ export default function Support() {
         </div>
 
         {/* Table of contents */}
-        <div style={{ background: "#fff", borderRadius: "20px", padding: "22px 24px", marginBottom: "32px", border: "1px solid #DDE3F5", boxShadow: "0 4px 16px rgba(44,95,212,0.07)" }}>
+        <div style={{ background: "var(--hoh-bg-ffffff)", borderRadius: "20px", padding: "22px 24px", marginBottom: "32px", border: "1px solid var(--hoh-line-dde3f5)", boxShadow: "0 4px 16px rgba(44,95,212,0.07)" }}>
           <p style={{ color: "#1A9E5C", fontSize: "11px", fontWeight: 700, letterSpacing: "1.4px", marginBottom: "14px" }}>FREQUENTLY ASKED QUESTIONS</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {faqs.map((f) => (
               <a key={f.id} href={`#${f.id}`}
-                style={{ color: "#0F1B3E", fontSize: "13.5px", textDecoration: "none", padding: "5px 0", display: "flex", alignItems: "center", gap: "8px", transition: "color 0.18s" }}
+                style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "13.5px", textDecoration: "none", padding: "5px 0", display: "flex", alignItems: "center", gap: "8px", transition: "color 0.18s" }}
                 onMouseEnter={e => (e.currentTarget.style.color = "#1A9E5C")}
-                onMouseLeave={e => (e.currentTarget.style.color = "#0F1B3E")}
+                onMouseLeave={e => (e.currentTarget.style.color = "var(--hoh-text-0f1b3e)")}
               >
                 <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: f.color, flexShrink: 0 }} />
                 {f.title}
@@ -161,14 +161,14 @@ export default function Support() {
 
         {/* FAQ sections */}
         {faqs.map((f) => (
-          <div key={f.id} id={f.id} style={{ background: "#fff", borderRadius: "20px", padding: "28px", marginBottom: "16px", border: "1px solid #DDE3F5", boxShadow: "0 4px 16px rgba(44,95,212,0.05)" }}>
+          <div key={f.id} id={f.id} style={{ background: "var(--hoh-bg-ffffff)", borderRadius: "20px", padding: "28px", marginBottom: "16px", border: "1px solid var(--hoh-line-dde3f5)", boxShadow: "0 4px 16px rgba(44,95,212,0.05)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
               <div style={{ width: "4px", height: "22px", background: f.color, borderRadius: "2px" }} />
-              <h2 style={{ color: "#0F1B3E", fontSize: "17px", fontWeight: 800, letterSpacing: "-0.01em" }}>{f.title}</h2>
+              <h2 style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "17px", fontWeight: 800, letterSpacing: "-0.01em" }}>{f.title}</h2>
             </div>
 
             {f.content && (
-              <p style={{ color: "#374151", fontSize: "14px", lineHeight: 1.8, whiteSpace: "pre-line" }}>
+              <p style={{ color: "var(--hoh-text-374151)", fontSize: "14px", lineHeight: 1.8, whiteSpace: "pre-line" }}>
                 {f.content}
                 {f.linkAfter && (
                   <Link href={f.linkAfter.href} style={{ color: "#2C5FD4", fontWeight: 600 }}>
@@ -184,7 +184,7 @@ export default function Support() {
                 {f.items.map((item, i) => (
                   <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px", marginBottom: "10px" }}>
                     <div style={{ width: "7px", height: "7px", borderRadius: "50%", background: f.color, flexShrink: 0, marginTop: "6px" }} />
-                    <p style={{ color: "#374151", fontSize: "14px", lineHeight: 1.7 }}>{item}</p>
+                    <p style={{ color: "var(--hoh-text-374151)", fontSize: "14px", lineHeight: 1.7 }}>{item}</p>
                   </li>
                 ))}
               </ul>
@@ -199,7 +199,7 @@ export default function Support() {
           <Link href="/legal/privacy" style={{ color: "#2C5FD4", fontSize: "13.5px", fontWeight: 600, textDecoration: "none", marginRight: "24px" }}>
             Privacy Policy
           </Link>
-          <Link href="/" style={{ color: "#8B94B2", fontSize: "13.5px", fontWeight: 600, textDecoration: "none" }}>
+          <Link href="/" style={{ color: "var(--hoh-text-8b94b2)", fontSize: "13.5px", fontWeight: 600, textDecoration: "none" }}>
             ← Home
           </Link>
         </div>

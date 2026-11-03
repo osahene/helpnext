@@ -7,11 +7,11 @@ export default function RemoveInfo({ contact, onDelete, onCancel }) {
     <div className="modal-content w-full max-w-sm mx-auto p-4">
       <div
         style={{
-          background: "#fff",
+          background: "var(--hoh-bg-ffffff)",
           borderRadius: "22px",
           padding: "24px",
           boxShadow: "0 4px 24px rgba(44,95,212,0.08)",
-          border: "1px solid #DDE3F5",
+          border: "1px solid var(--hoh-line-dde3f5)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -63,7 +63,7 @@ export default function RemoveInfo({ contact, onDelete, onCancel }) {
         {/* ── Confirmation Message ──────────────────────── */}
         <p
           style={{
-            color: "#0F1B3E",
+            color: "var(--hoh-text-0f1b3e)",
             fontSize: "14.5px",
             fontWeight: 500,
             lineHeight: 1.6,
@@ -86,11 +86,11 @@ export default function RemoveInfo({ contact, onDelete, onCancel }) {
               flex: 1,
               padding: "13px",
               borderRadius: "16px",
-              background: "#F0F4FF",
-              color: "#8B94B2",
+              background: "var(--hoh-bg-f0f4ff)",
+              color: "var(--hoh-text-8b94b2)",
               fontWeight: 600,
               fontSize: "14px",
-              border: "1px solid #DDE3F5",
+              border: "1px solid var(--hoh-line-dde3f5)",
               cursor: "pointer",
               transition: "all 0.2s ease",
             }}

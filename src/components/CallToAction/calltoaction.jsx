@@ -59,15 +59,15 @@ const ActionButton = ({ pendingCount }) => {
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               {/* Label pill */}
               <div style={{
-                background: "#fff",
+                background: "var(--hoh-bg-ffffff)",
                 borderRadius: "20px",
                 padding: "5px 12px",
                 boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
-                border: "1px solid #DDE3F5",
+                border: "1px solid var(--hoh-line-dde3f5)",
                 transition: "all 0.2s ease",
                 transitionDelay: `${i * 0.05}s`,
               }}>
-                <span style={{ color: "#0F1B3E", fontSize: "12.5px", fontWeight: 700 }}>
+                <span style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "12.5px", fontWeight: 700 }}>
                   {item.label}
                 </span>
               </div>
@@ -91,7 +91,7 @@ const ActionButton = ({ pendingCount }) => {
                     background: "#CC2222",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     fontSize: "9px", fontWeight: 700, color: "#fff",
-                    border: "2px solid #fff",
+                    border: "2px solid var(--hoh-line-ffffff)",
                   }}>
                     {pendingCount}
                   </div>

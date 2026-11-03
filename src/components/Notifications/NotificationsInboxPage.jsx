@@ -86,7 +86,7 @@ export default function NotificationsInboxPage() {
   };
 
   return (
-    <div style={{ background: "#F0F4FF", minHeight: "100vh" }} className="pt-24 pb-24">
+    <div style={{ background: "var(--hoh-bg-f0f4ff)", minHeight: "100vh" }} className="pt-24 pb-24">
       <div className="px-5 pb-4" style={{ maxWidth: "720px", margin: "0 auto" }}>
         {/* Header */}
         <div
@@ -143,14 +143,14 @@ export default function NotificationsInboxPage() {
         {!isAuthenticated ? (
           <div
             style={{
-              background: "#fff",
+              background: "var(--hoh-bg-ffffff)",
               borderRadius: "18px",
               padding: "28px 20px",
               textAlign: "center",
-              border: "1px solid #DDE3F5",
+              border: "1px solid var(--hoh-line-dde3f5)",
             }}
           >
-            <p style={{ fontSize: "14px", color: "#5B6483", marginBottom: "14px" }}>
+            <p style={{ fontSize: "14px", color: "var(--hoh-text-5b6483)", marginBottom: "14px" }}>
               Log in to see your notifications.
             </p>
             <Link
@@ -192,11 +192,11 @@ export default function NotificationsInboxPage() {
                       borderRadius: "999px",
                       fontSize: "12.5px",
                       fontWeight: 700,
-                      border: active ? "1px solid transparent" : "1px solid #DDE3F5",
+                      border: active ? "1px solid transparent" : "1px solid var(--hoh-line-dde3f5)",
                       background: active
                         ? "linear-gradient(135deg, #2C5FD4, #5B3FE8)"
-                        : "#fff",
-                      color: active ? "#fff" : "#5B6483",
+                        : "var(--hoh-bg-ffffff)",
+                      color: active ? "#fff" : "var(--hoh-text-5b6483)",
                       cursor: "pointer",
                     }}
                   >
@@ -208,15 +208,15 @@ export default function NotificationsInboxPage() {
 
             {/* List */}
             {loading ? (
-              <div style={{ textAlign: "center", padding: "40px 0", color: "#8A93B3", fontSize: "13.5px" }}>
+              <div style={{ textAlign: "center", padding: "40px 0", color: "var(--hoh-text-8a93b3)", fontSize: "13.5px" }}>
                 Loading notifications…
               </div>
             ) : error ? (
-              <div style={{ textAlign: "center", padding: "40px 0", color: "#8A93B3", fontSize: "13.5px" }}>
+              <div style={{ textAlign: "center", padding: "40px 0", color: "var(--hoh-text-8a93b3)", fontSize: "13.5px" }}>
                 Couldn&apos;t load notifications right now. Please try again later.
               </div>
             ) : results.length === 0 ? (
-              <div style={{ textAlign: "center", padding: "40px 0", color: "#8A93B3", fontSize: "13.5px" }}>
+              <div style={{ textAlign: "center", padding: "40px 0", color: "var(--hoh-text-8a93b3)", fontSize: "13.5px" }}>
                 No notifications yet.
               </div>
             ) : (
@@ -238,8 +238,8 @@ export default function NotificationsInboxPage() {
                       style={{
                         padding: "10px 20px",
                         borderRadius: "10px",
-                        background: "#fff",
-                        border: "1px solid #DDE3F5",
+                        background: "var(--hoh-bg-ffffff)",
+                        border: "1px solid var(--hoh-line-dde3f5)",
                         color: "#2C5FD4",
                         fontWeight: 700,
                         fontSize: "13px",

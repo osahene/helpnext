@@ -84,7 +84,7 @@ export default function AuthGate({ children }) {
   // before the effect above navigates away from it.
   if (shouldRedirectAway) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-screen bg-white">
+      <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-screen bg-white dark:bg-[#121212]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
     );

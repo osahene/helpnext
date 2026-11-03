@@ -25,10 +25,10 @@ export default function AuthRequiredPrompt({
           <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
         </svg>
       </div>
-      <p style={{ color: "#0F1B3E", fontSize: "18px", fontWeight: 800, marginBottom: "8px" }}>
+      <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "18px", fontWeight: 800, marginBottom: "8px" }}>
         {title}
       </p>
-      <p style={{ color: "#8B94B2", fontSize: "14px", lineHeight: 1.6, marginBottom: "20px" }}>
+      <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "14px", lineHeight: 1.6, marginBottom: "20px" }}>
         {message}
       </p>
       <div className="flex gap-3 w-full">
@@ -48,9 +48,9 @@ export default function AuthRequiredPrompt({
           <button
             style={{
               width: "100%", padding: "11px", borderRadius: "14px",
-              background: "#F0F4FF", color: "#2C5FD4",
+              background: "var(--hoh-bg-f0f4ff)", color: "#2C5FD4",
               fontWeight: 700, fontSize: "14px",
-              border: "1px solid #DDE3F5",
+              border: "1px solid var(--hoh-line-dde3f5)",
             }}
           >
             Login

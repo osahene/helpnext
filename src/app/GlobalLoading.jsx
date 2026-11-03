@@ -5,7 +5,7 @@ export default function Loading() {
   if (!isLoading) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-screen bg-white bg-opacity-70">
+    <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-screen bg-white dark:bg-[#121212] bg-opacity-70">
       <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
     </div>
   );

@@ -28,7 +28,7 @@ export default function LiveLocationBanner() {
       style={{
         position: "fixed", top: "12px", left: "50%", transform: "translateX(-50%)",
         zIndex: 60, display: "flex", alignItems: "center", gap: "10px",
-        background: "#FFF0F0", border: "1px solid #FFCDD2", borderRadius: "999px",
+        background: "var(--hoh-bg-fff0f0)", border: "1px solid var(--hoh-line-ffcdd2)", borderRadius: "999px",
         padding: "8px 8px 8px 14px", boxShadow: "0 8px 24px rgba(204,34,34,0.15)",
         maxWidth: "92vw",
       }}

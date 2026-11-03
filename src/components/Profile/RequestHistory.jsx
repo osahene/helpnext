@@ -7,9 +7,9 @@ import {
   faFire,
   faHandFist,
   faHeartPulse,
-  faPhoneVolume,
+  faStreetView,
   faTriangleExclamation,
-  faUserSecret,
+  faUserNinja,
   faUsers,
   faWater,
 } from "@fortawesome/free-solid-svg-icons";
@@ -21,10 +21,10 @@ import apiService from "@/utils/axios";
 // components/Contacts/addContact.jsx.
 const SITUATIONS = {
   health: { label: "Health Crisis", color: "#1A9E5C", icon: faHeartPulse },
-  robbery: { label: "Robbery Attack", color: "#CC2222", icon: faUserSecret },
+  robbery: { label: "Robbery Attack", color: "#CC2222", icon: faUserNinja },
   fire: { label: "Fire Outbreak", color: "#E8500A", icon: faFire },
   flood: { label: "Flood Alert", color: "#0A72C4", icon: faWater },
-  other: { label: "Call Emergency", color: "#7B22CE", icon: faPhoneVolume },
+  other: { label: "Safety Companion", color: "#7B22CE", icon: faStreetView },
   accident: { label: "Accident Alert", color: "#8B5C00", icon: faCarBurst },
   violence: { label: "Violence Alert", color: "#8B5C00", icon: faHandFist }, // older alerts only
 };
@@ -33,16 +33,16 @@ const SITUATIONS = {
 // alert that failed for every contact is "Failed"; "pending" means it went
 // out and no delivery report has come back yet, so it reads as "Sent".
 const STATUS = {
-  success: { label: "Delivered", color: "#1A9E5C", bg: "#E8F7EF" },
-  partial: { label: "Partly delivered", color: "#B7791F", bg: "#FFF6E0" },
-  pending: { label: "Sent", color: "#1A9E5C", bg: "#E8F7EF" },
-  failed: { label: "Failed", color: "#CC2222", bg: "#FFECEC" },
+  success: { label: "Delivered", color: "#1A9E5C", bg: "var(--hoh-bg-e8f7ef)" },
+  partial: { label: "Partly delivered", color: "#B7791F", bg: "var(--hoh-bg-fff6e0)" },
+  pending: { label: "Sent", color: "#1A9E5C", bg: "var(--hoh-bg-e8f7ef)" },
+  failed: { label: "Failed", color: "#CC2222", bg: "var(--hoh-bg-ffecec)" },
 };
 
 const situationFor = (item) =>
   SITUATIONS[item.action] ?? {
     label: item.alert || item.action || "Emergency",
-    color: "#8B94B2",
+    color: "var(--hoh-text-8b94b2)",
     icon: faTriangleExclamation,
   };
 
@@ -54,16 +54,16 @@ const formatDate = (iso) => {
 };
 
 const card = {
-  background: "#fff",
+  background: "var(--hoh-bg-ffffff)",
   borderRadius: "20px",
-  border: "1px solid #DDE3F5",
+  border: "1px solid var(--hoh-line-dde3f5)",
   boxShadow: "0 4px 16px rgba(44,95,212,0.06)",
 };
 
 const StatCard = ({ value, label, color }) => (
   <div style={{ ...card, flex: 1, padding: "16px 10px", textAlign: "center" }}>
     <p style={{ color, fontWeight: 800, fontSize: "24px", lineHeight: 1.1 }}>{value}</p>
-    <p style={{ color: "#8B94B2", fontSize: "12px", fontWeight: 600, marginTop: "4px" }}>{label}</p>
+    <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "12px", fontWeight: 600, marginTop: "4px" }}>{label}</p>
   </div>
 );
 
@@ -83,9 +83,9 @@ const HistoryItem = ({ item }) => {
       </div>
 
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14.5px" }}>{situation.label}</p>
+        <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "14.5px" }}>{situation.label}</p>
         <p style={{
-          color: "#8B94B2", fontSize: "12.5px", marginTop: "3px",
+          color: "var(--hoh-text-8b94b2)", fontSize: "12.5px", marginTop: "3px",
           whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
         }}>
           <FontAwesomeIcon icon={faUsers} style={{ marginRight: "6px" }} />
@@ -94,7 +94,7 @@ const HistoryItem = ({ item }) => {
       </div>
 
       <div style={{ textAlign: "right", flexShrink: 0 }}>
-        <p style={{ color: "#8B94B2", fontSize: "12px", marginBottom: "6px" }}>{formatDate(item.created_at)}</p>
+        <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "12px", marginBottom: "6px" }}>{formatDate(item.created_at)}</p>
         <span style={{
           display: "inline-flex", alignItems: "center", gap: "6px",
           padding: "3px 10px", borderRadius: "999px",
@@ -147,14 +147,14 @@ export default function RequestHistory() {
         <div style={{ width: "4px", height: "16px", background: "#CC2222", borderRadius: "2px" }} />
         <p style={{ color: "#CC2222", fontSize: "11px", fontWeight: 700, letterSpacing: "1.4px" }}>REQUEST HISTORY</p>
         {!loading && !error && (
-          <p style={{ marginLeft: "auto", color: "#8B94B2", fontSize: "12px", fontWeight: 500 }}>
+          <p style={{ marginLeft: "auto", color: "var(--hoh-text-8b94b2)", fontSize: "12px", fontWeight: 500 }}>
             {history.length} {history.length === 1 ? "alert" : "alerts"}
           </p>
         )}
       </div>
 
       {loading ? (
-        <div style={{ ...card, padding: "28px", textAlign: "center", color: "#8B94B2", fontSize: "13.5px" }}>
+        <div style={{ ...card, padding: "28px", textAlign: "center", color: "var(--hoh-text-8b94b2)", fontSize: "13.5px" }}>
           Loading your alerts…
         </div>
       ) : error ? (
@@ -163,8 +163,8 @@ export default function RequestHistory() {
         </div>
       ) : history.length === 0 ? (
         <div style={{ ...card, padding: "28px", textAlign: "center" }}>
-          <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14.5px", marginBottom: "4px" }}>No alerts yet</p>
-          <p style={{ color: "#8B94B2", fontSize: "13px" }}>Alerts you send will appear here.</p>
+          <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "14.5px", marginBottom: "4px" }}>No alerts yet</p>
+          <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "13px" }}>Alerts you send will appear here.</p>
         </div>
       ) : (
         // Its own scrolling box (like the app), so Account Actions stays
@@ -172,7 +172,7 @@ export default function RequestHistory() {
         <div style={{
           display: "flex", flexDirection: "column", gap: "10px",
           maxHeight: "420px", overflowY: "auto", padding: "10px",
-          background: "#F8FAFF", border: "1px solid #DDE3F5", borderRadius: "20px",
+          background: "var(--hoh-bg-f8faff)", border: "1px solid var(--hoh-line-dde3f5)", borderRadius: "20px",
         }}>
           {history.map((item) => (
             <HistoryItem key={item.id} item={item} />

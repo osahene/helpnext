@@ -20,14 +20,14 @@ export default function AlertFailedView({ situation, message, onRetry, onClose, 
       }}>
         <FontAwesomeIcon icon={faTriangleExclamation} size="xl" style={{ color: "#CC2222" }} />
       </div>
-      <p style={{ color: "#0F1B3E", fontSize: "18px", fontWeight: 800, marginBottom: "8px" }}>
+      <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "18px", fontWeight: 800, marginBottom: "8px" }}>
         Alert not sent
       </p>
-      <p style={{ color: "#8B94B2", fontSize: "14px", lineHeight: 1.6, marginBottom: "18px" }}>
+      <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "14px", lineHeight: 1.6, marginBottom: "18px" }}>
         {message}
       </p>
 
-      <p style={{ color: "#0F1B3E", fontSize: "13px", fontWeight: 700, marginBottom: "10px", alignSelf: "flex-start" }}>
+      <p style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "13px", fontWeight: 700, marginBottom: "10px", alignSelf: "flex-start" }}>
         Call {service.name} now
       </p>
       <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "8px", marginBottom: "16px" }}>
@@ -51,8 +51,8 @@ export default function AlertFailedView({ situation, message, onRetry, onClose, 
         <button
           onClick={onClose}
           style={{
-            flex: 1, padding: "12px", borderRadius: "14px", border: "1px solid #DDE3F5",
-            background: "#fff", color: "#0F1B3E", fontWeight: 700, fontSize: "14px",
+            flex: 1, padding: "12px", borderRadius: "14px", border: "1px solid var(--hoh-line-dde3f5)",
+            background: "var(--hoh-bg-ffffff)", color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "14px",
           }}
         >
           Close

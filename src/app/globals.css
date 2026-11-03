@@ -6,6 +6,8 @@
 @tailwind utilities;
 
 :root {
+  /* Native controls (inputs, selects, scrollbars) follow the OS setting too. */
+  color-scheme: light dark;
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -14,6 +16,161 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+  }
+}
+
+/* Light/dark colours for the components' inline styles. Each light value is
+   the colour the component used before, so light mode is unchanged; the
+   dark value replaces it under the OS dark setting. Named by role and
+   original colour: --hoh-bg-*, --hoh-text-*, --hoh-line-*. */
+:root {
+  --hoh-bg-cbd5e1: #cbd5e1;
+  --hoh-bg-dde3f5: #dde3f5;
+  --hoh-bg-e2e8f0: #e2e8f0;
+  --hoh-bg-e4e9f5: #e4e9f5;
+  --hoh-bg-e8f7ef: #e8f7ef;
+  --hoh-bg-e8f8f0: #e8f8f0;
+  --hoh-bg-eaf1fe: #eaf1fe;
+  --hoh-bg-edfbf3: #edfbf3;
+  --hoh-bg-eef2ff: #eef2ff;
+  --hoh-bg-eef4ff: #eef4ff;
+  --hoh-bg-eff6ff: #eff6ff;
+  --hoh-bg-f0f4ff: #f0f4ff;
+  --hoh-bg-f3eeff: #f3eeff;
+  --hoh-bg-f3f4f6: #f3f4f6;
+  --hoh-bg-f5f5f5: #f5f5f5;
+  --hoh-bg-f7f0ff: #f7f0ff;
+  --hoh-bg-f7f9fc: #f7f9fc;
+  --hoh-bg-f7f9ff: #f7f9ff;
+  --hoh-bg-f8faff: #f8faff;
+  --hoh-bg-fafafa: #fafafa;
+  --hoh-bg-fcf0f0: #fcf0f0;
+  --hoh-bg-fef2f2: #fef2f2;
+  --hoh-bg-ffe0e0: #ffe0e0;
+  --hoh-bg-ffecec: #ffecec;
+  --hoh-bg-fff0f0: #fff0f0;
+  --hoh-bg-fff3e0: #fff3e0;
+  --hoh-bg-fff3ee: #fff3ee;
+  --hoh-bg-fff6e0: #fff6e0;
+  --hoh-bg-fff8ee: #fff8ee;
+  --hoh-bg-fff8f6: #fff8f6;
+  --hoh-bg-fff8f8: #fff8f8;
+  --hoh-bg-fffbeb: #fffbeb;
+  --hoh-bg-fffbf0: #fffbf0;
+  --hoh-bg-ffffff: #ffffff;
+  --hoh-line-b2eecc: #b2eecc;
+  --hoh-line-cbd5e1: #cbd5e1;
+  --hoh-line-dddddd: #dddddd;
+  --hoh-line-dde3f5: #dde3f5;
+  --hoh-line-e2ccff: #e2ccff;
+  --hoh-line-e2e8f0: #e2e8f0;
+  --hoh-line-eee3f7: #eee3f7;
+  --hoh-line-eef1fa: #eef1fa;
+  --hoh-line-f0f4ff: #f0f4ff;
+  --hoh-line-ffcccc: #ffcccc;
+  --hoh-line-ffcdd2: #ffcdd2;
+  --hoh-line-ffd2d2: #ffd2d2;
+  --hoh-line-ffd8a8: #ffd8a8;
+  --hoh-line-ffdbd1: #ffdbd1;
+  --hoh-line-ffdea0: #ffdea0;
+  --hoh-line-ffe0e0: #ffe0e0;
+  --hoh-line-ffffff: #ffffff;
+  --hoh-text-0f172a: #0f172a;
+  --hoh-text-b45309: #b45309;
+  --hoh-text-0f1b3e: #0f1b3e;
+  --hoh-text-14213d: #14213d;
+  --hoh-text-333333: #333333;
+  --hoh-text-374151: #374151;
+  --hoh-text-3a3a3a: #3a3a3a;
+  --hoh-text-4a5272: #4a5272;
+  --hoh-text-4b5563: #4b5563;
+  --hoh-text-5a189a: #5a189a;
+  --hoh-text-5b6481: #5b6481;
+  --hoh-text-5b6483: #5b6483;
+  --hoh-text-64748b: #64748b;
+  --hoh-text-6b0f0f: #6b0f0f;
+  --hoh-text-6b7280: #6b7280;
+  --hoh-text-7a2e19: #7a2e19;
+  --hoh-text-7b22ce: #7b22ce;
+  --hoh-text-8a93b3: #8a93b3;
+  --hoh-text-8b94b2: #8b94b2;
+  --hoh-text-rgba77704: rgba(7,7,7,0.4);
+  --hoh-text-rgba777064: rgba(7,7,7,0.64);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --hoh-bg-cbd5e1: #203247;
+    --hoh-bg-dde3f5: #202a47;
+    --hoh-bg-e2e8f0: #16181d;
+    --hoh-bg-e4e9f5: #16181d;
+    --hoh-bg-e8f7ef: #16181d;
+    --hoh-bg-e8f8f0: #16181d;
+    --hoh-bg-eaf1fe: #202e47;
+    --hoh-bg-edfbf3: #16181d;
+    --hoh-bg-eef2ff: #16181d;
+    --hoh-bg-eef4ff: #16181d;
+    --hoh-bg-eff6ff: #16181d;
+    --hoh-bg-f0f4ff: #16181d;
+    --hoh-bg-f3eeff: #16181d;
+    --hoh-bg-f3f4f6: #16181d;
+    --hoh-bg-f5f5f5: #16181d;
+    --hoh-bg-f7f0ff: #16181d;
+    --hoh-bg-f7f9fc: #16181d;
+    --hoh-bg-f7f9ff: #16181d;
+    --hoh-bg-f8faff: #16181d;
+    --hoh-bg-fafafa: #16181d;
+    --hoh-bg-fcf0f0: #16181d;
+    --hoh-bg-fef2f2: #16181d;
+    --hoh-bg-ffe0e0: #472020;
+    --hoh-bg-ffecec: #16181d;
+    --hoh-bg-fff0f0: #16181d;
+    --hoh-bg-fff3e0: #473820;
+    --hoh-bg-fff3ee: #16181d;
+    --hoh-bg-fff6e0: #473c20;
+    --hoh-bg-fff8ee: #16181d;
+    --hoh-bg-fff8f6: #16181d;
+    --hoh-bg-fff8f8: #16181d;
+    --hoh-bg-fffbeb: #473f20;
+    --hoh-bg-fffbf0: #16181d;
+    --hoh-bg-ffffff: #1e1e1e;
+    --hoh-line-b2eecc: rgba(255,255,255,0.14);
+    --hoh-line-cbd5e1: rgba(255,255,255,0.14);
+    --hoh-line-dddddd: rgba(255,255,255,0.14);
+    --hoh-line-dde3f5: rgba(255,255,255,0.14);
+    --hoh-line-e2ccff: rgba(255,255,255,0.14);
+    --hoh-line-e2e8f0: rgba(255,255,255,0.14);
+    --hoh-line-eee3f7: rgba(255,255,255,0.14);
+    --hoh-line-eef1fa: rgba(255,255,255,0.14);
+    --hoh-line-f0f4ff: rgba(255,255,255,0.14);
+    --hoh-line-ffcccc: rgba(255,255,255,0.14);
+    --hoh-line-ffcdd2: rgba(255,255,255,0.14);
+    --hoh-line-ffd2d2: rgba(255,255,255,0.14);
+    --hoh-line-ffd8a8: rgba(255,255,255,0.14);
+    --hoh-line-ffdbd1: rgba(255,255,255,0.14);
+    --hoh-line-ffdea0: rgba(255,255,255,0.14);
+    --hoh-line-ffe0e0: rgba(255,255,255,0.14);
+    --hoh-line-ffffff: rgba(255,255,255,0.14);
+    --hoh-text-0f172a: #f1f3f8;
+    --hoh-text-b45309: #ffc46b;
+    --hoh-text-0f1b3e: #f1f3f8;
+    --hoh-text-14213d: #f1f3f8;
+    --hoh-text-333333: #f1f3f8;
+    --hoh-text-374151: #f1f3f8;
+    --hoh-text-3a3a3a: #f1f3f8;
+    --hoh-text-4a5272: #b4bac9;
+    --hoh-text-4b5563: #b4bac9;
+    --hoh-text-5a189a: #a480c7;
+    --hoh-text-5b6481: #b4bac9;
+    --hoh-text-5b6483: #b4bac9;
+    --hoh-text-64748b: #b4bac9;
+    --hoh-text-6b0f0f: #ae7b7b;
+    --hoh-text-6b7280: #b4bac9;
+    --hoh-text-7a2e19: #b68c80;
+    --hoh-text-7b22ce: #b685e4;
+    --hoh-text-8a93b3: #b4bac9;
+    --hoh-text-8b94b2: #b4bac9;
+    --hoh-text-rgba77704: rgba(255,255,255,0.4);
+    --hoh-text-rgba777064: rgba(255,255,255,0.64);
   }
 }
 

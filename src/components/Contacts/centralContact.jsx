@@ -38,7 +38,7 @@ export default function ContactBook() {
   const [activeTab, setActiveTab] = useState("register");
 
   return (
-    <div style={{ background: "#F0F4FF", minHeight: "100vh" }} className="pt-20 pb-24">
+    <div style={{ background: "var(--hoh-bg-f0f4ff)", minHeight: "100vh" }} className="pt-20 pb-24">
       {/* ── Page Header ────────────────────────────────────── */}
       <div className="px-5 pt-6 pb-4">
         <div
@@ -72,12 +72,12 @@ export default function ContactBook() {
       <div className="px-5 pb-4">
         <div
           style={{
-            background: "#fff",
+            background: "var(--hoh-bg-ffffff)",
             borderRadius: "18px",
             padding: "5px",
             display: "flex",
             boxShadow: "0 2px 16px rgba(44,95,212,0.1)",
-            border: "1px solid #DDE3F5",
+            border: "1px solid var(--hoh-line-dde3f5)",
           }}
         >
           {tabs.map((tab) => {
@@ -103,12 +103,12 @@ export default function ContactBook() {
                   cursor: "pointer",
                 }}
               >
-                <span style={{ color: isActive ? "#fff" : "#8B94B2", display: "flex" }}>
+                <span style={{ color: isActive ? "#fff" : "var(--hoh-text-8b94b2)", display: "flex" }}>
                   {tab.icon}
                 </span>
                 <span
                   style={{
-                    color: isActive ? "#fff" : "#8B94B2",
+                    color: isActive ? "#fff" : "var(--hoh-text-8b94b2)",
                     fontSize: "12.5px",
                     fontWeight: isActive ? 700 : 500,
                     letterSpacing: isActive ? "0.01em" : 0,

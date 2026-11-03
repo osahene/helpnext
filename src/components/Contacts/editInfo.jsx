@@ -7,17 +7,17 @@ import { DEFAULT_COUNTRY, splitPhone } from "@/utils/phone";
 const C = {
   primary: "#2C5FD4",
   accent: "#5B3FE8",
-  surface: "#F0F4FF",
-  border: "#DDE3F5",
-  text: "#0F1B3E",
-  muted: "#8B94B2",
+  surface: "var(--hoh-bg-f0f4ff)",
+  border: "var(--hoh-line-dde3f5)",
+  text: "var(--hoh-text-0f1b3e)",
+  muted: "var(--hoh-text-8b94b2)",
   error: "#EF4444",
-  locked: "#E4E9F5",
+  locked: "var(--hoh-bg-e4e9f5)",
 };
 
 const situationsList = [
   "Health Crisis", "Robbery Attack", "Fire Outbreak",
-  "Flood Alert", "Call Emergency", "Accident Alert",
+  "Flood Alert", "Safety Companion", "Accident Alert",
 ];
 
 const situationColors = {
@@ -25,7 +25,7 @@ const situationColors = {
   "Robbery Attack": "#CC2222",
   "Fire Outbreak": "#E8500A",
   "Flood Alert": "#0A72C4",
-  "Call Emergency": "#7B22CE",
+  "Safety Companion": "#7B22CE",
   "Accident Alert": "#8B5C00",
 };
 
@@ -52,7 +52,7 @@ const InputField = ({ label, icon, error, ...props }) => (
         style={{
           width: "100%", padding: "13px 14px 13px 42px", borderRadius: 14,
           border: `1.5px solid ${error ? C.error : C.border}`,
-          background: "#fff", color: C.text, fontSize: 14, fontWeight: 500,
+          background: "var(--hoh-bg-ffffff)", color: C.text, fontSize: 14, fontWeight: 500,
           outline: "none", boxSizing: "border-box", transition: "border-color 0.2s",
         }}
         onFocus={(e) => (e.target.style.borderColor = C.primary)}
@@ -125,7 +125,7 @@ export default function EditContact({ contact, onSave, onCancel }) {
   return (
     <form onSubmit={handleSubmit} style={{ width: "100%", maxWidth: 560, margin: "0 auto" }}>
       <div style={{
-        background: "#fff", borderRadius: 24, overflow: "hidden",
+        background: "var(--hoh-bg-ffffff)", borderRadius: 24, overflow: "hidden",
         border: `1px solid ${C.border}`, boxShadow: "0 12px 40px rgba(44,95,212,0.12)",
         display: "flex", flexDirection: "column", maxHeight: "88vh",
       }}>
@@ -286,7 +286,7 @@ export default function EditContact({ contact, onSave, onCancel }) {
         {/* ── Sticky action bar ───────────────────────── */}
         <div style={{
           display: "flex", gap: 12, padding: "16px 24px",
-          borderTop: `1px solid ${C.border}`, background: "#fff",
+          borderTop: `1px solid ${C.border}`, background: "var(--hoh-bg-ffffff)",
         }}>
           <button
             type="button" onClick={onCancel}

@@ -68,7 +68,7 @@ export default function MoreAction() {
   ];
 
   return (
-    <div style={{ background: "#F0F4FF", minHeight: "100vh" }} className="pt-20 pb-10">
+    <div style={{ background: "var(--hoh-bg-f0f4ff)", minHeight: "100vh" }} className="pt-20 pb-10">
 
       {/* ── Page Header ──────────────────────────────────── */}
       <div className="px-5 pt-6 pb-4">
@@ -102,8 +102,8 @@ export default function MoreAction() {
             const accent = serviceAccentColors[svc.name] || "#2C5FD4";
             return (
               <div key={svc.name} style={{
-                background: "#fff", borderRadius: "20px", padding: "16px",
-                border: "1px solid #DDE3F5", boxShadow: "0 4px 16px rgba(44,95,212,0.06)",
+                background: "var(--hoh-bg-ffffff)", borderRadius: "20px", padding: "16px",
+                border: "1px solid var(--hoh-line-dde3f5)", boxShadow: "0 4px 16px rgba(44,95,212,0.06)",
               }}>
                 {/* Service header */}
                 <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
@@ -111,7 +111,7 @@ export default function MoreAction() {
                     <Image src={svc.image} alt={svc.name} width={46} height={46} style={{ objectFit: "cover", borderRadius: "13px" }} />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14.5px", marginBottom: "2px" }}>{svc.name}</p>
+                    <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "14.5px", marginBottom: "2px" }}>{svc.name}</p>
                     <span style={{ background: `${accent}15`, color: accent, fontSize: "11px", fontWeight: 600, padding: "2px 8px", borderRadius: "20px" }}>
                       {svc.contacts.length} line{svc.contacts.length > 1 ? "s" : ""}
                     </span>
@@ -138,7 +138,7 @@ export default function MoreAction() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
                       </div>
-                      <span style={{ color: "#0F1B3E", fontSize: "14.5px", fontWeight: 600, letterSpacing: "0.3px", flex: 1 }}>{phone}</span>
+                      <span style={{ color: "var(--hoh-text-0f1b3e)", fontSize: "14.5px", fontWeight: 600, letterSpacing: "0.3px", flex: 1 }}>{phone}</span>
                       <div style={{ padding: "6px 12px", borderRadius: "20px", background: accent, boxShadow: `0 4px 10px ${accent}44` }}>
                         <span style={{ color: "#fff", fontSize: "12px", fontWeight: 700 }}>Call</span>
                       </div>
@@ -152,11 +152,11 @@ export default function MoreAction() {
 
         {/* ── Divider ───────────────────────────────────── */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
-          <div style={{ flex: 1, height: "1px", background: "#DDE3F5" }} />
-          <div style={{ background: "#fff", border: "1px solid #DDE3F5", borderRadius: "20px", padding: "4px 12px" }}>
-            <p style={{ color: "#8B94B2", fontSize: "10px", fontWeight: 700, letterSpacing: "1.2px" }}>ORGANISATION</p>
+          <div style={{ flex: 1, height: "1px", background: "var(--hoh-bg-dde3f5)" }} />
+          <div style={{ background: "var(--hoh-bg-ffffff)", border: "1px solid var(--hoh-line-dde3f5)", borderRadius: "20px", padding: "4px 12px" }}>
+            <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "10px", fontWeight: 700, letterSpacing: "1.2px" }}>ORGANISATION</p>
           </div>
-          <div style={{ flex: 1, height: "1px", background: "#DDE3F5" }} />
+          <div style={{ flex: 1, height: "1px", background: "var(--hoh-bg-dde3f5)" }} />
         </div>
 
         {/* ── Help OO Help contacts ─────────────────────── */}
@@ -172,7 +172,7 @@ export default function MoreAction() {
               <a
                 key={c.name} href={href} target={isCall ? undefined : "_blank"} rel={isCall ? undefined : "noopener noreferrer"}
                 style={{
-                  background: "#fff", borderRadius: "20px", padding: "18px",
+                  background: "var(--hoh-bg-ffffff)", borderRadius: "20px", padding: "18px",
                   border: `1.5px solid ${color}22`,
                   boxShadow: `0 6px 20px ${color}18, 0 2px 8px rgba(0,0,0,0.04)`,
                   display: "flex", flexDirection: "column", alignItems: "center",
@@ -190,8 +190,8 @@ export default function MoreAction() {
                 }}>
                   <FontAwesomeIcon icon={c.icon} style={{ color: "#fff", width: "22px", height: "22px" }} />
                 </div>
-                <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14px" }}>{c.name}</p>
-                <p style={{ color: "#8B94B2", fontSize: "11.5px", textAlign: "center", lineHeight: 1.4 }}>
+                <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "14px" }}>{c.name}</p>
+                <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "11.5px", textAlign: "center", lineHeight: 1.4 }}>
                   {isCall ? c.actions[0] : c.actions}
                 </p>
                 <div style={{ padding: "5px 12px", borderRadius: "20px", background: `${color}12` }}>

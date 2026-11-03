@@ -8,12 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 // ── Design tokens ─────────────────────────────────────────────────────────────
 const C = {
   accent:        "#4F8EF7",
-  accentLight:   "#EAF1FE",
-  surface:       "#F7F9FC",
-  border:        "#E2E8F0",
-  textPrimary:   "#0F172A",
-  textSecondary: "#64748B",
-  white:         "#FFFFFF",
+  accentLight:   "var(--hoh-bg-eaf1fe)",
+  surface:       "var(--hoh-bg-f7f9fc)",
+  border:        "var(--hoh-line-e2e8f0)",
+  textPrimary:   "var(--hoh-text-0f172a)",
+  textSecondary: "var(--hoh-text-64748b)",
+  white:         "var(--hoh-bg-ffffff)",
   error:         "#EF4444",
 };
 
@@ -173,7 +173,7 @@ export default function VerifyPhoneNumberOTP() {
         .form-panel {
           flex: 1; display: flex; flex-direction: column;
           justify-content: center; align-items: center;
-          padding: 48px 32px; background: #FFFFFF;
+          padding: 48px 32px; background: var(--hoh-bg-ffffff);
           animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both;
         }
         .form-inner { width: 100%; max-width: 420px; }
@@ -224,7 +224,7 @@ export default function VerifyPhoneNumberOTP() {
 
               {/* 6 digit boxes */}
               <div>
-                <label style={{ fontSize: 13, fontWeight: 600, color: "#374151", letterSpacing: "0.3px", display: "block", marginBottom: 12 }}>
+                <label style={{ fontSize: 13, fontWeight: 600, color: "var(--hoh-text-374151)", letterSpacing: "0.3px", display: "block", marginBottom: 12 }}>
                   Verification Code
                 </label>
                 <div className="digit-row">

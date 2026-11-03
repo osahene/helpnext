@@ -10,21 +10,21 @@ const steps = [
   {
     number: "01",
     color: "#2C5FD4",
-    bg: "#EEF4FF",
+    bg: "var(--hoh-bg-eef4ff)",
     title: "Tap Your Emergency",
     description: "Keep your location on, then tap the emergency you're facing. One tap is all it takes.",
   },
   {
     number: "02",
     color: "#E8500A",
-    bg: "#FFF3EE",
+    bg: "var(--hoh-bg-fff3ee)",
     title: "We Make Their Phones Ring",
     description: "Your approved contacts get a voice call announcing your emergency, backed up by WhatsApp and SMS so it's hard to miss.",
   },
   {
     number: "03",
     color: "#1A9E5C",
-    bg: "#EDFBF3",
+    bg: "var(--hoh-bg-edfbf3)",
     title: "Know Who's On the Way",
     description: "They see exactly where you are and tap “I'm on my way”, so you know help is coming.",
   },
@@ -50,7 +50,7 @@ export default function IntroModal({ onClose }) {
         >
           <motion.div
             style={{
-              background: "#fff",
+              background: "var(--hoh-bg-ffffff)",
               borderRadius: "28px",
               width: "100%",
               maxWidth: "460px",
@@ -140,9 +140,9 @@ export default function IntroModal({ onClose }) {
                     key={i}
                     style={{
                       display: "flex", alignItems: "flex-start", gap: "14px",
-                      background: "#F8FAFF",
+                      background: "var(--hoh-bg-f8faff)",
                       borderRadius: "16px", padding: "14px 16px",
-                      border: "1px solid #DDE3F5",
+                      border: "1px solid var(--hoh-line-dde3f5)",
                     }}
                   >
                     <div style={{
@@ -155,10 +155,10 @@ export default function IntroModal({ onClose }) {
                       </span>
                     </div>
                     <div>
-                      <p style={{ color: "#0F1B3E", fontWeight: 700, fontSize: "14px", marginBottom: "2px" }}>
+                      <p style={{ color: "var(--hoh-text-0f1b3e)", fontWeight: 700, fontSize: "14px", marginBottom: "2px" }}>
                         {step.title}
                       </p>
-                      <p style={{ color: "#8B94B2", fontSize: "12.5px", lineHeight: 1.5 }}>
+                      <p style={{ color: "var(--hoh-text-8b94b2)", fontSize: "12.5px", lineHeight: 1.5 }}>
                         {step.description}
                       </p>
                     </div>
@@ -169,8 +169,8 @@ export default function IntroModal({ onClose }) {
               {/* ── Legal Disclaimer Callout Box ─────────────────── */}
               <div
                 style={{
-                  background: "#FFF8F6",
-                  border: "1px solid #FFDBD1",
+                  background: "var(--hoh-bg-fff8f6)",
+                  border: "1px solid var(--hoh-line-ffdbd1)",
                   borderRadius: "14px",
                   padding: "12px 14px",
                   display: "flex",
@@ -186,7 +186,7 @@ export default function IntroModal({ onClose }) {
                     <line x1="12" y1="17" x2="12.01" y2="17"/>
                   </svg>
                 </div>
-                <p style={{ color: "#7A2E19", fontSize: "11.5px", lineHeight: "1.45", margin: 0 }}>
+                <p style={{ color: "var(--hoh-text-7a2e19)", fontSize: "11.5px", lineHeight: "1.45", margin: 0 }}>
                   <strong>Important Notice:</strong> Help OO Help is a peer-to-peer safety network. Alerts are sent to your chosen emergency contacts, <strong>not</strong> public emergency services (Police, Fire, Ambulance).
                 </p>
               </div>
@@ -249,7 +249,7 @@ export default function IntroModal({ onClose }) {
                 </button>
               </div>
 
-              <p style={{ textAlign: "center", color: "#8B94B2", fontSize: "12px", marginTop: "12px" }}>
+              <p style={{ textAlign: "center", color: "var(--hoh-text-8b94b2)", fontSize: "12px", marginTop: "12px" }}>
                 By proceeding, you agree to share your location during emergencies.
               </p>
             </div>
