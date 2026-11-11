@@ -197,7 +197,7 @@ export default function IntroModal({ onClose }) {
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                   {/* App Store */}
                   <button
-                    onClick={() => window.open("#", "_blank")}
+                    onClick={() => window.open("https://apps.apple.com/app/id6827770694", "_blank")}
                     style={{
                       background: "#000", color: "#fff", padding: "10px 12px", borderRadius: "12px",
                       display: "flex", alignItems: "center", gap: "8px", border: "none", cursor: "pointer"
@@ -214,7 +214,7 @@ export default function IntroModal({ onClose }) {
 
                   {/* Google Play */}
                   <button
-                    onClick={() => window.open("#", "_blank")}
+                    onClick={() => window.open("https://play.google.com/store/apps/details?id=com.helpoohelp.helpflutter", "_blank")}
                     style={{
                       background: "#000", color: "#fff", padding: "10px 12px", borderRadius: "12px",
                       display: "flex", alignItems: "center", gap: "8px", border: "none", cursor: "pointer"
