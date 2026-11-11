@@ -16,6 +16,9 @@ export default function robots() {
           // Token-based one-time links, not search-landing content.
           "/guestInvite",
           "/verifyEmerg",
+          // QR-code redirector for printed posters — always 302s elsewhere,
+          // nothing for a crawler to index.
+          "/get",
           // Mid-flow auth steps that depend on in-progress session state
           // (OTP/email verification, password reset) — not useful as
           // standalone search results.
